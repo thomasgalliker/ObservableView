@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView", "Observabl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{533683F1-B92C-4149-A2AD-6045623BC6D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView.Tests", "Tests\ObservableView.Tests\ObservableView.Tests.csproj", "{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,11 +139,22 @@ Global
 		{A6FCEF44-D2BA-42C7-B3CB-13667BCD7B54}.Release|ARM.ActiveCfg = Release|Any CPU
 		{A6FCEF44-D2BA-42C7-B3CB-13667BCD7B54}.Release|x64.ActiveCfg = Release|Any CPU
 		{A6FCEF44-D2BA-42C7-B3CB-13667BCD7B54}.Release|x86.ActiveCfg = Release|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Release|ARM.ActiveCfg = Release|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Release|x64.ActiveCfg = Release|Any CPU
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE} = {B5AEA046-0E87-4A7B-8F11-80B6BDDA1F2A}
+		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75} = {533683F1-B92C-4149-A2AD-6045623BC6D8}
 	EndGlobalSection
 EndGlobal

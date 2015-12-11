@@ -12,7 +12,7 @@
     <summary>ObservableView is a simple wrapper for collections which allows an easy to use API for searching, filtering, sorting of collections.</summary>
     <description>ObservableView is a simple wrapper for collections which allows an easy to use API for searching, filtering, sorting of collections.</description>
     <tags>
-      xamarin pcl ObservableView plugin for settings ObvserableCollection
+      xamarin pcl ObservableView plugin for settings ObservableView
       windows phone winphone wp8 wpa81 win81 windowsphone android xamarin.forms xamarin.ios ios monoandroid monodroid monotouch mvvmcross mvvmlight
     </tags>
     <releaseNotes>
