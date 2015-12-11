@@ -26,9 +26,9 @@
   </metadata>
   <files>
     <!--PCL-->
-    <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\portable-net45+wp8+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.dll" />
-    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\portable-net45+wp8+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.pdb" />
-    <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\portable-net45+wp8+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.xml" />
+    <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.pdb" />
+    <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.xml" />
 
     <!--Xamarin.Android-->
     <file src="..\ObservableView.Android\bin\Release\ObservableView.Platform.dll" target="lib\monoandroid10\ObservableView.Platform.dll" />
@@ -40,18 +40,18 @@
     
     <!--Xamarin.iOS Classic API-->
     <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.dll" target="lib\monotouch10\ObservableView.Platform.dll" />
-    <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\monotouch10\ObservableView.Platform.pdb" />
+    <!--<file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\monotouch10\ObservableView.Platform.pdb" />-->
     <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.xml" target="lib\monotouch10\ObservableView.Platform.xml" />
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\monotouch10\ObservableView.dll" />
-    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\monotouch10\ObservableView.pdb" />
+    <!--<file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\monotouch10\ObservableView.pdb" />-->
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\monotouch10\ObservableView.xml" />
     
     <!--Xamarin.iOS Unified API-->
     <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.dll" target="lib\xamarin.ios10\ObservableView.Platform.dll" />
-    <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\xamarin.ios10\ObservableView.Platform.pdb" />
+    <!--<file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\xamarin.ios10\ObservableView.Platform.pdb" />-->
     <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.xml" target="lib\xamarin.ios10\ObservableView.Platform.xml" />
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\xamarin.ios10\ObservableView.dll" />
-    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\xamarin.ios10\ObservableView.pdb" />
+    <!--<file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\xamarin.ios10\ObservableView.pdb" />-->
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\xamarin.ios10\ObservableView.xml" />
     
     <!--Windows Phone 8-->
