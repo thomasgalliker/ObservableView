@@ -6,16 +6,18 @@
     <title>ObservableView</title>
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <projectUrl>https://nuget.org/packages/ObservableView</projectUrl>
+    <projectUrl>https://github.com/thomasgalliker/ObservableView</projectUrl>
     <iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>ObservableView is a simple wrapper for collections which allows an easy to use API for searching, filtering, sorting of collections.</summary>
-    <description>ObservableView is a simple wrapper for collections which allows an easy to use API for searching, filtering, sorting of collections.</description>
+    <summary>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting of collections.</summary>
+    <description>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting of collections.</description>
     <tags>
       xamarin pcl ObservableView plugin for settings ObservableView
       windows phone winphone wp8 wpa81 win81 windowsphone android xamarin.forms xamarin.ios ios monoandroid monodroid monotouch mvvmcross mvvmlight
     </tags>
     <releaseNotes>
+      This is the initial release of ObservableView. Please report problems here: https://github.com/thomasgalliker/ObservableView.
+      Contributions on github are welcome!
     </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <language>en-US</language>
@@ -25,42 +27,54 @@
   <files>
     <!--PCL-->
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\portable-net45+wp8+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\portable-net45+wp8+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\portable-net45+wp8+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.xml" />
 
     <!--Xamarin.Android-->
     <file src="..\ObservableView.Android\bin\Release\ObservableView.Platform.dll" target="lib\monoandroid10\ObservableView.Platform.dll" />
+    <file src="..\ObservableView.Android\bin\Release\ObservableView.Platform.pdb" target="lib\monoandroid10\ObservableView.Platform.pdb" />
     <file src="..\ObservableView.Android\bin\Release\ObservableView.Platform.xml" target="lib\monoandroid10\ObservableView.Platform.xml" />
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\monoandroid10\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\monoandroid10\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\monoandroid10\ObservableView.xml" />
     
     <!--Xamarin.iOS Classic API-->
     <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.dll" target="lib\monotouch10\ObservableView.Platform.dll" />
+    <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\monotouch10\ObservableView.Platform.pdb" />
     <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.xml" target="lib\monotouch10\ObservableView.Platform.xml" />
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\monotouch10\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\monotouch10\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\monotouch10\ObservableView.xml" />
     
     <!--Xamarin.iOS Unified API-->
     <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.dll" target="lib\xamarin.ios10\ObservableView.Platform.dll" />
+    <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\xamarin.ios10\ObservableView.Platform.pdb" />
     <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.xml" target="lib\xamarin.ios10\ObservableView.Platform.xml" />
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\xamarin.ios10\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\xamarin.ios10\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\xamarin.ios10\ObservableView.xml" />
     
     <!--Windows Phone 8-->
-    <file src="..\ObservableView.WindowsPhone8\Bin\Release\ObservableView.Platform.dll" target="lib\wp8\ObservableView.Platform.dll" />
-    <file src="..\ObservableView.WindowsPhone8\Bin\Release\ObservableView.Platform.xml" target="lib\wp8\ObservableView.Platform.xml" />
+    <!--<file src="..\ObservableView.WindowsPhone8\Bin\Release\ObservableView.Platform.dll" target="lib\wp8\ObservableView.Platform.dll" />
+    <file src="..\ObservableView.WindowsPhone8\Bin\Release\ObservableView.Platform.pdb" target="lib\wp8\ObservableView.Platform.pdb" />
+    <file src="..\ObservableView.WindowsPhone8\Bin\Release\ObservableView.Platform.xml" target="lib\wp8\ObservableView.Platform.xml" />-->
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\wp8\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\wp8\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\wp8\ObservableView.xml" />
     
     <!--Windows Phone 8.1-->
-    <file src="..\ObservableView.WindowsPhone81\Bin\Release\ObservableView.Platform.dll" target="lib\wpa81\ObservableView.Platform.dll" />
-    <file src="..\ObservableView.WindowsPhone81\Bin\Release\ObservableView.Platform.xml" target="lib\wpa81\ObservableView.Platform.xml" />
+    <!--<file src="..\ObservableView.WindowsPhone81\Bin\Release\ObservableView.Platform.dll" target="lib\wpa81\ObservableView.Platform.dll" />
+    <file src="..\ObservableView.WindowsPhone81\Bin\Release\ObservableView.Platform.pdb" target="lib\wpa81\ObservableView.Platform.pdb" />
+    <file src="..\ObservableView.WindowsPhone81\Bin\Release\ObservableView.Platform.xml" target="lib\wpa81\ObservableView.Platform.xml" />-->
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\wpa81\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\wp8\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\wpa81\ObservableView.xml" />
     
     <!--Windows Store-->
-    <file src="..\ObservableView.WindowsStore\Bin\Release\ObservableView.Platform.dll" target="lib\win81\ObservableView.Platform.dll" />
-    <file src="..\ObservableView.WindowsStore\Bin\Release\ObservableView.Platform.xml" target="lib\win81\ObservableView.Platform.xml" />
+    <!--<file src="..\ObservableView.WindowsStore\Bin\Release\ObservableView.Platform.dll" target="lib\win81\ObservableView.Platform.dll" />
+    <file src="..\ObservableView.WindowsStore\Bin\Release\ObservableView.Platform.xml" target="lib\win81\ObservableView.Platform.xml" />-->
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\win81\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\wp8\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\win81\ObservableView.xml" />
     
     <file src="tools\init.ps1" target="tools\init.ps1" />

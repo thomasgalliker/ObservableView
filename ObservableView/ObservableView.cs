@@ -425,7 +425,7 @@ namespace ObservableView
             return queryableDtos.Provider.CreateQuery<T>(whereCallExpression).ToObservableCollection();
         }
 
-        private static IEnumerable<T> PerformOrdering<T>(IEnumerable<T> enumerable, IEnumerable<OrderSpecification<T>> orderSpecifications)
+        private static IEnumerable<T> PerformOrdering(IEnumerable<T> enumerable, IEnumerable<OrderSpecification<T>> orderSpecifications)
         {
             lock (orderSpecifications)
             {
