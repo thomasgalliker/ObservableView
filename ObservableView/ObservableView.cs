@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ObservableView.Extensions;
+using ObservableView.Grouping;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -6,9 +8,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
-using ObservableView.Extensions;
-using ObservableView.Grouping;
 
 namespace ObservableView
 {
@@ -361,15 +360,9 @@ namespace ObservableView
             {
                 return viewCollection.ToObservableCollection();
             }
-
+            
             IQueryable<T> queryableDtos = viewCollection.AsQueryable();
             ParameterExpression pe = Expression.Parameter(typeof(T), "x");
-
-            IEnumerable<PropertyInfo> searchableAttributes = this.GetSearchableAttributes();
-            if (searchableAttributes == null || !searchableAttributes.Any())
-            {
-                throw new Exception(string.Format("Please use [Searchable] annotation in your generic type {0} to mark properties as searchable.", typeof(T).Name));
-            }
 
             string[] searchStrings = pattern.Trim().Split(new[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -377,6 +370,12 @@ namespace ObservableView
             if (!searchStrings.Any())
             {
                 return results;
+            }
+
+            var searchableAttributes = this.GetSearchableAttributes();
+            if (searchableAttributes == null || !searchableAttributes.Any())
+            {
+                throw new Exception(string.Format("Please use [Searchable] annotation in your generic type {0} to mark properties as searchable.", typeof(T).Name));
             }
 
             Expression baseExpression = null;
