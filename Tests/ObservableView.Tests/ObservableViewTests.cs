@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-
-using FluentAssertions;
-
 using Xunit;
 
 namespace ObservableView.Tests
@@ -199,7 +197,7 @@ namespace ObservableView.Tests
             var observableCarsView = new ObservableView<Car>(carsList);
 
             // Act
-            observableCarsView.SearchText = "Polo";
+            observableCarsView.Search("Polo");
 
             // Assert
             var searchView = observableCarsView.View;
@@ -224,10 +222,10 @@ namespace ObservableView.Tests
             };
 
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.SearchText = "Polo";
+            observableCarsView.Search("Polo");
 
             // Act
-            observableCarsView.SearchText = "";
+            observableCarsView.ClearSearch();
 
             // Assert
             var searchView = observableCarsView.View;

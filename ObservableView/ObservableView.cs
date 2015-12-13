@@ -127,7 +127,7 @@ namespace ObservableView
         }
 
         /// <summary>
-        ///     Gets or sets the search text.
+        ///     Gets the search text. Use <code>Search("searchtext")</code> to perform a search operation.
         /// </summary>
         public string SearchText
         {
@@ -135,14 +135,10 @@ namespace ObservableView
             {
                 return this.searchText;
             }
-            set
+            private set
             {
                 this.searchText = value;
-
-                // Update properties to reflect the search result
                 this.OnPropertyChanged(() => this.SearchText);
-                this.OnPropertyChanged(() => this.View);
-                this.OnPropertyChanged(() => this.Groups);
             }
         }
 
@@ -350,6 +346,25 @@ namespace ObservableView
             return typeof(T).GetRuntimeProperties().Where(propertyInfo => 
                 propertyInfo.CustomAttributes.Any(attr =>
                     attr.AttributeType == typeof(SearchableAttribute))).ToList();
+        }
+
+        /// <summary>
+        /// Performs a search operation using the given <param name="pattern">search pattern</param>.
+        /// The search operation is performed on the properties <code>View</code> and <code>Group</code>. 
+        /// </summary>
+        /// <param name="pattern"></param>
+        public void Search(string pattern)
+        {
+            this.SearchText = pattern;
+
+            // Update properties to reflect the search result
+            this.OnPropertyChanged(() => this.View);
+            this.OnPropertyChanged(() => this.Groups);
+        }
+
+        public void ClearSearch()
+        {
+            this.Search(string.Empty);
         }
 
         private ObservableCollection<T> Search(IEnumerable<T> viewCollection, string pattern)
