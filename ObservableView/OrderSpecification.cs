@@ -7,10 +7,8 @@ namespace ObservableView
     /// </summary>
     /// <typeparam name="T">
     /// </typeparam>
-    internal class OrderSpecification<T>
+    internal class OrderSpecification<T> // TODO GATH: Could be a struct?
     {
-        #region Constructors and Destructors
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="OrderSpecification{T}" /> class.
         /// </summary>
@@ -21,10 +19,6 @@ namespace ObservableView
             this.KeySelector = keySelector;
             this.OrderDirection = orderDirection;
         }
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         ///     Gets the key selector.
@@ -37,7 +31,5 @@ namespace ObservableView
         /// </summary>
         /// <value>The order direction.</value>
         public OrderDirection OrderDirection { get; private set; }
-
-        #endregion
     }
 }
