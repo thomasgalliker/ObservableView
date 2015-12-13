@@ -20,14 +20,13 @@ namespace ObservableView
     public class ObservableView<T> : INotifyPropertyChanged
     {
         private static readonly object FilterHandlerEventLock = new object();
-        
+
         private readonly List<OrderSpecification<T>> orderSpecifications;
+        private readonly HashSet<PropertyInfo> searchSpecifications;
         private ObservableCollection<T> sourceCollection;
 
         private string searchText = string.Empty;
-
         private FilterEventHandler<T> filterHandler;
-
         private Func<T, string> groupKey;
         private IGroupKeyAlgorithm groupKeyAlogrithm;
 
@@ -35,6 +34,7 @@ namespace ObservableView
         {
             this.Source = collection;
             this.orderSpecifications = new List<OrderSpecification<T>>();
+            this.searchSpecifications = new HashSet<PropertyInfo>(this.GetSearchableAttributes());
             this.GroupKeyAlogrithm = new AlphaGroupKeyAlgorithm();
         }
 
@@ -223,7 +223,10 @@ namespace ObservableView
         /// <param name="orderDirection">Order direction in which the selected property shall be sorted.</param>
         public void AddOrderSpecification(Func<T, object> keySelector, OrderDirection orderDirection = OrderDirection.Ascending)
         {
-            ////Guard.ArgumentNotNull(() => keySelector);
+            if (keySelector == null)
+            {
+                throw new ArgumentNullException("keySelector");
+            }
 
             this.orderSpecifications.Add(new OrderSpecification<T>(keySelector, orderDirection));
 
@@ -233,7 +236,7 @@ namespace ObservableView
         /// <summary>
         /// Removes all order specifications.
         /// </summary>
-        public void RemoveOrderSpecifications()
+        public void ClearOrderSpecifications()
         {
             this.orderSpecifications.Clear();
 
@@ -341,6 +344,34 @@ namespace ObservableView
             return filteredCollection;
         }
 
+        public void AddSearchSpecification<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        {
+            if (propertyExpression == null)
+            {
+                throw new ArgumentNullException("propertyExpression");
+            }
+
+            var propertyInfo = propertyExpression.GetPropertyInfo();
+            var isAdded = this.searchSpecifications.Add(propertyInfo);
+            if (isAdded == false)
+            {
+                throw new InvalidOperationException(string.Format("Could not add property {0}", propertyInfo.Name));
+            }
+
+            this.Refresh();
+        }
+
+        /// <summary>
+        /// Removes all search specifications and resets <code>SearchText</code> to <code>string.Empty</code>.
+        /// </summary>
+        public void ClearSearchSpecifications()
+        {
+            this.SearchText = string.Empty;
+            this.searchSpecifications.Clear();
+
+            this.Refresh();
+        }
+
         private IEnumerable<PropertyInfo> GetSearchableAttributes()
         {
             return typeof(T).GetRuntimeProperties().Where(propertyInfo => 
@@ -376,9 +407,6 @@ namespace ObservableView
                 return viewCollection.ToObservableCollection();
             }
             
-            IQueryable<T> queryableDtos = viewCollection.AsQueryable();
-            ParameterExpression pe = Expression.Parameter(typeof(T), "x");
-
             string[] searchStrings = pattern.Trim().Split(new[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
 
             // TODO: Define more characters which can split the search termin into atomic words.
@@ -387,20 +415,23 @@ namespace ObservableView
                 return results;
             }
 
-            var searchableAttributes = this.GetSearchableAttributes();
-            if (searchableAttributes == null || !searchableAttributes.Any())
+            if (!this.searchSpecifications.Any())
             {
-                throw new Exception(string.Format("Please use [Searchable] annotation in your generic type {0} to mark properties as searchable.", typeof(T).Name));
+                throw new InvalidOperationException(
+                    string.Format("Please add at least one search specification either by calling AddSearchSpecification"
+                                  + " or by defining [Searchable] annotation in your type {0} to mark properties as searchable.",
+                                  typeof(T).Name));
             }
 
             Expression baseExpression = null;
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(T), "x");
 
             foreach (string searchString in searchStrings)
             {
                 Expression argumentBaseExpression = null;
-                foreach (PropertyInfo propertyInfo in searchableAttributes)
+                foreach (PropertyInfo propertyInfo in this.searchSpecifications)
                 {
-                    Expression nextExpression = this.AddExpression(pe, propertyInfo.Name, searchString);
+                    Expression nextExpression = this.AddExpression(parameterExpression, propertyInfo.Name, searchString);
                     if (nextExpression != null)
                     {
                         if (argumentBaseExpression == null)
@@ -429,12 +460,14 @@ namespace ObservableView
                 return results;
             }
 
+            IQueryable<T> queryableDtos = viewCollection.AsQueryable();
+
             MethodCallExpression whereCallExpression = Expression.Call(
                 typeof(Queryable),
                 "Where",
                 new[] { queryableDtos.ElementType },
                 queryableDtos.Expression,
-                Expression.Lambda<Func<T, bool>>(baseExpression, new[] { pe }));
+                Expression.Lambda<Func<T, bool>>(baseExpression, new[] { parameterExpression }));
 
             return queryableDtos.Provider.CreateQuery<T>(whereCallExpression).ToObservableCollection();
         }

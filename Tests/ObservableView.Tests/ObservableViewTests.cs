@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -174,14 +175,14 @@ namespace ObservableView.Tests
 
             receivedEvents.Should().HaveCount(9);
             receivedEvents.Count(x => x == "Source").Should().Be(3);    // 3 Source changes, because we removed 3 new elements
-            receivedEvents.Count(x => x == "View").Should().Be(3);   
-            receivedEvents.Count(x => x == "Groups").Should().Be(3); 
+            receivedEvents.Count(x => x == "View").Should().Be(3);
+            receivedEvents.Count(x => x == "Groups").Should().Be(3);
         }
         #endregion
 
         #region Searching
         [Fact]
-        public void ShouldFindItemsOnSearchText()
+        public void ShouldFindItemsOnSearchUsingSearchableAnnotation()
         {
             // Arrange
             var carsList = new ObservableCollection<Car>
@@ -208,7 +209,87 @@ namespace ObservableView.Tests
         }
 
         [Fact]
-        public void ShouldResetSearchText()
+        public void ShouldFindItemsOnSearchUsingAddSearchSpecification()
+        {
+            // Arrange
+            var carsList = new ObservableCollection<Car>
+            {
+                this.carAudiA1, 
+                this.carAudiA3, 
+                this.carBmwM1, 
+                this.carBmwM3, 
+                this.carVwPolo,
+                this.carVwGolf
+            };
+
+            var observableCarsView = new ObservableView<Car>(carsList);
+
+            // Act
+            observableCarsView.AddSearchSpecification(c => c.Year);
+            observableCarsView.Search("20");
+
+            // Assert
+            var searchView = observableCarsView.View;
+            searchView.Should().NotBeNull();
+            searchView.Should().HaveCount(5); // This not only includes 'Year' filtered items, but also the [Searchable] annotated ones
+
+            searchView.Single(x => x.Model == this.carAudiA1.Model).Should().NotBeNull();
+            searchView.Single(x => x.Model == this.carAudiA3.Model).Should().NotBeNull();
+            searchView.Single(x => x.Model == this.carBmwM1.Model).Should().NotBeNull();
+            searchView.Single(x => x.Model == this.carBmwM3.Model).Should().NotBeNull();
+            searchView.Single(x => x.Model == this.carVwGolf.Model).Should().NotBeNull();
+        }
+
+
+        [Fact]
+        public void ShouldThrowExceptionWhenAddingDuplicatedSearchSpecification()
+        {
+            // Arrange
+            var carsList = new ObservableCollection<Car>
+            {
+                this.carAudiA1, 
+                this.carAudiA3, 
+                this.carBmwM1, 
+                this.carBmwM3, 
+                this.carVwPolo,
+                this.carVwGolf
+            };
+
+            var observableCarsView = new ObservableView<Car>(carsList);
+
+            // Act
+            observableCarsView.AddSearchSpecification(c => c.Year);
+            Action action = () => observableCarsView.AddSearchSpecification(c => c.Year);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(action);
+        }
+
+        [Fact]
+        public void ShouldThrowExceptionWhenAddingDuplicatedSearchSpecificationWithSearchableAttribute()
+        {
+            // Arrange
+            var carsList = new ObservableCollection<Car>
+            {
+                this.carAudiA1, 
+                this.carAudiA3, 
+                this.carBmwM1, 
+                this.carBmwM3, 
+                this.carVwPolo,
+                this.carVwGolf
+            };
+
+            var observableCarsView = new ObservableView<Car>(carsList);
+
+            // Act
+            Action action = () => observableCarsView.AddSearchSpecification(c => c.Model);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(action);
+        }
+
+        [Fact]
+        public void ShouldClearSearch()
         {
             // Arrange
             var carsList = new ObservableCollection<Car>
@@ -228,6 +309,35 @@ namespace ObservableView.Tests
             observableCarsView.ClearSearch();
 
             // Assert
+            var searchView = observableCarsView.View;
+            searchView.Should().NotBeNull();
+            searchView.Should().HaveCount(carsList.Count);
+        }
+
+        [Fact]
+        public void ShouldClearSearchSpecifications()
+        {
+            // Arrange
+            var carsList = new ObservableCollection<Car>
+            {
+                this.carAudiA1, 
+                this.carAudiA3, 
+                this.carBmwM1, 
+                this.carBmwM3, 
+                this.carVwPolo,
+                this.carVwGolf
+            };
+
+            var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.AddSearchSpecification(c => c.Year);
+            observableCarsView.Search("2000");
+
+            // Act
+            observableCarsView.ClearSearchSpecifications();
+
+            // Assert
+            observableCarsView.SearchText.Should().Be(string.Empty);
+
             var searchView = observableCarsView.View;
             searchView.Should().NotBeNull();
             searchView.Should().HaveCount(carsList.Count);
@@ -355,7 +465,7 @@ namespace ObservableView.Tests
             observableCarsView.AddOrderSpecification(x => x.Brand, OrderDirection.Descending);
 
             // Act
-            observableCarsView.RemoveOrderSpecifications();
+            observableCarsView.ClearOrderSpecifications();
 
             // Assert
             var orderedView = observableCarsView.View;
@@ -369,15 +479,15 @@ namespace ObservableView.Tests
 
         #region Test Classes
         // Predefined car pool
-        private readonly Car carAudiA1 = new Car(CarBrand.Audi, "A1");
-        private readonly Car carAudiA4 = new Car(CarBrand.Audi, "A4 Avant");
-        private readonly Car carAudiA3 = new Car(CarBrand.Audi, "A3 Sportback");
-        private readonly Car carBmwM1 = new Car(CarBrand.BMW, "M1");
-        private readonly Car carBmwM3 = new Car(CarBrand.BMW, "M3");
-        private readonly Car carBmwX5 = new Car(CarBrand.BMW, "X5");
-        private readonly Car carVwPolo = new Car(CarBrand.VW, "Polo 1.4 TDI");
-        private readonly Car carVwGolf = new Car(CarBrand.VW, "Golf 1.6");
-        private readonly Car carVwGolfGti = new Car(CarBrand.VW, "Golf GTI 2.0");
+        private readonly Car carAudiA1 = new Car(CarBrand.Audi, "A1", 2013);
+        private readonly Car carAudiA4 = new Car(CarBrand.Audi, "A4 Avant", 2000);
+        private readonly Car carAudiA3 = new Car(CarBrand.Audi, "A3 Sportback", 2015);
+        private readonly Car carBmwM1 = new Car(CarBrand.BMW, "M1", 2014);
+        private readonly Car carBmwM3 = new Car(CarBrand.BMW, "M3", 2012);
+        private readonly Car carBmwX5 = new Car(CarBrand.BMW, "X5", 2012);
+        private readonly Car carVwPolo = new Car(CarBrand.VW, "Polo 1.4 TDI", 1999);
+        private readonly Car carVwGolf = new Car(CarBrand.VW, "Golf 20th Birthday Ed.", 1990);
+        private readonly Car carVwGolfGti = new Car(CarBrand.VW, "Golf GTI 2.0", 2016);
 
         private enum CarBrand
         {
@@ -388,16 +498,19 @@ namespace ObservableView.Tests
 
         private class Car
         {
-            public Car(CarBrand carBrand, string carModel)
+            public Car(CarBrand brand, string model, int year)
             {
-                this.Brand = carBrand;
-                this.Model = carModel;
+                this.Brand = brand;
+                this.Model = model;
+                this.Year = year;
             }
 
             public CarBrand Brand { get; private set; }
 
             [Searchable]
             public string Model { get; private set; }
+
+            public int Year { get; private set; }
         }
         #endregion
     }

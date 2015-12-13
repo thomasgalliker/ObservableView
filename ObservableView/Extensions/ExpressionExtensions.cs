@@ -17,5 +17,29 @@ namespace ObservableView.Extensions
             var methodInfo = typeof(string).GetRuntimeMethod("Contains", new[] { typeof(string) });
             return Expression.Call(expression, methodInfo, containsExpression);
         }
+
+        public static MemberExpression GetMemberExpression(this LambdaExpression lambdaExpression)
+        {
+            var memberExpression = lambdaExpression.Body as MemberExpression;
+            if (memberExpression == null)
+            {
+                throw new ArgumentException("'lambdaExpression' should be a member expression");
+            }
+
+            return memberExpression;
+        }
+
+        public static PropertyInfo GetPropertyInfo(this LambdaExpression lambdaExpression)
+        {
+            var memberExpression = GetMemberExpression(lambdaExpression);
+
+            var propertyInfo = memberExpression.Member as PropertyInfo;
+            if (propertyInfo == null)
+            {
+                throw new ArgumentException("'lambdaExpression' should be a property");
+            }
+
+            return propertyInfo;
+        }
     }
 }
