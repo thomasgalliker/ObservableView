@@ -127,7 +127,9 @@ namespace ObservableView
         }
 
         /// <summary>
-        ///     Gets the search text. Use <code>Search("searchtext")</code> to perform a search operation.
+        ///     Gets or sets the search text.
+        ///     This property can be used for data binding and has the same effect
+        ///     as using the <code>Search("searchtext")</code> method to perform a search operation.
         /// </summary>
         public string SearchText
         {
@@ -135,10 +137,17 @@ namespace ObservableView
             {
                 return this.searchText;
             }
-            private set
+            set
             {
-                this.searchText = value;
-                this.OnPropertyChanged(() => this.SearchText);
+                if (this.searchText != value)
+                {
+                    this.searchText = value;
+                    this.OnPropertyChanged(() => this.SearchText);
+
+                    // Update properties to reflect the search result
+                    this.OnPropertyChanged(() => this.View);
+                    this.OnPropertyChanged(() => this.Groups);
+                }
             }
         }
 
@@ -387,10 +396,6 @@ namespace ObservableView
         public void Search(string pattern)
         {
             this.SearchText = pattern;
-
-            // Update properties to reflect the search result
-            this.OnPropertyChanged(() => this.View);
-            this.OnPropertyChanged(() => this.Groups);
         }
 
         public void ClearSearch()
