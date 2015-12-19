@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ObservableView</id>
-    <version>1.0.1</version>
+    <version>1.0.2-pre2</version>
     <title>ObservableView</title>
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
@@ -40,18 +40,18 @@
     
     <!--Xamarin.iOS Classic API-->
     <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.dll" target="lib\monotouch10\ObservableView.Platform.dll" />
-    <!--<file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\monotouch10\ObservableView.Platform.pdb" />-->
+    <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\monotouch10\ObservableView.Platform.pdb" />
     <file src="..\ObservableView.iOS\bin\iPhone\Release\ObservableView.Platform.xml" target="lib\monotouch10\ObservableView.Platform.xml" />
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\monotouch10\ObservableView.dll" />
-    <!--<file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\monotouch10\ObservableView.pdb" />-->
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\monotouch10\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\monotouch10\ObservableView.xml" />
     
     <!--Xamarin.iOS Unified API-->
     <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.dll" target="lib\xamarin.ios10\ObservableView.Platform.dll" />
-    <!--<file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\xamarin.ios10\ObservableView.Platform.pdb" />-->
+    <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.pdb" target="lib\xamarin.ios10\ObservableView.Platform.pdb" />
     <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.Platform.xml" target="lib\xamarin.ios10\ObservableView.Platform.xml" />
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\xamarin.ios10\ObservableView.dll" />
-    <!--<file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\xamarin.ios10\ObservableView.pdb" />-->
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\xamarin.ios10\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\xamarin.ios10\ObservableView.xml" />
     
     <!--Windows Phone 8-->
