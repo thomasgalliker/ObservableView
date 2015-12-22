@@ -1,12 +1,9 @@
-﻿using System;
+﻿using ObservableView.Netfx.Extensions;
+using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-
-using ObservableView.Netfx.Extensions;
 
 namespace ObservableView.Netfx
 {
@@ -14,10 +11,10 @@ namespace ObservableView.Netfx
     {
         private static DataGrid dataGrid;
 
-        public static readonly DependencyProperty ObservableViewProperty =
-            DependencyProperty.RegisterAttached("ObservableView", 
-            typeof(object), 
-            typeof(ObservableViewExtensions), 
+        public static readonly DependencyProperty ObservableViewProperty = DependencyProperty.RegisterAttached(
+            "ObservableView",
+            typeof(object),
+            typeof(ObservableViewExtensions),
             new UIPropertyMetadata(null, ObservableViewPropertyChanged));
 
         public static object GetObservableView(DependencyObject obj)
@@ -52,6 +49,25 @@ namespace ObservableView.Netfx
                 dataGrid.Loaded += DataGridLoaded;
                 dataGrid.Unloaded += DataGridUnloaded;
                 dataGrid.Sorting += OnDataGridSortingChanged;
+
+                // Check if there is a binding to ItemsSource
+                var itemsSourceBindingExpression = dataGrid.GetBindingExpression(ItemsControl.ItemsSourceProperty);
+                if (itemsSourceBindingExpression != null)
+                {
+                    throw new InvalidOperationException("Dependency property 'ItemsSource' must not have a binding for ObservableView to work properly. " +
+                        "Bind to ObservableView instead.");
+                }
+
+                // Programmatically create the <ObservableViewProperty>.View binding
+                var observableViewBindingExpression = dataGrid.GetBindingExpression(ObservableViewProperty);
+                if (observableViewBindingExpression == null)
+                {
+                    throw new InvalidOperationException("Dependency property 'ObservableView' does not have a valid binding.");
+                }
+
+                string viewPropertyBindingName = observableViewBindingExpression.ResolvedSourcePropertyName + ".View";
+                var viewPropertyBinding = new Binding(viewPropertyBindingName);
+                dataGrid.SetBinding(ItemsControl.ItemsSourceProperty, viewPropertyBinding);
             }
         }
 
@@ -122,11 +138,10 @@ namespace ObservableView.Netfx
         }
 
         /// <summary>
-        /// This method is used to synchronize the ObservableView's sort specification
-        /// with the DataGrid's sort specification.
-        /// 
-        /// This is the case if the ObservableView refreshes its data.
-        /// (For some mysterious reasons, the DataGrid loses its sort specification in this case)
+        ///     This method is used to synchronize the ObservableView's sort specification
+        ///     with the DataGrid's sort specification.
+        ///     This is the case if the ObservableView refreshes its data.
+        ///     (For some mysterious reasons, the DataGrid loses its sort specification in this case)
         /// </summary>
         private static void SyncObservableViewSortWithDataGridSort(IObservableView observableView)
         {
@@ -141,10 +156,9 @@ namespace ObservableView.Netfx
         }
 
         /// <summary>
-        /// This method is used to synchronize the DataGrid's sort specification
-        /// with the ObservableView's sort specification.
-        /// 
-        /// This is the case if the user clicks the sort headers in the DataGrid.
+        ///     This method is used to synchronize the DataGrid's sort specification
+        ///     with the ObservableView's sort specification.
+        ///     This is the case if the user clicks the sort headers in the DataGrid.
         /// </summary>
         private static void SyncDataGridSortWithObservableViewSort(IObservableView observableView)
         {
