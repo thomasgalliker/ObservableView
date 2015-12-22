@@ -7,8 +7,7 @@
         xmlns:command="http://www.galasoft.ch/mvvmlight"
         xmlns:netfx="clr-namespace:ObservableView.Netfx;assembly=ObservableView.Netfx"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
-        Title="MainWindow" Height="541.179" Width="525"
+        Title="MainWindow" Height="480" Width="640"
         DataContext="{Binding Source={StaticResource Locator},  Path=Main}">
     <Window.Resources>
         <DataTemplate x:Key="DeleteButtonCellTemplate">
@@ -23,30 +22,46 @@
             </Button>
         </DataTemplate>
     </Window.Resources>
-    
-    <Grid>
-        <TextBox Text="{Binding MallsList.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 HorizontalAlignment="Left" 
-                 Height="23" 
-                 Margin="60,10,0,0" 
-                 TextWrapping="Wrap"
-                 VerticalAlignment="Top" 
-                 Width="447"/>
 
-        <Label Content="Search" 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"
+               Content="Search" 
                HorizontalAlignment="Left" 
-               Margin="10,6,0,0" 
                VerticalAlignment="Top"/>
-        <DataGrid ItemsSource="{Binding MallsList.View}"
+
+            <TextBox Grid.Row="0" Grid.Column="1"
+                     Text="{Binding MallsList.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     HorizontalAlignment="Left" 
+                     Height="23" 
+                     TextWrapping="Wrap"
+                     VerticalAlignment="Top" 
+                     Width="200"/>
+        </Grid>
+
+        <DataGrid Grid.Row="1" Grid.Column="0"
+                  ItemsSource="{Binding MallsList.View}"
                   netfx:ObservableViewExtensions.ObservableView="{Binding MallsList}"
                   AutoGenerateColumns="False"
-                  HorizontalAlignment="Left" 
+                  HorizontalAlignment="Stretch" 
+                  HorizontalContentAlignment="Stretch" 
                   GridLinesVisibility="Horizontal"
                   HorizontalGridLinesBrush="LightGray"
-                  Height="271" 
-                  Margin="10,38,0,0" 
-                  VerticalAlignment="Top" 
-                  Width="497">
+                  VerticalAlignment="Top">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Title}" Header="Title" CanUserSort="True" SortMemberPath="Title"/>
                 <DataGridTextColumn Binding="{Binding Subtitle}" Header="Subtitle" CanUserSort="True" SortMemberPath="Subtitle"/>
@@ -55,7 +70,11 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <GroupBox Header="Add Mall" HorizontalAlignment="Left" Margin="10,314,0,0" VerticalAlignment="Top" Width="Auto">
+        <GroupBox Grid.Row="2" Grid.Column="0"
+                  Header="Add Mall"
+                  HorizontalAlignment="Left" 
+                  VerticalAlignment="Top"
+                  Width="Auto">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
