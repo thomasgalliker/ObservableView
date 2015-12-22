@@ -7,7 +7,7 @@
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <projectUrl>https://github.com/thomasgalliker/ObservableView</projectUrl>
-    <iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/thomasgalliker/ObservableView/master/ObservableView.NuGet/packageIcon50x50.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting of collections.</summary>
     <description>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting of collections.</description>
