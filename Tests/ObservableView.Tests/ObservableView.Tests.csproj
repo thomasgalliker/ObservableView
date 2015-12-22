@@ -75,6 +75,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ExpressionExtensionsTests.cs" />
+    <Compile Include="NaturalSortComparableTests.cs" />
     <Compile Include="ObservableViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
