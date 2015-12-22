@@ -27,7 +27,7 @@ namespace ObservableViewSample.Data.ViewModel
 
             // Add sort specifications
             this.MallsList.AddOrderSpecification(x => x.Title, OrderDirection.Ascending);
-            this.MallsList.AddOrderSpecification(x => x.Subtitle);
+            this.MallsList.AddOrderSpecification(x => x.Subtitle, OrderDirection.Descending);
 
             // Add search specifications
             this.MallsList.AddSearchSpecification(x => x.Title);

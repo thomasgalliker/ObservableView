@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.WPF", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Data", "Samples\ObservableViewSample.Data\ObservableViewSample.Data.csproj", "{B49937EF-91FB-420A-8A1E-D268F6CC1E01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView.Netfx", "ObservableView.Netfx\ObservableView.Netfx.csproj", "{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -175,6 +177,16 @@ Global
 		{B49937EF-91FB-420A-8A1E-D268F6CC1E01}.Release|ARM.ActiveCfg = Release|Any CPU
 		{B49937EF-91FB-420A-8A1E-D268F6CC1E01}.Release|x64.ActiveCfg = Release|Any CPU
 		{B49937EF-91FB-420A-8A1E-D268F6CC1E01}.Release|x86.ActiveCfg = Release|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Release|ARM.ActiveCfg = Release|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Release|x64.ActiveCfg = Release|Any CPU
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

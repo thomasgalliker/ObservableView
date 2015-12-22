@@ -17,8 +17,14 @@ namespace ObservableViewSample.Data.Service
         {
             Malls = new ObservableCollection<Mall>
                           {
-                              new Mall("Abercrombie & Fitch / abercrombie kids", "Level 2 | (480) 792-9275"),
-                              new Mall("ALDO", "Level 2 | (480) 899-0803"),
+                              new Mall("Abercrombie & Fitch / abercrombie kids", "Level-a | (480) 792-9275"),
+                              new Mall("Abercrombie & Fitch / abercrombie kids", "Level-b | (480) 792-9275"),
+                              new Mall("Abercrombie & Fitch / abercrombie kids", "Level-c | (480) 792-9275"),
+                              new Mall("Abercrombie & Fitch / abercrombie adults", "Level-c | (480) 792-9275"),
+                              new Mall("Abercrombie & Fitch / abercrombie grannies", "Level-c | (480) 792-9275"),
+                              new Mall("ALDO", "Level-A | (480) 899-0803"),
+                              new Mall("ALDO", "Level-B | (480) 899-0803"),
+                              new Mall("ALDO", "Level-Z | (480) 899-0803"),
                               new Mall("All Mobile Matters Mobile Phone Repair & More", "Level 2 | (480) 228-9690"),
                               new Mall("Alterations By L", "Level 1 | (480) 786-8092"),
                               new Mall("AMERICAN EAGLE OUTFITTERS", "Level 2 | (480) 812-0090"),

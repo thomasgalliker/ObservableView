@@ -17,7 +17,7 @@ namespace ObservableView
     ///     ObservableView is a class which adds sorting, filtering, searching and grouping
     ///     on top of collections.
     /// </summary>
-    public class ObservableView<T> : INotifyPropertyChanged
+    public class ObservableView<T> : INotifyPropertyChanged, IObservableView
     {
         private static readonly object FilterHandlerEventLock = new object();
 
@@ -221,6 +221,18 @@ namespace ObservableView
                 return new ObservableCollection<T>(viewCollection);
             }
         }
+
+        public object OnSorting
+        {
+            get
+            {
+                return null;
+            }
+            set
+            {
+                
+            }
+        }
         #endregion
 
         #region Public Methods and Operators
@@ -230,7 +242,7 @@ namespace ObservableView
         /// </summary>
         /// <param name="keySelector">Lambda expression to select the ordering property.</param>
         /// <param name="orderDirection">Order direction in which the selected property shall be sorted.</param>
-        public void AddOrderSpecification(Func<T, object> keySelector, OrderDirection orderDirection = OrderDirection.Ascending)
+        public void AddOrderSpecification(Expression<Func<T, object>> keySelector, OrderDirection orderDirection = OrderDirection.Ascending)
         {
             if (keySelector == null)
             {
@@ -239,17 +251,31 @@ namespace ObservableView
 
             this.orderSpecifications.Add(new OrderSpecification<T>(keySelector, orderDirection));
 
-            this.Refresh();
+            //this.Refresh();
         }
 
-        /// <summary>
-        /// Removes all order specifications.
-        /// </summary>
+        public void AddOrderSpecification(string propertyName, OrderDirection orderDirection = OrderDirection.Ascending)
+        {
+            var parameter = Expression.Parameter(typeof(T));
+            var memberExpression = Expression.Property(parameter, propertyName);
+            var keySelector = Expression.Lambda<Func<T, object>>(memberExpression, parameter);
+
+            this.AddOrderSpecification(keySelector, orderDirection);
+        }
+
+        /// <inheritdoc />
+        public OrderDirection? GetSortSpecification(string propertyName)
+        {
+            var orderSpecification = this.orderSpecifications.SingleOrDefault(s => s.PropertyName == propertyName);
+            return orderSpecification != null ? orderSpecification.OrderDirection : (OrderDirection?)null;
+        }
+
+        /// <inheritdoc />
         public void ClearOrderSpecifications()
         {
             this.orderSpecifications.Clear();
 
-            this.Refresh();
+            //this.Refresh();
         }
 
         /// <summary>

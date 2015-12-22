@@ -42,6 +42,7 @@
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Grouping\IGroupKeyAlgorithm.cs" />
+    <Compile Include="IObservableView.cs" />
     <Compile Include="ObservableView.cs" />
     <Compile Include="OrderDirection.cs" />
     <Compile Include="OrderSpecification.cs" />
