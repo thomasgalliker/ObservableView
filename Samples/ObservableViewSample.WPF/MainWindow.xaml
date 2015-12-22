@@ -54,7 +54,6 @@
         </Grid>
 
         <DataGrid Grid.Row="1" Grid.Column="0"
-                  ItemsSource="{Binding MallsList.View}"
                   netfx:ObservableViewExtensions.ObservableView="{Binding MallsList}"
                   AutoGenerateColumns="False"
                   HorizontalAlignment="Stretch" 
