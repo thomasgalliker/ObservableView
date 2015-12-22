@@ -50,14 +50,22 @@ namespace ObservableView.Netfx
                 dataGrid.Unloaded += DataGridUnloaded;
                 dataGrid.Sorting += OnDataGridSortingChanged;
 
+                // Check if there is a binding to ItemsSource
+                var itemsSourceBindingExpression = dataGrid.GetBindingExpression(ItemsControl.ItemsSourceProperty);
+                if (itemsSourceBindingExpression != null)
+                {
+                    throw new InvalidOperationException("Dependency property 'ItemsSource' must not have a binding for ObservableView to work properly. " +
+                        "Bind to ObservableView instead.");
+                }
+
                 // Programmatically create the <ObservableViewProperty>.View binding
-                var bindingExpression = dataGrid.GetBindingExpression(ObservableViewProperty);
-                if (bindingExpression == null)
+                var observableViewBindingExpression = dataGrid.GetBindingExpression(ObservableViewProperty);
+                if (observableViewBindingExpression == null)
                 {
                     throw new InvalidOperationException("Dependency property 'ObservableView' does not have a valid binding.");
                 }
 
-                string viewPropertyBindingName = bindingExpression.ResolvedSourcePropertyName + ".View";
+                string viewPropertyBindingName = observableViewBindingExpression.ResolvedSourcePropertyName + ".View";
                 var viewPropertyBinding = new Binding(viewPropertyBindingName);
                 dataGrid.SetBinding(ItemsControl.ItemsSourceProperty, viewPropertyBinding);
             }
