@@ -12,7 +12,7 @@ You can use this library in any .Net project which is compatible to PCL (e.g. Xa
 
 ### API Usage
 #### Basic data binding in XAML with MVVM
-The usage of ObservableView is not much different from ObservableCollection: Declare and instantiate ObservableView in a ViewModel, bind it to a View and finally fill it with data.
+The usage of ObservableView is not much different from ObservableCollection: Declare and instantiate ObservableView<T> in a ViewModel, bind it to a View and finally fill it with data.
 ```
 // Excerpt from a basic ViewModel which loads data into MallList:
 public ObservableView<Mall> MallList { get; }
@@ -55,20 +55,34 @@ As you can observe in the example above, the XAML view binds to MallList.View. T
 #### Add, remove, update source collection
 If you need to add or remove items of the source collection, you can simply do so by manipulating the MallList.Source property. By doing so, it automatically refreshes all dependent properties (e.g. View).
 
-
-
 #### Search
-```
-this.MallList.AddSearchSpecification(x => x.Title);
+Two steps are necessary in order to enable the search functionality:
+- Define search specification(s) for properties of your collection item type T:
+- a) Call ```this.MallList.AddSearchSpecification(x => x.Title);``` for searchable properties
+- b) Annotate searchable properties with ```[Searchable]``` 
 
-[Searchable]
-```
+The search operation can be done either from within the ViewModel using ```ObservableView.Search(...)``` method or by binding ```ObservableView.SearchText``` in XAML to a search input textbox.
 
 #### Filter
 TODO: Document
 
 #### Sort
-TODO: Document
+There are many ways of how collections can be presented with defined sort orders. Method AddOrderSpecification can be used to set-up sort specifications for properties of type T.
+```
+this.MallsList.AddOrderSpecification(x => x.Title, OrderDirection.Ascending);
+this.MallsList.AddOrderSpecification(x => x.Subtitle, OrderDirection.Descending);
+```
+
+In the XAML, we could either bind the ItemsSource property to MallsList.View or we can use the attached dependency property ```ObservableViewExtensions.ObservableView``` to bind MallsList directly to the DataGrid. The latter approach enables you to make use of multi-column sorting using the DataGrid headers.
+```
+<DataGrid netfx:ObservableViewExtensions.ObservableView="{Binding MallsList}"
+		  AutoGenerateColumns="False">
+	<DataGrid.Columns>
+		<DataGridTextColumn Binding="{Binding Title}" Header="Title" CanUserSort="True" SortMemberPath="Title"/>
+		<DataGridTextColumn Binding="{Binding Subtitle}" Header="Subtitle" CanUserSort="True" SortMemberPath="Subtitle"/>
+	</DataGrid.Columns>
+</DataGrid>
+```
 
 #### Group
 TODO: Document
