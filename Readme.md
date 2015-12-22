@@ -13,8 +13,9 @@ You can use this library in any .Net project which is compatible to PCL (e.g. Xa
 ### API Usage
 #### Basic data binding in XAML with MVVM
 The usage of ObservableView is not much different from ObservableCollection: Declare and instantiate ObservableView<T> in a ViewModel, bind it to a View and finally fill it with data.
+
+Excerpt from a basic ViewModel which loads data into MallList:
 ```
-// Excerpt from a basic ViewModel which loads data into MallList:
 public ObservableView<Mall> MallList { get; }
 
 public MallListViewModel(IMallService mallService)
@@ -23,8 +24,9 @@ public MallListViewModel(IMallService mallService)
 	this.MallList = new ObservableView<Mall>(allMalls);
 }
 ```
+
+Excerpt from a View which binds MallList.View to a WPF ListView:
 ```
-// Excerpt from a View which binds MallList.View to a WPF ListView:
 <ListView ItemsSource="{Binding MallList.View}">
 	<ListView.View>
 		<GridView>
@@ -57,11 +59,12 @@ If you need to add or remove items of the source collection, you can simply do s
 
 #### Search
 Two steps are necessary in order to enable the search functionality:
-- Define search specification(s) for properties of your collection item type T:
+
+1) Define search specification(s) for properties of your collection item type T:
 - a) Call ```this.MallList.AddSearchSpecification(x => x.Title);``` for searchable properties
 - b) Annotate searchable properties with ```[Searchable]``` 
 
-The search operation can be done either from within the ViewModel using ```ObservableView.Search(...)``` method or by binding ```ObservableView.SearchText``` in XAML to a search input textbox.
+2) The search operation can be done either from within the ViewModel using ```ObservableView.Search(...)``` method or by binding ```ObservableView.SearchText``` in XAML to a search input textbox.
 
 #### Filter
 TODO: Document
