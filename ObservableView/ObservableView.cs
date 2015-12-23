@@ -505,8 +505,6 @@ namespace ObservableView
 
         private static IEnumerable<T> PerformOrdering(IEnumerable<T> enumerable, IEnumerable<OrderSpecification<T>> orderSpecifications)
         {
-            lock (orderSpecifications)
-            {
                 IQueryable<T> query = enumerable.AsQueryable();
 
                 OrderSpecification<T> firstSpecification = orderSpecifications.First();
@@ -533,7 +531,6 @@ namespace ObservableView
                 }
 
                 return orderedQuery.ToList();
-            }
         }
 
         #endregion
