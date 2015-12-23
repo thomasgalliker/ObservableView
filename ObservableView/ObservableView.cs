@@ -221,18 +221,6 @@ namespace ObservableView
                 return new ObservableCollection<T>(viewCollection);
             }
         }
-
-        public object OnSorting
-        {
-            get
-            {
-                return null;
-            }
-            set
-            {
-                
-            }
-        }
         #endregion
 
         #region Public Methods and Operators
