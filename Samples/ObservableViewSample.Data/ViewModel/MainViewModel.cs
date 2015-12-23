@@ -5,6 +5,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 using ObservableView;
+using ObservableView.Sorting;
 
 using ObservableViewSample.Data.Model;
 using ObservableViewSample.Data.Service;
@@ -15,6 +16,7 @@ namespace ObservableViewSample.Data.ViewModel
     {
         private RelayCommand addMallCommand;
         private RelayCommand<Mall> deleteMallCommand;
+        private RelayCommand refreshCommand;
         private string newMallTitle;
         private string newMallSubtitle;
         private int newMallNumberOf = 1;
@@ -69,6 +71,18 @@ namespace ObservableViewSample.Data.ViewModel
                              // Reset the text input
                              this.NewMallTitle = string.Empty;
                              this.NewMallSubtitle = string.Empty;
+                         }));
+            }
+        }
+
+        public RelayCommand RefreshCommand
+        {
+            get
+            {
+                return this.refreshCommand ?? (this.refreshCommand = new RelayCommand(
+                         () =>
+                         {
+                             this.MallsList.Refresh();
                          }));
             }
         }

@@ -37,6 +37,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0"
@@ -51,6 +52,14 @@
                      TextWrapping="Wrap"
                      VerticalAlignment="Top" 
                      Width="200"/>
+            
+            <Button Grid.Row="0" Grid.Column="2" Width="80" HorizontalAlignment="Right" Content="Refresh">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <command:EventToCommand Command="{Binding RefreshCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
         </Grid>
 
         <DataGrid Grid.Row="1" Grid.Column="0"
