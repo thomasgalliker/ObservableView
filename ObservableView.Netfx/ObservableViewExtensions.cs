@@ -50,25 +50,40 @@ namespace ObservableView.Netfx
                 dataGrid.Unloaded += DataGridUnloaded;
                 dataGrid.Sorting += OnDataGridSortingChanged;
 
-                // Check if there is a binding to ItemsSource
-                var itemsSourceBindingExpression = dataGrid.GetBindingExpression(ItemsControl.ItemsSourceProperty);
-                if (itemsSourceBindingExpression != null)
-                {
-                    throw new InvalidOperationException("Dependency property 'ItemsSource' must not have a binding for ObservableView to work properly. " +
-                        "Bind to ObservableView instead.");
-                }
-
-                // Programmatically create the <ObservableViewProperty>.View binding
-                var observableViewBindingExpression = dataGrid.GetBindingExpression(ObservableViewProperty);
-                if (observableViewBindingExpression == null)
-                {
-                    throw new InvalidOperationException("Dependency property 'ObservableView' does not have a valid binding.");
-                }
-
-                string viewPropertyBindingName = observableViewBindingExpression.ResolvedSourcePropertyName + ".View";
-                var viewPropertyBinding = new Binding(viewPropertyBindingName);
-                dataGrid.SetBinding(ItemsControl.ItemsSourceProperty, viewPropertyBinding);
+                CheckIfItemsSourcePropertyIsNotBound();
+                BindObservableViewToItemsSource();
             }
+        }
+
+        /// <summary>
+        /// Check if there is a binding to ItemsSource.
+        /// If you use the ObservableView dependency property, you must use ItemsSource at the same time.
+        /// </summary>
+        private static void CheckIfItemsSourcePropertyIsNotBound()
+        {
+            var itemsSourceBindingExpression = dataGrid.GetBindingExpression(ItemsControl.ItemsSourceProperty);
+            if (itemsSourceBindingExpression != null)
+            {
+                throw new InvalidOperationException("Dependency property 'ItemsSource' must not have a binding for ObservableView to work properly. " +
+                    "Bind to ObservableView instead.");
+            }
+        }
+
+        /// <summary>
+        /// Since we want to bind the ObservableView directly to the ObservableViewProperty,
+        /// we have to make sure that the ItemsSourceProperty of the DataGrid is bound programmatically to the ObservableView.View property.
+        /// </summary>
+        private static void BindObservableViewToItemsSource()
+        {
+            var observableViewBindingExpression = dataGrid.GetBindingExpression(ObservableViewProperty);
+            if (observableViewBindingExpression == null)
+            {
+                throw new InvalidOperationException("Dependency property 'ObservableView' does not have a valid binding.");
+            }
+
+            string viewPropertyBindingName = observableViewBindingExpression.ResolvedSourcePropertyName + ".View";
+            var viewPropertyBinding = new Binding(viewPropertyBindingName);
+            dataGrid.SetBinding(ItemsControl.ItemsSourceProperty, viewPropertyBinding);
         }
 
         private static void DataGridUnloaded(object sender, RoutedEventArgs e)
