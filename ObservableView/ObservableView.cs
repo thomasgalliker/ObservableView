@@ -232,14 +232,20 @@ namespace ObservableView
         /// <param name="orderDirection">Order direction in which the selected property shall be sorted.</param>
         public void AddOrderSpecification(Expression<Func<T, object>> keySelector, OrderDirection orderDirection = OrderDirection.Ascending)
         {
-            if (keySelector == null)
-            {
-                throw new ArgumentNullException("keySelector");
-            }
+            this.AddOrderSpecificationInternal(keySelector, orderDirection);
+            this.Refresh();
+        }
 
-            this.orderSpecifications.Add(new OrderSpecification<T>(keySelector, orderDirection));
+        /// <inheritdoc />
+        void IObservableView.AddOrderSpecification(string propertyName, OrderDirection orderDirection = OrderDirection.Ascending)
+        {
+            this.AddOrderSpecification(propertyName, orderDirection);
+        }
 
-            //this.Refresh();
+        /// <inheritdoc />
+        void IObservableView.RemoveOrderSpecification(string propertyName)
+        {
+            this.orderSpecifications.RemoveAll(x => x.PropertyName == propertyName);
         }
 
         public void AddOrderSpecification(string propertyName, OrderDirection orderDirection = OrderDirection.Ascending)
@@ -248,14 +254,38 @@ namespace ObservableView
             var memberExpression = Expression.Property(parameter, propertyName);
             var keySelector = Expression.Lambda<Func<T, object>>(memberExpression, parameter);
 
-            this.AddOrderSpecification(keySelector, orderDirection);
+            this.AddOrderSpecificationInternal(keySelector, orderDirection);
+        }
+
+        private void AddOrderSpecificationInternal(Expression<Func<T, object>> keySelector, OrderDirection orderDirection)
+        {
+            if (keySelector == null)
+            {
+                throw new ArgumentNullException("keySelector");
+            }
+            var newOrderSpecification = new OrderSpecification<T>(keySelector, orderDirection);
+            var index = this.orderSpecifications.FindIndex(x => x.PropertyName == newOrderSpecification.PropertyName);
+            if (index > -1)
+            {
+                this.orderSpecifications[index] = newOrderSpecification;
+            }
+            else
+            {
+                this.orderSpecifications.Add(newOrderSpecification);
+            }
         }
 
         /// <inheritdoc />
-        public OrderDirection? GetSortSpecification(string propertyName)
+        OrderDirection? IObservableView.GetSortSpecification(string propertyName)
         {
             var orderSpecification = this.orderSpecifications.SingleOrDefault(s => s.PropertyName == propertyName);
             return orderSpecification != null ? orderSpecification.OrderDirection : (OrderDirection?)null;
+        }
+
+        /// <inheritdoc />
+        void IObservableView.ClearOrderSpecifications()
+        {
+            this.orderSpecifications.Clear();
         }
 
         /// <inheritdoc />
@@ -263,7 +293,7 @@ namespace ObservableView
         {
             this.orderSpecifications.Clear();
 
-            //this.Refresh();
+            this.Refresh();
         }
 
         /// <summary>
@@ -397,7 +427,7 @@ namespace ObservableView
 
         private IEnumerable<PropertyInfo> GetSearchableAttributes()
         {
-            return typeof(T).GetRuntimeProperties().Where(propertyInfo => 
+            return typeof(T).GetRuntimeProperties().Where(propertyInfo =>
                 propertyInfo.CustomAttributes.Any(attr =>
                     attr.AttributeType == typeof(SearchableAttribute))).ToList();
         }
@@ -425,7 +455,7 @@ namespace ObservableView
             {
                 return viewCollection.ToObservableCollection();
             }
-            
+
             string[] searchStrings = pattern.Trim().Split(new[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
 
             // TODO: Define more characters which can split the search termin into atomic words.
@@ -493,32 +523,32 @@ namespace ObservableView
 
         private static IEnumerable<T> PerformOrdering(IEnumerable<T> enumerable, IEnumerable<OrderSpecification<T>> orderSpecifications)
         {
-                IQueryable<T> query = enumerable.AsQueryable();
+            IQueryable<T> query = enumerable.AsQueryable();
 
-                OrderSpecification<T> firstSpecification = orderSpecifications.First();
-                IOrderedEnumerable<T> orderedQuery;
-                if (firstSpecification.OrderDirection == OrderDirection.Ascending)
+            OrderSpecification<T> firstSpecification = orderSpecifications.First();
+            IOrderedEnumerable<T> orderedQuery;
+            if (firstSpecification.OrderDirection == OrderDirection.Ascending)
+            {
+                orderedQuery = query.OrderBy(firstSpecification.KeySelector);
+            }
+            else
+            {
+                orderedQuery = query.OrderByDescending(firstSpecification.KeySelector);
+            }
+
+            foreach (var orderSpecification in orderSpecifications.Skip(1))
+            {
+                if (orderSpecification.OrderDirection == OrderDirection.Ascending)
                 {
-                    orderedQuery = query.OrderBy(firstSpecification.KeySelector);
+                    orderedQuery = orderedQuery.ThenBy(orderSpecification.KeySelector);
                 }
                 else
                 {
-                    orderedQuery = query.OrderByDescending(firstSpecification.KeySelector);
+                    orderedQuery = orderedQuery.ThenByDescending(orderSpecification.KeySelector);
                 }
+            }
 
-                foreach (var orderSpecification in orderSpecifications.Skip(1))
-                {
-                    if (orderSpecification.OrderDirection == OrderDirection.Ascending)
-                    {
-                        orderedQuery = orderedQuery.ThenBy(orderSpecification.KeySelector);
-                    }
-                    else
-                    {
-                        orderedQuery = orderedQuery.ThenByDescending(orderSpecification.KeySelector);
-                    }
-                }
-
-                return orderedQuery.ToList();
+            return orderedQuery.ToList();
         }
 
         #endregion

@@ -1,6 +1,8 @@
 ﻿using ObservableView.Netfx.Extensions;
 using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -40,7 +42,6 @@ namespace ObservableView.Netfx
             {
                 dataGrid.Loaded -= DataGridLoaded;
                 dataGrid.Unloaded -= DataGridUnloaded;
-                dataGrid.Sorting -= OnDataGridSortingChanged;
             }
 
             var newObservableView = e.NewValue as IObservableView;
@@ -48,10 +49,70 @@ namespace ObservableView.Netfx
             {
                 dataGrid.Loaded += DataGridLoaded;
                 dataGrid.Unloaded += DataGridUnloaded;
-                dataGrid.Sorting += OnDataGridSortingChanged;
 
                 CheckIfItemsSourcePropertyIsNotBound();
                 BindObservableViewToItemsSource();
+            }
+        }
+
+        static void SortDescriptionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            Console.WriteLine("SortDescriptionCollectionChanged: Action={0}", e.Action);
+
+            if (dataGrid == null)
+            {
+                return;
+            }
+
+            var observableView = GetObservableView(dataGrid) as IObservableView;
+            if (observableView == null)
+            {
+                return;
+            }
+
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                // clear all columns sort directions
+                foreach (var column in dataGrid.Columns)
+                {
+                    column.SortDirection = null;
+                }
+            }
+         
+            if (e.NewItems != null)
+            {
+                observableView.ClearOrderSpecifications();
+                var allSortDescriptions = (SortDescriptionCollection)sender;
+
+                // set columns sort directions
+                var sortDescriptions = allSortDescriptions.Union(e.NewItems.Cast<SortDescription>()).ToList();
+                foreach (SortDescription sortDescription in sortDescriptions) //TODO GATH NewItems only contains NEW ITEMS; We should also consider existing sort orders
+                {
+
+                    var orderDirection = sortDescription.Direction == ListSortDirection.Ascending ? OrderDirection.Ascending : OrderDirection.Descending;
+                    observableView.AddOrderSpecification(sortDescription.PropertyName, orderDirection);
+
+                    SetSortDirection(sortDescription.PropertyName, sortDescription.Direction);
+                }
+            }
+
+            if (e.OldItems != null)
+            {
+                // reset columns sort directions
+                foreach (SortDescription descr in e.OldItems)
+                {
+                    observableView.RemoveOrderSpecification(descr.PropertyName);
+                    SetSortDirection(descr.PropertyName, null);
+                }
+            }
+        }
+
+        private static void SetSortDirection(string sortMemberPath, ListSortDirection? direction)
+        {
+            var column = dataGrid.Columns.FirstOrDefault(c => c.SortMemberPath == sortMemberPath);
+            if (column != null)
+            {
+                column.SortDirection = direction;
             }
         }
 
@@ -93,6 +154,12 @@ namespace ObservableView.Netfx
                 return;
             }
 
+            var notifyCollectionChanged = dataGrid.Items.SortDescriptions as INotifyCollectionChanged;
+            if (notifyCollectionChanged != null)
+            {
+                notifyCollectionChanged.CollectionChanged -= SortDescriptionCollectionChanged;
+            }
+
             var observableView = GetObservableView(dataGrid) as IObservableView;
             if (observableView == null)
             {
@@ -117,7 +184,15 @@ namespace ObservableView.Netfx
 
             observableView.PropertyChanged += ObservableViewOnPropertyChanged;
 
-            SyncObservableViewSortWithDataGridSort(observableView);
+            // initial sync
+            SyncObservableViewSortWithDataGridSort(observableView, isInitialSync: true);
+
+            // Subscribe column sort changed
+            var notifyCollectionChanged = dataGrid.Items.SortDescriptions as INotifyCollectionChanged;
+            if (notifyCollectionChanged != null)
+            {
+                notifyCollectionChanged.CollectionChanged += SortDescriptionCollectionChanged;
+            }
         }
 
         private static void ObservableViewOnPropertyChanged(object sender, PropertyChangedEventArgs args)
@@ -134,55 +209,31 @@ namespace ObservableView.Netfx
             }
         }
 
-        private static void OnDataGridSortingChanged(object sender, DataGridSortingEventArgs e)
-        {
-            if (dataGrid == null)
-            {
-                return;
-            }
-
-            var observableView = GetObservableView(dataGrid) as IObservableView;
-            if (observableView == null)
-            {
-                return;
-            }
-
-            observableView.ClearOrderSpecifications();
-
-            SyncDataGridSortWithObservableViewSort(observableView);
-        }
-
         /// <summary>
         ///     This method is used to synchronize the ObservableView's sort specification
         ///     with the DataGrid's sort specification.
         ///     This is the case if the ObservableView refreshes its data.
         ///     (For some mysterious reasons, the DataGrid loses its sort specification in this case)
         /// </summary>
-        private static void SyncObservableViewSortWithDataGridSort(IObservableView observableView)
+        private static void SyncObservableViewSortWithDataGridSort(IObservableView observableView, bool isInitialSync = false)
         {
+            Console.WriteLine("Sync ObservableView => DataGrid");
+
+            if (isInitialSync)
+            {
+                dataGrid.Items.SortDescriptions.Clear();
+            }
+
             foreach (var dataGridColumn in dataGrid.Columns)
             {
                 var listSortDirection = observableView.GetSortSpecification(dataGridColumn.SortMemberPath).ToSortDirection();
                 if (listSortDirection != null)
                 {
                     dataGridColumn.SortDirection = listSortDirection;
-                }
-            }
-        }
-
-        /// <summary>
-        ///     This method is used to synchronize the DataGrid's sort specification
-        ///     with the ObservableView's sort specification.
-        ///     This is the case if the user clicks the sort headers in the DataGrid.
-        /// </summary>
-        private static void SyncDataGridSortWithObservableViewSort(IObservableView observableView)
-        {
-            foreach (var dataGridColumn in dataGrid.Columns)
-            {
-                var orderDirection = dataGridColumn.SortDirection.ToSortDirection();
-                if (orderDirection != null)
-                {
-                    observableView.AddOrderSpecification(dataGridColumn.SortMemberPath, orderDirection.Value);
+                    if (isInitialSync)
+                    {
+                        dataGrid.Items.SortDescriptions.Add(new SortDescription(dataGridColumn.SortMemberPath, listSortDirection.Value));
+                    }
                 }
             }
         }

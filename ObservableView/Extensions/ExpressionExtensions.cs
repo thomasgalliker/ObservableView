@@ -20,7 +20,10 @@ namespace ObservableView.Extensions
 
         public static MemberExpression GetMemberExpression(this LambdaExpression lambdaExpression)
         {
-            var memberExpression = lambdaExpression.Body as MemberExpression;
+            var member = lambdaExpression.Body as MemberExpression;
+            var unary = lambdaExpression.Body as UnaryExpression;
+            var memberExpression = member ?? (unary != null ? unary.Operand as MemberExpression : null);
+
             if (memberExpression == null)
             {
                 throw new ArgumentException("'lambdaExpression' should be a member expression");

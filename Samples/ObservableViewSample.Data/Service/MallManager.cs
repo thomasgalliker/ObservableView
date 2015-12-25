@@ -1,15 +1,47 @@
-﻿using System.Collections.ObjectModel;
-
-using ObservableViewSample.Data.Model;
+﻿using ObservableViewSample.Data.Model;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace ObservableViewSample.Data.Service
 {
     public class MallManager : IMallManager
     {
         private static readonly ObservableCollection<Mall> Malls;
+        private static readonly Random random = new Random();
+
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
 
         public ObservableCollection<Mall> GetMalls()
         {
+            var ablphabeticList = new ObservableCollection<Mall>
+                       {
+
+                           new Mall("AAA", "AAA"),
+                           new Mall("AAA", "BBB"),
+                           new Mall("AAA", "CCC"),
+
+                           new Mall("BBB", "AAA"),
+                           new Mall("BBB", "BBB"),
+                           new Mall("BBB", "CCC"),
+
+                           new Mall("CCC", "AAA"),
+                           new Mall("CCC", "BBB"),
+                           new Mall("CCC", "CCC"),
+                       };
+
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    x.Add(new Mall(RandomString(10), RandomString(10)));
+            //}
+
+            //return ablphabeticList;
             return Malls;
         }
 
