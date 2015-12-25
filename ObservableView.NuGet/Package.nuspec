@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ObservableView</id>
-    <version>1.0.2-pre3</version>
+    <version>1.0.2-pre4</version>
     <title>ObservableView</title>
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
@@ -16,8 +16,8 @@
       windows phone winphone wp8 wpa81 win81 windowsphone android xamarin.forms xamarin.ios ios monoandroid monodroid monotouch mvvmcross mvvmlight
     </tags>
     <releaseNotes>
-      This is the initial release of ObservableView. Please report problems here: https://github.com/thomasgalliker/ObservableView.
-      Contributions on github are welcome!
+      - Bug fix: Sorting in WPF DataGrid headers not reflected correctly
+      - Bug fix: Sorting not updated on View property refresh
     </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <language>en-US</language>
