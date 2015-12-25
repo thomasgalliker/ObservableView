@@ -1,5 +1,5 @@
 # ObservableView
-<img src="https://raw.githubusercontent.com/thomasgalliker/ObservableView/master/logo_gradient.png" alt="ObservableView" align="right" height="100">
+<img src="https://raw.githubusercontent.com/thomasgalliker/ObservableView/master/logo_gradient.png" alt="ObservableView" align="right" height="140">
 ObservableView is a simple wrapper for collections which provides an easy-to-use API for searching, filtering, sorting and grouping of collections. This project enhances the well-known ObservableCollection of the .Net Framework with addition, commonly-used features. The goal is to have a Swiss army knife of a collection utility which provides an easy-to-use but very powerful API while preserving maximum platform compatibility.
 
 ### Download and Install ObservableView
@@ -86,6 +86,8 @@ In the XAML, we could either bind the ItemsSource property to MallsList.View or 
 	</DataGrid.Columns>
 </DataGrid>
 ```
+
+TODO: Describe how to use IComparer with custom column sort algorithms.
 
 #### Group
 TODO: Document
