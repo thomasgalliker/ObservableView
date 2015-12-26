@@ -1,5 +1,7 @@
 using System.ComponentModel;
 
+using ObservableView.Sorting;
+
 namespace ObservableView
 {
     internal interface IObservableView

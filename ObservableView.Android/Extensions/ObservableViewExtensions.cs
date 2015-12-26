@@ -1,7 +1,7 @@
+using Android.Views;
+using ObservableView.Grouping;
 using System;
 using System.Collections.Generic;
-
-using Android.Views;
 
 namespace ObservableView.Extensions
 {

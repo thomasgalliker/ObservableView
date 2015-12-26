@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
+using ObservableView.Sorting;
+
 namespace ObservableView.Netfx
 {
     public static class ObservableViewExtensions

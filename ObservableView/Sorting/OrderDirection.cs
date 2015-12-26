@@ -1,4 +1,4 @@
-namespace ObservableView
+namespace ObservableView.Sorting
 {
     public enum OrderDirection
     {

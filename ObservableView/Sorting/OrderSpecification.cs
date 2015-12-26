@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 using ObservableView.Extensions;
 
-namespace ObservableView
+namespace ObservableView.Sorting
 {
     internal class OrderSpecification<T> // TODO GATH: Could be a struct?
     {

@@ -1,11 +1,11 @@
+using Android.Views;
+using Android.Widget;
+using ObservableView.Grouping;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-
-using Android.Views;
-using Android.Widget;
 
 namespace ObservableView
 {

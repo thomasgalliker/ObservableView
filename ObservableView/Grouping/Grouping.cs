@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace ObservableView
+namespace ObservableView.Grouping
 {
     [DebuggerDisplay("Key = {Key}, Count = {this.Items.Count}")]
     public class Grouping<TV> : ObservableCollection<TV>

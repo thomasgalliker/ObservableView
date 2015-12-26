@@ -1,9 +1,13 @@
 ﻿using FluentAssertions;
+using ObservableView.Searching;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+
+using ObservableView.Sorting;
+
 using Xunit;
 
 namespace ObservableView.Tests

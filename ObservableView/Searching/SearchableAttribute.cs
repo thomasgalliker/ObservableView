@@ -1,6 +1,6 @@
 using System;
 
-namespace ObservableView
+namespace ObservableView.Searching
 {
     /// <summary>
     ///     Class SearchableAttribute.

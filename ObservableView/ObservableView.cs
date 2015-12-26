@@ -1,5 +1,7 @@
 ﻿using ObservableView.Extensions;
+using ObservableView.Filtering;
 using ObservableView.Grouping;
+using ObservableView.Searching;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,10 +11,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using ObservableView.Sorting;
+
 namespace ObservableView
 {
-    public delegate void FilterEventHandler<T>(object sender, FilterEventArgs<T> e);
-
     /// <summary>
     ///     ObservableView is a class which adds sorting, filtering, searching and grouping
     ///     on top of collections.
