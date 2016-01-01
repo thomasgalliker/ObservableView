@@ -10,7 +10,7 @@ namespace ObservableView.Sorting
         public OrderSpecification(Expression<Func<T, object>> keySelector, OrderDirection orderDirection)
         {
             this.KeySelector = keySelector.Compile();
-            this.PropertyName = keySelector.GetPropertyInfo().Name;
+            this.PropertyName = ReflectionHelper<T>.GetProperty(keySelector).Name;
             this.OrderDirection = orderDirection;
         }
 

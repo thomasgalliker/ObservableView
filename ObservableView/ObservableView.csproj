@@ -35,8 +35,25 @@
     <DocumentationFile>bin\Release\ObservableView.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\OperationExtensions.cs" />
+    <Compile Include="Searching\Operands\VariableOperand.cs" />
+    <Compile Include="Searching\Operands\ConstantOperand.cs" />
+    <Compile Include="Searching\ExpressionBuilder.cs" />
+    <Compile Include="Searching\Operators\EqualsOperator.cs" />
+    <Compile Include="Searching\Operators\AndOperator.cs" />
+    <Compile Include="Searching\Operations\BinaryOperation.cs" />
+    <Compile Include="Searching\Operators\BinaryOperator.cs" />
+    <Compile Include="Searching\Operators\ContainsOperator.cs" />
     <Compile Include="Filtering\FilterEventArgs.cs" />
     <Compile Include="Filtering\FilterEventHandler.cs" />
+    <Compile Include="Searching\Operations\GroupOperation.cs" />
+    <Compile Include="Searching\Operators\GroupOperator.cs" />
+    <Compile Include="Searching\IExpressionBuilder.cs" />
+    <Compile Include="Searching\Operands\IOperand.cs" />
+    <Compile Include="Searching\Operands\Operation.cs" />
+    <Compile Include="Searching\Operators\IOperator.cs" />
+    <Compile Include="Searching\Operators\OrOperator.cs" />
+    <Compile Include="Searching\Operands\PropertyOperand.cs" />
     <Compile Include="Grouping\Grouping.cs" />
     <Compile Include="Grouping\AlphaGroupKeyAlgorithm.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
@@ -44,12 +61,19 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Grouping\IGroupKeyAlgorithm.cs" />
     <Compile Include="IObservableView.cs" />
+    <Compile Include="ObservableObject.cs" />
     <Compile Include="ObservableView.cs" />
+    <Compile Include="Extensions\ReflectionHelper.cs" />
+    <Compile Include="Searching\ISearchSpecification.cs" />
+    <Compile Include="Searching\SearchSpecification.cs" />
     <Compile Include="Sorting\OrderDirection.cs" />
     <Compile Include="Sorting\OrderSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searching\SearchableAttribute.cs" />
     <Compile Include="Sorting\NaturalSortComparable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Expressions\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

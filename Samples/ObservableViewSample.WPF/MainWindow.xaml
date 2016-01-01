@@ -6,6 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:command="http://www.galasoft.ch/mvvmlight"
         xmlns:netfx="clr-namespace:ObservableView.Netfx;assembly=ObservableView.Netfx"
+        xmlns:wpf="clr-namespace:ObservableViewSample.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="480" Width="640"
         DataContext="{Binding Source={StaticResource Locator},  Path=Main}">
@@ -52,7 +53,7 @@
                      TextWrapping="Wrap"
                      VerticalAlignment="Top" 
                      Width="200"/>
-            
+
             <Button Grid.Row="0" Grid.Column="2" Width="80" HorizontalAlignment="Right" Content="Refresh">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
@@ -60,6 +61,17 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
+
+            <!--<Label Grid.Row="0" Grid.Column="0"
+               Content="Filter control" 
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Top"/>
+
+            <wpf:FilterControl Grid.Row="0" Grid.Column="1"
+                               HorizontalAlignment="Left" 
+                               VerticalAlignment="Top" 
+                               VerticalContentAlignment="Stretch"
+                               Width="400"/>-->
         </Grid>
 
         <DataGrid Grid.Row="1" Grid.Column="0"

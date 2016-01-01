@@ -11,6 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using ObservableView.Searching.Operators;
 using ObservableView.Sorting;
 
 namespace ObservableView
@@ -19,12 +20,11 @@ namespace ObservableView
     ///     ObservableView is a class which adds sorting, filtering, searching and grouping
     ///     on top of collections.
     /// </summary>
-    public class ObservableView<T> : INotifyPropertyChanged, IObservableView
+    public class ObservableView<T> : ObservableObject, IObservableView//, ISearchSpecification<T>
     {
         private static readonly object FilterHandlerEventLock = new object();
 
         private readonly List<OrderSpecification<T>> orderSpecifications;
-        private readonly HashSet<PropertyInfo> searchSpecifications;
         private ObservableCollection<T> sourceCollection;
 
         private string searchText = string.Empty;
@@ -36,7 +36,9 @@ namespace ObservableView
         {
             this.Source = collection;
             this.orderSpecifications = new List<OrderSpecification<T>>();
-            this.searchSpecifications = new HashSet<PropertyInfo>(this.GetSearchableAttributes());
+            this.SearchSpecification = new SearchSpecification<T>();
+            this.SearchSpecification.SearchSpecificationAdded += this.OnSearchSpecificationChanged;
+            this.SearchSpecification.SearchSpecificationsCleared += this.OnSearchSpecificationsCleared;
             this.GroupKeyAlogrithm = new AlphaGroupKeyAlgorithm();
         }
 
@@ -50,11 +52,6 @@ namespace ObservableView
         {
         }
 
-        #region Public Events
-
-        /// <summary>
-        ///     The filter handler.
-        /// </summary>
         public event FilterEventHandler<T> FilterHandler
         {
             add
@@ -75,14 +72,6 @@ namespace ObservableView
             }
         }
 
-        /// <summary>
-        ///     The property changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
-
-        #region Public Properties
         public Func<T, string> GroupKey
         {
             get
@@ -204,7 +193,7 @@ namespace ObservableView
                 {
                     if (!string.IsNullOrEmpty(this.SearchText))
                     {
-                        viewCollection = this.Search(viewCollection, this.SearchText);
+                        viewCollection = this.PerformSearch(viewCollection, this.SearchText);
                     }
 
                     if (this.filterHandler != null)
@@ -223,9 +212,6 @@ namespace ObservableView
                 return new ObservableCollection<T>(viewCollection);
             }
         }
-        #endregion
-
-        #region Public Methods and Operators
 
         /// <summary>
         /// Adds a new order specification for a certain property of given type T.
@@ -308,73 +294,37 @@ namespace ObservableView
             this.OnPropertyChanged(() => this.Groups);
         }
 
-        #endregion
+        ////private Expression AddExpression(ParameterExpression parameterExpression, string propertyName, string value)
+        ////{
+        ////    Expression returnExpression = null;
+        ////    Expression rightExpression = Expression.Constant(value.ToLower());
 
-        #region Methods
+        ////    var propertyInfo = typeof(T).GetRuntimeProperty(propertyName);
+        ////    if (propertyInfo != null)
+        ////    {
+        ////        Expression left = Expression.Property(parameterExpression, propertyInfo);
+        ////        if (left.Type == typeof(string))
+        ////        {
+        ////            // If the given property is of type string, we want to compare them in lower letters.
+        ////            Expression toLowerExpression = left.ToLower();
+        ////            Expression removeDiacriticsExpression = Expression.Call(null, typeof(StringExtensions).GetRuntimeMethod("RemoveDiacritics", new[] { typeof(string) }), toLowerExpression);
+        ////            Expression containsExpression = removeDiacriticsExpression.Contains(rightExpression);
+        ////            returnExpression = Expression.OrElse(containsExpression, toLowerExpression.Contains(rightExpression)); // There are two comparisons done: One with diacritics and one without.
+        ////        }
+        ////        else if (left.Type == typeof(int))
+        ////        {
+        ////            // If the given property is of type integer, we want to convert it to string first.
+        ////            Expression leftToLower = Expression.Call(left, typeof(int).GetRuntimeMethod("ToString", new Type[] { })); // TODO: use ToLower extension method
+        ////            returnExpression = leftToLower.Contains(rightExpression);
+        ////        }
+        ////        else if (left.Type.GetTypeInfo().IsEnum)
+        ////        {
+        ////            // TODO: Handle enum localized strings
+        ////        }
+        ////    }
 
-        /// <summary>
-        ///     Called when [property changed].
-        /// </summary>
-        /// <typeparam name="TX">The type of the tx.Generic type T.Generic type T.</typeparam>
-        /// <param name="propertyExpression">The property expression.</param>
-        /// <exception cref="ArgumentException">
-        ///     'propertyExpression' should be a member expression
-        ///     or
-        ///     'propertyExpression' body should be a constant expression.
-        /// </exception>
-        protected virtual void OnPropertyChanged<TX>(Expression<Func<TX>> propertyExpression)
-        {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                var body = propertyExpression.Body as MemberExpression;
-                if (body == null)
-                {
-                    throw new ArgumentException("'propertyExpression' should be a member expression");
-                }
-
-                var expression = body.Expression as ConstantExpression;
-                if (expression == null)
-                {
-                    throw new ArgumentException("'propertyExpression' body should be a constant expression");
-                }
-
-                var e = new PropertyChangedEventArgs(body.Member.Name);
-                handler(this, e);
-            }
-        }
-
-        private Expression AddExpression(ParameterExpression parameterExpression, string propertyName, string value)
-        {
-            Expression returnExpression = null;
-            Expression rightExpression = Expression.Constant(value.ToLower());
-
-            var propertyInfo = typeof(T).GetRuntimeProperty(propertyName);
-            if (propertyInfo != null)
-            {
-                Expression left = Expression.Property(parameterExpression, propertyInfo);
-                if (left.Type == typeof(string))
-                {
-                    // If the given property is of type string, we want to compare them in lower letters.
-                    Expression toLowerExpression = left.ToLower();
-                    Expression removeDiacriticsExpression = Expression.Call(null, typeof(StringExtensions).GetRuntimeMethod("RemoveDiacritics", new[] { typeof(string) }), toLowerExpression);
-                    Expression containsExpression = removeDiacriticsExpression.Contains(rightExpression);
-                    returnExpression = Expression.OrElse(containsExpression, toLowerExpression.Contains(rightExpression)); // There are two comparisons done: One with diacritics and one without.
-                }
-                else if (left.Type == typeof(int))
-                {
-                    // If the given property is of type integer, we want to convert it to string first.
-                    Expression leftToLower = Expression.Call(left, typeof(int).GetRuntimeMethod("ToString", new Type[] { })); // TODO: use ToLower extension method
-                    returnExpression = leftToLower.Contains(rightExpression);
-                }
-                else if (left.Type.GetTypeInfo().IsEnum)
-                {
-                    // TODO: Handle enum localized strings
-                }
-            }
-
-            return returnExpression;
-        }
+        ////    return returnExpression;
+        ////}
 
         ////private Expression CreateToLowerContainsExpression(Expression leftExpression, Expression rightExpression)
         ////{
@@ -399,32 +349,29 @@ namespace ObservableView
             return filteredCollection;
         }
 
-        public void AddSearchSpecification<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        public ISearchSpecification<T> SearchSpecification { get; private set; }
+
+        private void OnSearchSpecificationChanged(object sender, EventArgs e)
         {
-            if (propertyExpression == null)
-            {
-                throw new ArgumentNullException("propertyExpression");
-            }
-
-            var propertyInfo = propertyExpression.GetPropertyInfo();
-            var isAdded = this.searchSpecifications.Add(propertyInfo);
-            if (isAdded == false)
-            {
-                throw new InvalidOperationException(string.Format("Could not add property {0}", propertyInfo.Name));
-            }
-
             this.Refresh();
         }
 
-        /// <summary>
-        /// Removes all search specifications and resets <code>SearchText</code> to <code>string.Empty</code>.
-        /// </summary>
-        public void ClearSearchSpecifications()
+        [Obsolete("AddSearchSpecification has been replaced with SearchSpecification property. Call SearchSpecification.Add(...) to add new search specifications.")]
+        public void AddSearchSpecification<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
+        {
+            throw new NotSupportedException("AddSearchSpecification has been replaced with SearchSpecification property.Call SearchSpecification.Add(...) to add new search specifications.");
+        }
+
+        private void OnSearchSpecificationsCleared(object sender, EventArgs e)
         {
             this.SearchText = string.Empty;
-            this.searchSpecifications.Clear();
-
             this.Refresh();
+        }
+
+        [Obsolete("ClearSearchSpecifications has been replaced with SearchSpecification property. Call SearchSpecification.Clear() to remove all specifications.")]
+        public void ClearSearchSpecifications()
+        {
+            throw new NotSupportedException("ClearSearchSpecifications has been replaced with SearchSpecification property. Call SearchSpecification.Clear() to remove all specifications.");
         }
 
         private IEnumerable<PropertyInfo> GetSearchableAttributes()
@@ -449,7 +396,7 @@ namespace ObservableView
             this.Search(string.Empty);
         }
 
-        private ObservableCollection<T> Search(IEnumerable<T> viewCollection, string pattern)
+        private ObservableCollection<T> PerformSearch(IEnumerable<T> viewCollection, string pattern)
         {
             var results = new ObservableCollection<T>();
 
@@ -466,46 +413,20 @@ namespace ObservableView
                 return results;
             }
 
-            if (!this.searchSpecifications.Any())
+            if (!this.SearchSpecification.Any())
             {
                 throw new InvalidOperationException(
-                    string.Format("Please add at least one search specification either by calling AddSearchSpecification"
-                                  + " or by defining [Searchable] annotation in your type {0} to mark properties as searchable.",
+                    string.Format("Please add at least one search specification either by calling SearchSpecification.Add"
+                                  + " or by defining [Searchable] annotations on properties in type {0} to mark them as searchable.",
                                   typeof(T).Name));
             }
+   
+            this.SearchSpecification.ReplaceSearchTextVariables(pattern); // TODO: Reimplement: How are searchStrings handled?
 
-            Expression baseExpression = null;
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(T), "x");
-
-            foreach (string searchString in searchStrings)
-            {
-                Expression argumentBaseExpression = null;
-                foreach (PropertyInfo propertyInfo in this.searchSpecifications)
-                {
-                    Expression nextExpression = this.AddExpression(parameterExpression, propertyInfo.Name, searchString);
-                    if (nextExpression != null)
-                    {
-                        if (argumentBaseExpression == null)
-                        {
-                            argumentBaseExpression = nextExpression;
-                        }
-                        else
-                        {
-                            argumentBaseExpression = Expression.OrElse(argumentBaseExpression, nextExpression);
-                        }
-                    }
-                }
-
-                if (baseExpression == null)
-                {
-                    baseExpression = argumentBaseExpression;
-                }
-                else
-                {
-                    baseExpression = Expression.AndAlso(baseExpression, argumentBaseExpression);
-                }
-            }
-
+            var parameterExpression = Expression.Parameter(typeof(T), "x");
+            var expressionBuilder = new ExpressionBuilder(parameterExpression);
+            var baseOperation = this.SearchSpecification.BaseOperation;
+            var baseExpression = expressionBuilder.Build(baseOperation);
             if (baseExpression == null)
             {
                 return results;
@@ -552,7 +473,5 @@ namespace ObservableView
 
             return orderedQuery.ToList();
         }
-
-        #endregion
     }
 }

@@ -5,6 +5,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 using ObservableView;
+using ObservableView.Searching.Operators;
 using ObservableView.Sorting;
 
 using ObservableViewSample.Data.Model;
@@ -32,8 +33,8 @@ namespace ObservableViewSample.Data.ViewModel
             this.MallsList.AddOrderSpecification(x => x.Subtitle, OrderDirection.Descending);
 
             // Add search specifications
-            this.MallsList.AddSearchSpecification(x => x.Title);
-            this.MallsList.AddSearchSpecification(x => x.Subtitle);
+            this.MallsList.SearchSpecification.Add(x => x.Title, BinaryOperator.Contains);
+            this.MallsList.SearchSpecification.Add(x => x.Subtitle, BinaryOperator.Contains);
         }
 
         public ObservableView<Mall> MallsList { get; private set; }
