@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 using FluentAssertions;
 
-using ObservableView.Tests.TestData;
-using ObservableView;
 using ObservableView.Extensions;
-using ObservableView.Filtering;
 using ObservableView.Searching;
 using ObservableView.Searching.Operands;
-using ObservableView.Searching.Operations;
 using ObservableView.Searching.Operators;
+using ObservableView.Tests.TestData;
 
 using Xunit;
 
-namespace ObservableView.Tests
+namespace ObservableView.Tests.Searching
 {
     public class SearchSpecificationTests
     {

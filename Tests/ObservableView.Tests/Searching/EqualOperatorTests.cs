@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 using FluentAssertions;
 
-using ObservableView.Tests.TestData;
-using ObservableView;
-using ObservableView.Filtering;
 using ObservableView.Searching;
 using ObservableView.Searching.Operators;
+using ObservableView.Tests.TestData;
 
 using Xunit;
 
-namespace ObservableView.Tests
+namespace ObservableView.Tests.Searching
 {
     public class EqualOperatorTests
     {
@@ -27,7 +20,7 @@ namespace ObservableView.Tests
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
 
             ISearchSpecification<Car> searchSpecification = new SearchSpecification<Car>();
-            searchSpecification.Add(car => car.Year, BinaryOperator.Equals);
+            searchSpecification.Add(car => car.Year, BinaryOperator.Equal);
 
             // Act
             searchSpecification.ReplaceSearchTextVariables("2000");
@@ -47,7 +40,7 @@ namespace ObservableView.Tests
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
 
             ISearchSpecification<Car> searchSpecification = new SearchSpecification<Car>();
-            searchSpecification.Add(car => car.Year, BinaryOperator.Equals);
+            searchSpecification.Add(car => car.Year, BinaryOperator.Equal);
 
             // Act
             searchSpecification.ReplaceSearchTextVariables((object)null);

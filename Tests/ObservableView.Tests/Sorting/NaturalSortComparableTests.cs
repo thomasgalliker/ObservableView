@@ -8,7 +8,7 @@ using ObservableView.Sorting;
 
 using Xunit;
 
-namespace ObservableView.Tests
+namespace ObservableView.Tests.Sorting
 {
     public class NaturalSortComparableTests
     {

@@ -74,13 +74,14 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="EqualOperatorTests.cs" />
-    <Compile Include="ExpressionExtensionsTests.cs" />
-    <Compile Include="NaturalSortComparableTests.cs" />
+    <Compile Include="Searching\ContainsOperatorTests.cs" />
+    <Compile Include="Searching\EqualOperatorTests.cs" />
+    <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
+    <Compile Include="Sorting\NaturalSortComparableTests.cs" />
     <Compile Include="ObservableViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ExpressionBuilderTests.cs" />
-    <Compile Include="SearchSpecificationTests.cs" />
+    <Compile Include="Searching\ExpressionBuilderTests.cs" />
+    <Compile Include="Searching\SearchSpecificationTests.cs" />
     <Compile Include="TestData\Car.cs" />
     <Compile Include="TestData\CarBrand.cs" />
     <Compile Include="TestData\CarPool.cs" />
@@ -95,6 +96,7 @@
       <Name>ObservableView</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-using FluentAssertions;
 using ObservableView.Extensions;
-
+using FluentAssertions;
 using Xunit;
 
-namespace ObservableView.Tests
+namespace ObservableView.Tests.Extensions
 {
     public class ExpressionExtensionsTests
     {
