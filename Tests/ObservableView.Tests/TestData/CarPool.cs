@@ -2,9 +2,11 @@
 
 namespace ObservableView.Tests.TestData
 {
+    /// <summary>
+    /// Predefined car pool
+    /// </summary>
     static class CarPool
     {
-        // Predefined car pool
         public static readonly Car carAudiA1 = new Car(CarBrand.Audi, "A1", 2013);
         public static readonly Car carAudiA4 = new Car(CarBrand.Audi, "A4 Avant", 2000);
         public static readonly Car carAudiA3 = new Car(CarBrand.Audi, "A3 Sportback", 2015);
