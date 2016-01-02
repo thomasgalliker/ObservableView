@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 using FluentAssertions;
@@ -203,31 +204,17 @@ namespace ObservableView.Tests
         }
 
         [Fact]
-        public void ShouldThrowExceptionWhenAddingDuplicatedSearchSpecification()
+        public void ShouldThrowExceptionWhenThereAreNoSearchSpecificationsDefined()
         {
             // Arrange
             var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchSpecification.Clear();
 
             // Act
-            Action action = () => observableCarsView.SearchSpecification.Add(c => c.Year, BinaryOperator.Contains);
-            action();
-
-            // Assert
-            Assert.Throws<InvalidOperationException>(action);
-        }
-
-        [Fact]
-        public void ShouldThrowExceptionWhenAddingDuplicatedSearchSpecificationWithSearchableAttribute()
-        {
-            // Arrange
-            var carsList = CarPool.GetDefaultCarsList();
-
-            var observableCarsView = new ObservableView<Car>(carsList);
-
-            // Act
-            Action action = () => observableCarsView.SearchSpecification.Add(c => c.Model, BinaryOperator.Contains);
+            observableCarsView.Search("Polo");
+            Action action = () => { var searchView = observableCarsView.View; };
 
             // Assert
             Assert.Throws<InvalidOperationException>(action);
@@ -258,7 +245,7 @@ namespace ObservableView.Tests
             var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.SearchSpecification.Add(c => c.Year, BinaryOperator.Equals);
+            observableCarsView.SearchSpecification.Add(c => c.Year, BinaryOperator.Equal); //TODO: Should work with default operator now.
             observableCarsView.Search("2000");
 
             // Act

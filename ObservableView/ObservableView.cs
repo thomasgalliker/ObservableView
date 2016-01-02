@@ -35,11 +35,32 @@ namespace ObservableView
         public ObservableView(ObservableCollection<T> collection)
         {
             this.Source = collection;
+
             this.orderSpecifications = new List<OrderSpecification<T>>();
+
             this.SearchSpecification = new SearchSpecification<T>();
+            this.InitializeSearchSpecificationFromSearchableAttributes();   
+
             this.SearchSpecification.SearchSpecificationAdded += this.OnSearchSpecificationChanged;
             this.SearchSpecification.SearchSpecificationsCleared += this.OnSearchSpecificationsCleared;
+
             this.GroupKeyAlogrithm = new AlphaGroupKeyAlgorithm();
+        }
+
+        private void InitializeSearchSpecificationFromSearchableAttributes()
+        {
+            MethodInfo addMethod = this.SearchSpecification.GetType().GetRuntimeMethods().First(m => m.Name == "Add");
+            var searchableAttributes = this.GetSearchableAttributes();
+            foreach (var propertyInfo in searchableAttributes)
+            {
+                var parameter = Expression.Parameter(typeof(T), "x");
+                var property = Expression.Property(parameter, propertyInfo);
+                var funcType = typeof(Func<,>).MakeGenericType(typeof(T), propertyInfo.PropertyType);
+                LambdaExpression lambdaExpression = Expression.Lambda(funcType, property, parameter);
+
+                addMethod.MakeGenericMethod(propertyInfo.PropertyType)
+                     .Invoke(this.SearchSpecification, new object[] { lambdaExpression, null });
+            }
         }
 
         public ObservableView()
@@ -357,7 +378,7 @@ namespace ObservableView
         }
 
         [Obsolete("AddSearchSpecification has been replaced with SearchSpecification property. Call SearchSpecification.Add(...) to add new search specifications.")]
-        public void AddSearchSpecification<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
+        public void AddSearchSpecification<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
             throw new NotSupportedException("AddSearchSpecification has been replaced with SearchSpecification property.Call SearchSpecification.Add(...) to add new search specifications.");
         }
@@ -420,7 +441,7 @@ namespace ObservableView
                                   + " or by defining [Searchable] annotations on properties in type {0} to mark them as searchable.",
                                   typeof(T).Name));
             }
-   
+
             this.SearchSpecification.ReplaceSearchTextVariables(pattern); // TODO: Reimplement: How are searchStrings handled?
 
             var parameterExpression = Expression.Parameter(typeof(T), "x");
