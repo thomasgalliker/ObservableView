@@ -6,8 +6,8 @@ using ObservableView.Searching.Operations;
 
 namespace ObservableView.Searching.Operators
 {
-    [DebuggerDisplay("EqualsOperator")]
-    public class EqualsOperator : BinaryOperator
+    [DebuggerDisplay("EqualOperator")]
+    public class EqualOperator : BinaryOperator
     {
         public override Expression Build(IExpressionBuilder expressionBuilder, Operation operation)
         {

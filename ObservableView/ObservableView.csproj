@@ -39,7 +39,7 @@
     <Compile Include="Searching\Operands\VariableOperand.cs" />
     <Compile Include="Searching\Operands\ConstantOperand.cs" />
     <Compile Include="Searching\ExpressionBuilder.cs" />
-    <Compile Include="Searching\Operators\EqualsOperator.cs" />
+    <Compile Include="Searching\Operators\EqualOperator.cs" />
     <Compile Include="Searching\Operators\AndOperator.cs" />
     <Compile Include="Searching\Operations\BinaryOperation.cs" />
     <Compile Include="Searching\Operators\BinaryOperator.cs" />

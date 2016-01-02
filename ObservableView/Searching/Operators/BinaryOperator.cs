@@ -27,11 +27,11 @@ namespace ObservableView.Searching.Operators
         ////                                            t.GetTypeInfo().IsAbstract == false &&
         ////                                            t.GetTypeInfo().IsSubclassOf(baseType));
         ////}
-        public static EqualsOperator Equals
+        public static EqualOperator Equal
         {
             get
             {
-                return new EqualsOperator();
+                return new EqualOperator();
             }
         }
 
