@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 
 using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;
 
 namespace ObservableView.Searching.Operators
 {
+    [DataContract(Name = "EqualOperator")]
     [DebuggerDisplay("EqualOperator")]
     public class EqualOperator : BinaryOperator
     {
