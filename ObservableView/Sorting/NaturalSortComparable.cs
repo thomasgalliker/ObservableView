@@ -147,7 +147,7 @@ namespace ObservableView.Sorting
         {
             get
             {
-                return this.value.Length;
+                return this.value == null ? 0 : this.value.Length;
             }
         }
 
