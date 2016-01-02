@@ -7,12 +7,13 @@ using ObservableView.Filtering;
 using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;
 using ObservableView.Searching.Operators;
+using System.Reflection;
 
 namespace ObservableView.Searching
 {
     public class SearchSpecification<T> : ISearchSpecification<T>
     {
-        private static readonly VariableOperand DefaultSearchTextVariableOperand = new VariableOperand("searchText");
+        private const string DefaultSearchTextVariableName = "searchText";
 
         public event EventHandler SearchSpecificationAdded;
 
@@ -20,17 +21,36 @@ namespace ObservableView.Searching
 
         public Operation BaseOperation { get; private set; }
 
-        public ISearchSpecification<T> Add<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator) // TODO: BinaryOperator @operator = null then take default depending on property type
+        private static void EnsureOperator(Type propertyType, ref BinaryOperator @operator)
+        {
+            if (@operator == null)
+            {
+                // TODO: BinaryOperator @operator = null then take default depending on property type
+                if (propertyType == typeof(string))
+                {
+                    @operator = BinaryOperator.Contains;
+                }
+                else if (propertyType == typeof(int))
+                {
+                    @operator = BinaryOperator.Equal;
+                }
+            }
+        }
+
+        public ISearchSpecification<T> Add<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
         {
             if (propertyExpression == null)
             {
                 throw new ArgumentNullException("propertyExpression");
             }
 
+            var propertyInfo = ReflectionHelper<T>.GetProperty(propertyExpression);
+
+            EnsureOperator(propertyInfo.PropertyType, ref @operator);
+
             if (this.BaseOperation == null)
             {
-                var propertyInfo = ReflectionHelper<T>.GetProperty(propertyExpression);
-                this.BaseOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), DefaultSearchTextVariableOperand);
+                this.BaseOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), new VariableOperand(DefaultSearchTextVariableName));
             }
             else
             {
@@ -41,26 +61,33 @@ namespace ObservableView.Searching
             return this;
         }
 
-        public ISearchSpecification<T> And<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator)
+        public ISearchSpecification<T> And<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
         {
-            return this.CreateNestedOperation(propertyExpression, @operator, GroupOperator.And);
+            return this.CreateNestedOperation(propertyExpression, GroupOperator.And, @operator);
         }
 
-        public ISearchSpecification<T> Or<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator)
+        public ISearchSpecification<T> Or<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
         {
-            return this.CreateNestedOperation(propertyExpression, @operator, GroupOperator.Or);
+            return this.CreateNestedOperation(propertyExpression, GroupOperator.Or, @operator);
         }
 
-        private ISearchSpecification<T> CreateNestedOperation<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator, GroupOperator groupOperator)
+        private ISearchSpecification<T> CreateNestedOperation<TProperty>(Expression<Func<T, TProperty>> propertyExpression, GroupOperator groupOperator, BinaryOperator @operator = null)
         {
             if (this.BaseOperation == null)
             {
                 throw new InvalidOperationException("Call Add beforehand.");
             }
 
+            if (propertyExpression == null)
+            {
+                throw new ArgumentNullException("propertyExpression");
+            }
+
             var propertyInfo = ReflectionHelper<T>.GetProperty(propertyExpression);
 
-            var nestedBinaryOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), DefaultSearchTextVariableOperand);
+            EnsureOperator(propertyInfo.PropertyType, ref @operator);
+
+            var nestedBinaryOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), new VariableOperand(DefaultSearchTextVariableName));
 
             this.BaseOperation = new GroupOperation(this.BaseOperation, nestedBinaryOperation, groupOperator);
 
@@ -79,10 +106,10 @@ namespace ObservableView.Searching
 
         public void ReplaceSearchTextVariables<TX>(TX value)
         {
-            this.ReplaceVariables(DefaultSearchTextVariableOperand.VariableName, value);
+            this.ReplaceVariables(DefaultSearchTextVariableName, value);
         }
 
-        public void ReplaceVariables<TX>(string variableName, TX value)
+        private void ReplaceVariables<TX>(string variableName, TX value)
         {
             var variableOperands = this.BaseOperation.Flatten().OfType<VariableOperand>().Where(v => v.VariableName == variableName);
 
