@@ -19,7 +19,7 @@
       - Bug fix: Sorting in WPF DataGrid headers not reflected correctly
       - Bug fix: Sorting not updated on View property refresh
     </releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2016</copyright>
     <language>en-US</language>
     <dependencies>
     </dependencies>

@@ -96,4 +96,4 @@ TODO: Document
 Performance is a critical success factor for component such as the ObservableView. ObservableView has been tested with ten thousands of data records with good results. If you, however, have issues in certain situations, do not hesitate to open a new issue.
 
 ### License
-This project is Copyright &copy; 2015 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is Copyright &copy; 2016 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
