@@ -138,9 +138,9 @@
       <Project>{a6fcef44-d2ba-42c7-b3cb-13667bcd7b54}</Project>
       <Name>ObservableView</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ObservableViewSample.Data\ObservableViewSample.Data.csproj">
-      <Project>{b49937ef-91fb-420a-8a1e-d268f6cc1e01}</Project>
-      <Name>ObservableViewSample.Data</Name>
+    <ProjectReference Include="..\ObservableViewSample\ObservableViewSample\ObservableViewSample.csproj">
+      <Project>{ab2cefaa-5c6e-4245-818a-854c562f2532}</Project>
+      <Name>ObservableViewSample</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

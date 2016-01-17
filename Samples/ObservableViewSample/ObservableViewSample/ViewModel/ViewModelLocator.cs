@@ -2,10 +2,9 @@ using GalaSoft.MvvmLight.Ioc;
 
 using Microsoft.Practices.ServiceLocation;
 
-using ObservableViewSample.Data.Model;
-using ObservableViewSample.Data.Service;
+using ObservableViewSample.Service;
 
-namespace ObservableViewSample.Data.ViewModel
+namespace ObservableViewSample.ViewModel
 {
     public class ViewModelLocator
     {

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -8,10 +7,10 @@ using ObservableView;
 using ObservableView.Searching.Operators;
 using ObservableView.Sorting;
 
-using ObservableViewSample.Data.Model;
-using ObservableViewSample.Data.Service;
+using ObservableViewSample.Model;
+using ObservableViewSample.Service;
 
-namespace ObservableViewSample.Data.ViewModel
+namespace ObservableViewSample.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {

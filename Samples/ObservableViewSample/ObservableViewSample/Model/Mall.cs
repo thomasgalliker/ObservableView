@@ -1,4 +1,4 @@
-namespace ObservableViewSample.Data.Model
+namespace ObservableViewSample.Model
 {
 	public class Mall
 	{

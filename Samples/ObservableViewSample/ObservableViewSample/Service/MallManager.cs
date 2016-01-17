@@ -1,9 +1,10 @@
-﻿using ObservableViewSample.Data.Model;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace ObservableViewSample.Data.Service
+using ObservableViewSample.Model;
+
+namespace ObservableViewSample.Service
 {
     public class MallManager : IMallManager
     {
