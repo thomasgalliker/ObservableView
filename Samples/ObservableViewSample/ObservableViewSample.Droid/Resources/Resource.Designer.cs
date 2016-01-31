@@ -11,7 +11,7 @@
 
 [assembly: global::Android.Runtime.ResourceDesignerAttribute("ObservableViewSample.Android.Resource", IsApplication=true)]
 
-namespace ObservableViewSample.Android.Resources
+namespace ObservableViewSample.Android
 {
 	
 	

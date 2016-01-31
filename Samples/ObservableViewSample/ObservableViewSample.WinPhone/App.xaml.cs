@@ -6,6 +6,7 @@ using System.Windows.Navigation;
 
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using ObservableViewSample.WindowsPhone8.Resources;
 
 namespace ObservableViewSample.WindowsPhone8
 {
