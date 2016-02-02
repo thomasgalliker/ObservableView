@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions\OperationExtensions.cs" />
+    <Compile Include="Extensions\QueryableExtensions.cs" />
     <Compile Include="Searching\Operands\VariableOperand.cs" />
     <Compile Include="Searching\Operands\ConstantOperand.cs" />
     <Compile Include="Searching\ExpressionBuilder.cs" />

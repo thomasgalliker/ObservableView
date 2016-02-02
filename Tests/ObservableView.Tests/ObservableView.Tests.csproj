@@ -74,6 +74,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Extensions\QueryableExtensionsTests.cs" />
     <Compile Include="Searching\ContainsOperatorTests.cs" />
     <Compile Include="Searching\EqualOperatorTests.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
