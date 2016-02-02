@@ -7,6 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:wpExtensions="clr-namespace:WPExtensions;assembly=WPExtensions"
+    xmlns:controls="clr-namespace:CrossPlatformLibrary.Controls;assembly=CrossPlatformLibrary.Platform"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -68,7 +70,23 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <phone:LongListSelector Grid.Row="1" 
+            <controls:PhoneTextBoxEx Grid.Row="0" Grid.Column="0" 
+                                    Text="{Binding MallsList.SearchText, Mode=TwoWay}"
+                                    Foreground="{StaticResource PhoneAccentBrush}"
+                                    Hint="{Binding Path=LocalizedResources.SearchHint, Source={StaticResource LocalizedStrings}}"
+                                    ActionIcon="/Resources/close.png"
+                                    HidesActionItemWhenEmpty="True"
+                                    Delay="40"
+                                    Margin="-8, 0, -8, 0" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="ActionIconTapped">
+                        <i:InvokeCommandAction Command="{Binding SearchBoxClearCommand, Mode=OneWay}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                </controls:PhoneTextBoxEx>
+
+
+                <phone:LongListSelector Grid.Row="1" 
                                     Margin="0,0,-12,0" 
                                     ItemsSource="{Binding MallsList.Groups}" 
                                     JumpListStyle="{StaticResource AllRestaurantsJumpListStyle}"
