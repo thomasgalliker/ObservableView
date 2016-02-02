@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 using ObservableView;
+using ObservableView.Grouping;
 using ObservableView.Searching.Operators;
 using ObservableView.Sorting;
 
@@ -17,10 +18,11 @@ namespace ObservableViewSample.ViewModel
         private RelayCommand addMallCommand;
         private RelayCommand<Mall> deleteMallCommand;
         private RelayCommand refreshCommand;
+        private RelayCommand searchBoxClearCommand;
         private string newMallTitle;
         private string newMallSubtitle;
         private int newMallNumberOf = 1;
-
+        
         public MainViewModel(IMallManager mallManager)
         {
             var listItems = mallManager.GetMalls();
@@ -34,6 +36,10 @@ namespace ObservableViewSample.ViewModel
             // Add search specifications
             this.MallsList.SearchSpecification.Add(x => x.Title, BinaryOperator.Contains);
             this.MallsList.SearchSpecification.Add(x => x.Subtitle, BinaryOperator.Contains);
+
+            // Add grouping specifications
+            this.MallsList.GroupKeyAlogrithm = new AlphaGroupKeyAlgorithm();
+            this.MallsList.GroupKey = item => item.Title;
         }
 
         public ObservableView<Mall> MallsList { get; private set; }
@@ -83,6 +89,19 @@ namespace ObservableViewSample.ViewModel
                          () =>
                          {
                              this.MallsList.Refresh();
+                         }));
+            }
+        }
+
+
+        public RelayCommand SearchBoxClearCommand
+        {
+            get
+            {
+                return this.searchBoxClearCommand ?? (this.searchBoxClearCommand = new RelayCommand(
+                         () =>
+                         {
+                             this.MallsList.ClearSearch();
                          }));
             }
         }
