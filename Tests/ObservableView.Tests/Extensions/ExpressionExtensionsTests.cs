@@ -27,6 +27,23 @@ namespace ObservableView.Tests.Extensions
         }
 
         [Fact]
+        public void ShouldToStringExpressionTest()
+        {
+            // Arrange
+            const int InputString = 1234;
+            var parameter = Expression.Parameter(typeof(int), "x");
+
+            // Act
+            var toStringExpression = parameter.ToStringExpression();
+            var lambda = Expression.Lambda<Func<int, string>>(toStringExpression, parameter);
+            var func = lambda.Compile();
+            var toString = func(InputString);
+
+            // Assert
+            toString.Should().Be(InputString.ToString());
+        }
+
+        [Fact]
         public void ShouldContainExpressionTest()
         {
             // Arrange

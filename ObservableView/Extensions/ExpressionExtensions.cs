@@ -12,6 +12,12 @@ namespace ObservableView.Extensions
             return Expression.Call(expression, methodInfo);
         }
 
+        internal static Expression ToStringExpression(this Expression expression)
+        {
+            var methodInfo = typeof(object).GetRuntimeMethod("ToString", new Type[] { });
+            return Expression.Call(expression, methodInfo);
+        }
+
         internal static Expression Contains(this Expression expression, Expression containsExpression)
         {
             var methodInfo = typeof(string).GetRuntimeMethod("Contains", new[] { typeof(string) });
