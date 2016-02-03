@@ -9,6 +9,8 @@ using ObservableView.Searching.Operations;
 using ObservableView.Searching.Operators;
 using System.Reflection;
 
+using ObservableView.Searching.Processors;
+
 namespace ObservableView.Searching
 {
     public class SearchSpecification<T> : ISearchSpecification<T>
@@ -37,7 +39,7 @@ namespace ObservableView.Searching
             }
         }
 
-        public ISearchSpecification<T> Add<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
+        public ISearchSpecification<T> Add<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null, IExpressionProcessor[] expressionProcessors = null)
         {
             if (propertyExpression == null)
             {
@@ -50,14 +52,15 @@ namespace ObservableView.Searching
 
             if (this.BaseOperation == null)
             {
-                this.BaseOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), new VariableOperand(DefaultSearchTextVariableName));
+                this.BaseOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
+
+                this.OnSearchSpecificationAdded();
             }
             else
             {
                 return this.Or(propertyExpression, @operator);
             }
 
-            this.OnSearchSpecificationAdded();
             return this;
         }
 
@@ -87,7 +90,7 @@ namespace ObservableView.Searching
 
             EnsureOperator(propertyInfo.PropertyType, ref @operator);
 
-            var nestedBinaryOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), new VariableOperand(DefaultSearchTextVariableName));
+            var nestedBinaryOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
 
             this.BaseOperation = new GroupOperation(this.BaseOperation, nestedBinaryOperation, groupOperator);
 

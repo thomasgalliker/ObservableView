@@ -14,8 +14,21 @@ namespace ObservableView.Searching.Operators
         public override Expression Build(IExpressionBuilder expressionBuilder, Operation operation)
         {
             BinaryOperation binaryOperation = (BinaryOperation)operation;
-            MethodInfo contains = ReflectionHelper<string>.GetMethod<string>((source, argument) => source.Contains(argument));
-            Expression containsExpression = Expression.Call(expressionBuilder.Build(binaryOperation.LeftOperand), contains, expressionBuilder.Build(binaryOperation.RightOperand));
+
+            var leftExpression = expressionBuilder.Build(binaryOperation.LeftOperand);
+
+            MethodInfo containsMethodInfo = ReflectionHelper<string>.GetMethod<string>((source, argument) => source.Contains(argument));
+
+            var rightExpression = expressionBuilder.Build(binaryOperation.RightOperand);
+            if (rightExpression.Type != typeof(string))
+            {
+                rightExpression = rightExpression.ToStringExpression();
+            }
+
+            Expression containsExpression = Expression.Call(
+                leftExpression,
+                containsMethodInfo,
+                rightExpression);
 
             return containsExpression;
         }

@@ -164,7 +164,6 @@ namespace ObservableView.Tests
         {
             // Arrange
             var carsList = CarPool.GetDefaultCarsList();
-
             var observableCarsView = new ObservableView<Car>(carsList);
 
             // Act
@@ -183,12 +182,12 @@ namespace ObservableView.Tests
         {
             // Arrange
             var carsList = CarPool.GetDefaultCarsList();
-
             var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchSpecification
+                .Add(c => c.Model, BinaryOperator.Contains)
+                .Or(c => c.Year, BinaryOperator.Contains);
 
             // Act
-            observableCarsView.SearchSpecification.Add(c => c.Model, BinaryOperator.Contains).Or(c => c.Year, BinaryOperator.Contains);
-
             observableCarsView.Search("20");
 
             // Assert
@@ -201,6 +200,69 @@ namespace ObservableView.Tests
             searchView.Single(x => x.Model == CarPool.carBmwM1.Model).Should().NotBeNull();
             searchView.Single(x => x.Model == CarPool.carBmwM3.Model).Should().NotBeNull();
             searchView.Single(x => x.Model == CarPool.carVwGolf.Model).Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ShouldSplitMultipleWordsWithLogicOrOperator()
+        {
+            // Arrange
+            var carsList = CarPool.GetDefaultCarsList();
+            var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchTextDelimiters = new [] {' '};
+            observableCarsView.SearchTextLogic = SearchLogic.Or;
+
+            // Act
+            observableCarsView.Search("M 3");
+
+            // Assert
+            var searchView = observableCarsView.View;
+            searchView.Should().NotBeNull();
+            searchView.Should().HaveCount(3); // The whitespace delimiter should act as logic OR operator
+
+            searchView.Should().Contain(CarPool.carAudiA3);
+            searchView.Should().Contain(CarPool.carBmwM1);
+            searchView.Should().Contain(CarPool.carBmwM3);
+        }
+
+        [Fact]
+        public void ShouldSplitMultipleWordsWithLogicAndOperator()
+        {
+            // Arrange
+            var carsList = CarPool.GetDefaultCarsList();
+            var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchTextDelimiters = new[] { ' ' };
+            observableCarsView.SearchTextLogic = SearchLogic.And;
+            observableCarsView.SearchSpecification.Add(c => c.Model, BinaryOperator.Contains);
+
+            // Act
+            observableCarsView.Search("M 3"); // The whitespace delimiter should act as logic AND operator
+
+            // Assert
+            var searchView = observableCarsView.View;
+            searchView.Should().NotBeNull();
+            searchView.Should().HaveCount(1);
+
+            searchView.Should().Contain(CarPool.carBmwM3);
+        }
+
+        [Fact]
+        public void ShouldUseCustomSearchTextPreprocessor()
+        {
+            // Arrange
+            var carsList = CarPool.GetDefaultCarsList();
+            var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchTextDelimiters = new[] { ' ' };
+            observableCarsView.SearchTextPreprocessor = searchText => { return searchText.Replace("AND", ""); };
+
+            // Act
+            observableCarsView.Search("Birthday AND Golf");
+
+            // Assert
+            var searchView = observableCarsView.View;
+            searchView.Should().NotBeNull();
+            searchView.Should().HaveCount(1);
+
+            searchView.Should().Contain(CarPool.carVwGolf);
         }
 
         [Fact]

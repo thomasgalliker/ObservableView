@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>ObservableView</id>
-    <version>1.0.2-pre4</version>
+    <version>1.0.2-pre5</version>
     <title>ObservableView</title>
     <authors>Thomas Galliker</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
@@ -16,8 +16,18 @@
       windows phone winphone wp8 wpa81 win81 windowsphone android xamarin.forms xamarin.ios ios monoandroid monodroid monotouch mvvmcross mvvmlight
     </tags>
     <releaseNotes>
-      - Bug fix: Sorting in WPF DataGrid headers not reflected correctly
-      - Bug fix: Sorting not updated on View property refresh
+1.1.0-pre1
+- Complete overwork of the search API
+- Added custom SearchTextDelimiters
+- Added SearchTextPreprocessor
+- Added configurable SearchTextLogic (AND, OR)
+      
+1.0.2
+- Bug fix: Sorting in WPF DataGrid headers not reflected correctly
+- Bug fix: Sorting not updated on View property refresh
+      
+1.0.1
+- Initial release
     </releaseNotes>
     <copyright>Copyright 2016</copyright>
     <language>en-US</language>
@@ -67,14 +77,14 @@
     <file src="..\ObservableView.WindowsPhone81\Bin\Release\ObservableView.Platform.pdb" target="lib\wpa81\ObservableView.Platform.pdb" />
     <file src="..\ObservableView.WindowsPhone81\Bin\Release\ObservableView.Platform.xml" target="lib\wpa81\ObservableView.Platform.xml" />-->
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\wpa81\ObservableView.dll" />
-    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\wp8\ObservableView.pdb" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\wpa81\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\wpa81\ObservableView.xml" />
     
     <!--Windows Store-->
     <!--<file src="..\ObservableView.WindowsStore\Bin\Release\ObservableView.Platform.dll" target="lib\win81\ObservableView.Platform.dll" />
     <file src="..\ObservableView.WindowsStore\Bin\Release\ObservableView.Platform.xml" target="lib\win81\ObservableView.Platform.xml" />-->
     <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\win81\ObservableView.dll" />
-    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\wp8\ObservableView.pdb" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\win81\ObservableView.pdb" />
     <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\win81\ObservableView.xml" />
     
     <file src="tools\init.ps1" target="tools\init.ps1" />

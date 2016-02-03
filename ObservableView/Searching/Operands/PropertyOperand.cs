@@ -34,7 +34,7 @@ namespace ObservableView.Searching.Operands
             else if (propertyExpression.Type == typeof(int))
             {
                 // If the given property is of type integer, we want to convert it to string first.
-                Expression leftToLower = Expression.Call(propertyExpression, typeof(int).GetRuntimeMethod("ToString", new Type[] { })); // TODO: use ToLower extension method
+                Expression leftToLower = propertyExpression.ToStringExpression();
                 returnExpression = leftToLower;
             }
             else if (propertyExpression.Type.GetTypeInfo().IsEnum)

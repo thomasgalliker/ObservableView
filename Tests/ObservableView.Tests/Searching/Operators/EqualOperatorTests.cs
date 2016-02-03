@@ -8,7 +8,7 @@ using ObservableView.Tests.TestData;
 
 using Xunit;
 
-namespace ObservableView.Tests.Searching
+namespace ObservableView.Tests.Searching.Operators
 {
     public class EqualOperatorTests
     {
@@ -29,7 +29,7 @@ namespace ObservableView.Tests.Searching
 
             // Assert
             expression.Should().NotBeNull();
-            //TODO GATH: more asserts here
+            expression.Type.Should().Be<bool>();
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace ObservableView.Tests.Searching
 
             // Assert
             expression.Should().NotBeNull();
-            //TODO GATH: more asserts here
+            expression.Type.Should().Be<bool>();
         }
     }
 }

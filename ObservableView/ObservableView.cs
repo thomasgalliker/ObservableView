@@ -1,17 +1,16 @@
-﻿using ObservableView.Extensions;
-using ObservableView.Filtering;
-using ObservableView.Grouping;
-using ObservableView.Searching;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using ObservableView.Searching.Operators;
+using ObservableView.Exceptions;
+using ObservableView.Extensions;
+using ObservableView.Filtering;
+using ObservableView.Grouping;
+using ObservableView.Searching;
 using ObservableView.Sorting;
 
 namespace ObservableView
@@ -20,7 +19,7 @@ namespace ObservableView
     ///     ObservableView is a class which adds sorting, filtering, searching and grouping
     ///     on top of collections.
     /// </summary>
-    public class ObservableView<T> : ObservableObject, IObservableView//, ISearchSpecification<T>
+    public class ObservableView<T> : ObservableObject, IObservableView
     {
         private static readonly object FilterHandlerEventLock = new object();
 
@@ -31,6 +30,7 @@ namespace ObservableView
         private FilterEventHandler<T> filterHandler;
         private Func<T, string> groupKey;
         private IGroupKeyAlgorithm groupKeyAlogrithm;
+        private Func<string, string> searchTextPreprocessor;
 
         public ObservableView(ObservableCollection<T> collection)
         {
@@ -39,17 +39,21 @@ namespace ObservableView
             this.orderSpecifications = new List<OrderSpecification<T>>();
 
             this.SearchSpecification = new SearchSpecification<T>();
-            this.InitializeSearchSpecificationFromSearchableAttributes();   
+            this.InitializeSearchSpecificationFromSearchableAttributes();
 
             this.SearchSpecification.SearchSpecificationAdded += this.OnSearchSpecificationChanged;
             this.SearchSpecification.SearchSpecificationsCleared += this.OnSearchSpecificationsCleared;
 
             this.GroupKeyAlogrithm = new AlphaGroupKeyAlgorithm();
+
+            this.SearchTextDelimiters = new[] { ' ' };
+            this.SearchTextLogic = SearchLogic.Or;
         }
 
         private void InitializeSearchSpecificationFromSearchableAttributes()
         {
-            MethodInfo addMethod = this.SearchSpecification.GetType().GetRuntimeMethods().First(m => m.Name == "Add");
+            MethodInfo addMethod = ReflectionHelper<ISearchSpecification<T>>.GetMethod(source => source.Add<T>(null, null, null));
+
             var searchableAttributes = this.GetSearchableAttributes();
             foreach (var propertyInfo in searchableAttributes)
             {
@@ -58,8 +62,9 @@ namespace ObservableView
                 var funcType = typeof(Func<,>).MakeGenericType(typeof(T), propertyInfo.PropertyType);
                 LambdaExpression lambdaExpression = Expression.Lambda(funcType, property, parameter);
 
-                addMethod.MakeGenericMethod(propertyInfo.PropertyType)
-                     .Invoke(this.SearchSpecification, new object[] { lambdaExpression, null });
+                addMethod.GetGenericMethodDefinition()
+                         .MakeGenericMethod(propertyInfo.PropertyType)
+                         .Invoke(this.SearchSpecification, new object[] { lambdaExpression, null });
             }
         }
 
@@ -129,10 +134,10 @@ namespace ObservableView
                 }
 
                 var groupedList = this.View
-                    .GroupBy(item => this.GroupKeyAlogrithm.GetGroupKey(this.GroupKey.Invoke(item)))
-                    .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup))
-                    .OrderBy(itemGroup => itemGroup.Key)
-                    .ToList();
+                        .GroupBy(item => this.GroupKeyAlogrithm.GetGroupKey(this.GroupKey.Invoke(item)))
+                        .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup))
+                        .OrderBy(itemGroup => itemGroup.Key)
+                        .ToList();
 
                 return groupedList;
             }
@@ -160,6 +165,19 @@ namespace ObservableView
                     this.OnPropertyChanged(() => this.View);
                     this.OnPropertyChanged(() => this.Groups);
                 }
+            }
+        }
+
+        public Func<string, string> SearchTextPreprocessor
+        {
+            get
+            {
+                return this.searchTextPreprocessor;
+            }
+            set
+            {
+                this.searchTextPreprocessor = value;
+                this.OnPropertyChanged(() => this.Groups);
             }
         }
 
@@ -214,7 +232,8 @@ namespace ObservableView
                 {
                     if (!string.IsNullOrEmpty(this.SearchText))
                     {
-                        viewCollection = this.PerformSearch(viewCollection, this.SearchText);
+                        var processedSearchText = this.PreprocessSearchText(this.SearchText);
+                        viewCollection = this.PerformSearch(viewCollection, processedSearchText);
                     }
 
                     if (this.filterHandler != null)
@@ -232,6 +251,23 @@ namespace ObservableView
                 // Otherwise the binding is not refreshed when OnPropertyChanged is called.
                 return new ObservableCollection<T>(viewCollection);
             }
+        }
+
+        private string PreprocessSearchText(string text)
+        {
+            if (this.SearchTextPreprocessor != null)
+            {
+                try
+                {
+                    return this.SearchTextPreprocessor(text);
+                }
+                catch (Exception ex)
+                {
+                    throw new SearchTextPreprocessorException("Failed to preprocess search string.", ex);
+                }
+            }
+
+            return text;
         }
 
         /// <summary>
@@ -397,14 +433,14 @@ namespace ObservableView
 
         private IEnumerable<PropertyInfo> GetSearchableAttributes()
         {
-            return typeof(T).GetRuntimeProperties().Where(propertyInfo =>
-                propertyInfo.CustomAttributes.Any(attr =>
-                    attr.AttributeType == typeof(SearchableAttribute))).ToList();
+            return typeof(T).GetRuntimeProperties().Where(propertyInfo => propertyInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(SearchableAttribute))).ToList();
         }
 
         /// <summary>
-        /// Performs a search operation using the given <param name="pattern">search pattern</param>.
-        /// The search operation is performed on the properties <code>View</code> and <code>Group</code>. 
+        ///     Performs a search operation using the given
+        ///     <param name="pattern">search pattern</param>
+        ///     .
+        ///     The search operation is performed on the properties <code>View</code> and <code>Group</code>.
         /// </summary>
         /// <param name="pattern"></param>
         public void Search(string pattern)
@@ -417,6 +453,17 @@ namespace ObservableView
             this.Search(string.Empty);
         }
 
+        /// <summary>
+        /// Defines the characters which are relevant for splitting the SearchText
+        /// into search words.
+        /// </summary>
+        public char[] SearchTextDelimiters { get; set; }
+
+        /// <summary>
+        /// Defines the logic to be applied between the splitted search words.
+        /// </summary>
+        public SearchLogic SearchTextLogic { get; set; }
+
         private ObservableCollection<T> PerformSearch(IEnumerable<T> viewCollection, string pattern)
         {
             var results = new ObservableCollection<T>();
@@ -426,9 +473,7 @@ namespace ObservableView
                 return viewCollection.ToObservableCollection();
             }
 
-            string[] searchStrings = pattern.Trim().Split(new[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-
-            // TODO: Define more characters which can split the search termin into atomic words.
+            var searchStrings = pattern.Trim().Split(this.SearchTextDelimiters, StringSplitOptions.RemoveEmptyEntries);
             if (!searchStrings.Any())
             {
                 return results;
@@ -437,32 +482,64 @@ namespace ObservableView
             if (!this.SearchSpecification.Any())
             {
                 throw new InvalidOperationException(
-                    string.Format("Please add at least one search specification either by calling SearchSpecification.Add"
-                                  + " or by defining [Searchable] annotations on properties in type {0} to mark them as searchable.",
-                                  typeof(T).Name));
+                    string.Format(
+                        "Please add at least one search specification either by calling SearchSpecification.Add " +
+                        "or by defining [Searchable] annotations on properties in type {0} to mark them as searchable.",
+                        typeof(T).Name));
             }
 
-            this.SearchSpecification.ReplaceSearchTextVariables(pattern); // TODO: Reimplement: How are searchStrings handled?
-
-            var parameterExpression = Expression.Parameter(typeof(T), "x");
-            var expressionBuilder = new ExpressionBuilder(parameterExpression);
-            var baseOperation = this.SearchSpecification.BaseOperation;
-            var baseExpression = expressionBuilder.Build(baseOperation);
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(T), "x");
+            Expression baseExpression = this.BuildBaseExpression(parameterExpression, searchStrings, this.SearchTextLogic);
             if (baseExpression == null)
             {
                 return results;
             }
 
             IQueryable<T> queryableDtos = viewCollection.AsQueryable();
+            return queryableDtos.Where(baseExpression, parameterExpression).ToObservableCollection();
+        }
 
-            MethodCallExpression whereCallExpression = Expression.Call(
-                typeof(Queryable),
-                "Where",
-                new[] { queryableDtos.ElementType },
-                queryableDtos.Expression,
-                Expression.Lambda<Func<T, bool>>(baseExpression, new[] { parameterExpression }));
+        /// <summary>
+        ///     This methods builds the Expression tree from the defined SearchSpecification and the given searchStrings.
+        /// </summary>
+        private Expression BuildBaseExpression(ParameterExpression parameterExpression, string[] searchStrings, SearchLogic searchLogic)
+        {
+            Expression baseExpression = null;
+            foreach (var searchString in searchStrings)
+            {
+                this.SearchSpecification.ReplaceSearchTextVariables(searchString);
 
-            return queryableDtos.Provider.CreateQuery<T>(whereCallExpression).ToObservableCollection();
+                var expressionBuilder = new ExpressionBuilder(parameterExpression);
+                var lastExpression = expressionBuilder.Build(this.SearchSpecification.BaseOperation);
+                if (lastExpression != null)
+                {
+                    if (baseExpression == null)
+                    {
+                        baseExpression = lastExpression;
+                    }
+                    else
+                    {
+                        if (searchLogic == SearchLogic.Or)
+                        {
+                            baseExpression = Expression.OrElse(baseExpression, lastExpression);
+                        }
+                        else if (searchLogic == SearchLogic.And)
+                        {
+                            baseExpression = Expression.AndAlso(baseExpression, lastExpression);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException(string.Format("Provided searchLogic '{0}' is not valid.", searchLogic));
+                        }
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return baseExpression;
         }
 
         private static IEnumerable<T> PerformOrdering(IEnumerable<T> enumerable, IEnumerable<OrderSpecification<T>> orderSpecifications)

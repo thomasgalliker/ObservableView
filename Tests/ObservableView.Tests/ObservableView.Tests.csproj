@@ -75,8 +75,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Extensions\QueryableExtensionsTests.cs" />
-    <Compile Include="Searching\ContainsOperatorTests.cs" />
-    <Compile Include="Searching\EqualOperatorTests.cs" />
+    <Compile Include="Searching\Operands\ConstantOperandTests.cs" />
+    <Compile Include="Searching\Operators\ContainsOperatorTests.cs" />
+    <Compile Include="Searching\Operators\EqualOperatorTests.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
     <Compile Include="Sorting\NaturalSortComparableTests.cs" />
     <Compile Include="ObservableViewTests.cs" />

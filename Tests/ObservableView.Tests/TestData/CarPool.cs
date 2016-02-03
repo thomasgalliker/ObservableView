@@ -14,7 +14,7 @@ namespace ObservableView.Tests.TestData
         public static readonly Car carBmwM3 = new Car(CarBrand.BMW, "M3", 2012);
         public static readonly Car carBmwX5 = new Car(CarBrand.BMW, "X5", 2012);
         public static readonly Car carVwPolo = new Car(CarBrand.VW, "Polo 1.4 TDI", 1999);
-        public static readonly Car carVwGolf = new Car(CarBrand.VW, "Golf 20th Birthday Ed.", 1990);
+        public static readonly Car carVwGolf = new Car(CarBrand.VW, "Golf 20th Birthdäy Ed.", 1990);
         public static readonly Car carVwGolfGti = new Car(CarBrand.VW, "Golf GTI 2.0", 2016);
 
         public static ObservableCollection<Car> GetDefaultCarsList()
