@@ -39,7 +39,12 @@ namespace ObservableView.Searching
             }
         }
 
-        public ISearchSpecification<T> Add<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null, IExpressionProcessor[] expressionProcessors = null)
+        public ISearchSpecification<T> Add<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
+        {
+            return this.Add(propertyExpression, null, @operator);
+        }
+
+        public ISearchSpecification<T> Add<TProperty>(Expression<Func<T, TProperty>> propertyExpression, IExpressionProcessor[] expressionProcessors, BinaryOperator @operator = null)
         {
             if (propertyExpression == null)
             {
@@ -52,13 +57,13 @@ namespace ObservableView.Searching
 
             if (this.BaseOperation == null)
             {
-                this.BaseOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
+                this.BaseOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo, expressionProcessors), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
 
                 this.OnSearchSpecificationAdded();
             }
             else
             {
-                return this.Or(propertyExpression, @operator);
+                return this.Or(propertyExpression, expressionProcessors, @operator);
             }
 
             return this;
@@ -66,15 +71,25 @@ namespace ObservableView.Searching
 
         public ISearchSpecification<T> And<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
         {
-            return this.CreateNestedOperation(propertyExpression, GroupOperator.And, @operator);
+            return this.And(propertyExpression, null, @operator);
+        }
+
+        public ISearchSpecification<T> And<TProperty>(Expression<Func<T, TProperty>> propertyExpression, IExpressionProcessor[] expressionProcessors, BinaryOperator @operator = null)
+        {
+            return this.CreateNestedOperation(propertyExpression, GroupOperator.And, @operator, expressionProcessors);
         }
 
         public ISearchSpecification<T> Or<TProperty>(Expression<Func<T, TProperty>> propertyExpression, BinaryOperator @operator = null)
         {
-            return this.CreateNestedOperation(propertyExpression, GroupOperator.Or, @operator);
+            return this.Or(propertyExpression, null, @operator);
         }
 
-        private ISearchSpecification<T> CreateNestedOperation<TProperty>(Expression<Func<T, TProperty>> propertyExpression, GroupOperator groupOperator, BinaryOperator @operator = null)
+        public ISearchSpecification<T> Or<TProperty>(Expression<Func<T, TProperty>> propertyExpression, IExpressionProcessor[] expressionProcessors, BinaryOperator @operator = null)
+        {
+            return this.CreateNestedOperation(propertyExpression, GroupOperator.Or, @operator, expressionProcessors);
+        }
+
+        private ISearchSpecification<T> CreateNestedOperation<TProperty>(Expression<Func<T, TProperty>> propertyExpression, GroupOperator groupOperator, BinaryOperator @operator = null, IExpressionProcessor[] expressionProcessors = null)
         {
             if (this.BaseOperation == null)
             {
@@ -90,7 +105,7 @@ namespace ObservableView.Searching
 
             EnsureOperator(propertyInfo.PropertyType, ref @operator);
 
-            var nestedBinaryOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
+            var nestedBinaryOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo, expressionProcessors), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
 
             this.BaseOperation = new GroupOperation(this.BaseOperation, nestedBinaryOperation, groupOperator);
 

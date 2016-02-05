@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 
 using FluentAssertions;
 
@@ -6,6 +8,7 @@ using ObservableView.Extensions;
 using ObservableView.Searching;
 using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operators;
+using ObservableView.Searching.Processors;
 using ObservableView.Tests.TestData;
 
 using Xunit;
@@ -95,6 +98,61 @@ namespace ObservableView.Tests.Searching
 
             var variableOperand2 = sequenceOfExpressions.ElementAt(6) as VariableOperand;
             variableOperand2.Value.Should().Be(SearchText);
+        }
+
+        [Fact]
+        public void ShouldReplaceSearchTextVariablesWithNull()
+        {
+            // Arrange
+            const object SearchText = null;
+            ISearchSpecification<Car> searchSpecification = new SearchSpecification<Car>();
+            searchSpecification
+               .Add(car => car.Model, BinaryOperator.Contains)
+               .And(car => car.Year, BinaryOperator.Contains);
+
+            // Act
+            searchSpecification.ReplaceSearchTextVariables(SearchText);
+
+            // Assert
+            var sequenceOfExpressions = searchSpecification.BaseOperation.Flatten().ToList();
+            sequenceOfExpressions.Should().HaveCount(7);
+
+            var variableOperand1 = sequenceOfExpressions.ElementAt(2) as VariableOperand;
+            variableOperand1.Value.Should().Be(SearchText);
+
+            var variableOperand2 = sequenceOfExpressions.ElementAt(6) as VariableOperand;
+            variableOperand2.Value.Should().Be(SearchText);
+        }
+
+        [Fact]
+        public void ShouldSequentiallyApplyExpressionProcessors()
+        {
+            // Arrange
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+
+            ISearchSpecification<Car> searchSpecification = new SearchSpecification<Car>();
+            searchSpecification.Add(c => c.ChasisNumber, new IExpressionProcessor[] { ExpressionProcessor.ToLower, ExpressionProcessor.Trim }, new ContainsOperator(StringComparison.Ordinal));
+
+            // Act
+            searchSpecification.ReplaceSearchTextVariables("aa");
+            var expression = expressionBuilder.Build(searchSpecification.BaseOperation);
+
+            // Assert
+            var sequenceOfExpressions = searchSpecification.BaseOperation.Flatten().ToList();
+            sequenceOfExpressions.Should().HaveCount(3);
+            sequenceOfExpressions.ElementAt(0).Should().BeOfType(typeof(PropertyOperand));
+            sequenceOfExpressions.ElementAt(1).Should().BeOfType(typeof(ContainsOperator));
+            sequenceOfExpressions.ElementAt(2).Should().BeOfType(typeof(VariableOperand));
+
+            sequenceOfExpressions.ElementAt(0).As<PropertyOperand>().ExpressionProcessors.Should().HaveCount(2);
+            sequenceOfExpressions.ElementAt(0).As<PropertyOperand>().ExpressionProcessors.ElementAt(0).Should().BeOfType(typeof(ToLowerExpressionProcessor));
+            sequenceOfExpressions.ElementAt(0).As<PropertyOperand>().ExpressionProcessors.ElementAt(1).Should().BeOfType(typeof(TrimExpressionProcessor));
+
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, parameterExpression);
+            queryResult.Should().HaveCount(2);
+            queryResult.Should().Contain(CarPool.carAudiA1);
+            queryResult.Should().Contain(CarPool.carAudiA3);
         }
     }
 }

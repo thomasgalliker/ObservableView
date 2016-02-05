@@ -64,7 +64,7 @@ namespace ObservableView
 
                 addMethod.GetGenericMethodDefinition()
                          .MakeGenericMethod(propertyInfo.PropertyType)
-                         .Invoke(this.SearchSpecification, new object[] { lambdaExpression, null });
+                         .Invoke(this.SearchSpecification, new object[] { lambdaExpression, null, null });
             }
         }
 

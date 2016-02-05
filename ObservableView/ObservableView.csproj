@@ -41,8 +41,10 @@
     <Compile Include="Searching\Operands\VariableOperand.cs" />
     <Compile Include="Searching\Operands\ConstantOperand.cs" />
     <Compile Include="Searching\ExpressionBuilder.cs" />
+    <Compile Include="Searching\Processors\ExpressionProcessor.cs" />
     <Compile Include="Searching\Processors\IExpressionProcessor.cs" />
-    <Compile Include="Searching\Processors\ToLowerExpression.cs" />
+    <Compile Include="Searching\Processors\TrimExpressionProcessor.cs" />
+    <Compile Include="Searching\Processors\ToLowerExpressionProcessor.cs" />
     <Compile Include="Searching\Operators\EqualOperator.cs" />
     <Compile Include="Searching\Operators\AndOperator.cs" />
     <Compile Include="Searching\Operations\BinaryOperation.cs" />

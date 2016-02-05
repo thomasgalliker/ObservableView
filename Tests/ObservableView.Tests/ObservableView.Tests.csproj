@@ -79,6 +79,7 @@
     <Compile Include="Searching\Operators\ContainsOperatorTests.cs" />
     <Compile Include="Searching\Operators\EqualOperatorTests.cs" />
     <Compile Include="Extensions\ExpressionExtensionsTests.cs" />
+    <Compile Include="Searching\Processors\ExpressionProcessorTests.cs" />
     <Compile Include="Sorting\NaturalSortComparableTests.cs" />
     <Compile Include="ObservableViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="TestData\CarBrand.cs" />
     <Compile Include="TestData\CarPool.cs" />
     <Compile Include="TestData\Person.cs" />
+    <Compile Include="TestData\TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
