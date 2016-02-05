@@ -14,7 +14,6 @@ namespace ObservableView.Grouping
             }
 
             return firstChar.ToString()
-                            .RemoveDiacritics()
                             .ToLower();
         }
     }
