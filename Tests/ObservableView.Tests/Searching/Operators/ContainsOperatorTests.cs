@@ -1,8 +1,12 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 
 using FluentAssertions;
 
+using ObservableView.Extensions;
 using ObservableView.Searching;
+using ObservableView.Searching.Operands;
+using ObservableView.Searching.Operations;
 using ObservableView.Searching.Operators;
 using ObservableView.Tests.TestData;
 
@@ -25,15 +29,50 @@ namespace ObservableView.Tests.Searching.Operators
             ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
 
-            ISearchSpecification<Car> searchSpecification = new SearchSpecification<Car>();
-            searchSpecification.Add(car => car.Year, BinaryOperator.Contains);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Year);
+            var propertyOperand = new PropertyOperand(propertyInfo);
+            var constantOperand = new ConstantOperand("20");
+
+            var containsOperator = new ContainsOperator();
+            var binaryOperation = new BinaryOperation(BinaryOperator.Contains, propertyOperand, constantOperand);
 
             // Act
-            var expression = expressionBuilder.Build(searchSpecification.BaseOperation);
+            var containsExpression = containsOperator.Build(expressionBuilder, binaryOperation);
 
             // Assert
-            expression.Should().NotBeNull();
-            expression.Type.Should().Be<bool>();
+            containsExpression.Should().NotBeNull();
+            containsExpression.Type.Should().Be<bool>();
+
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), containsExpression, parameterExpression);
+            queryResult.Should().HaveCount(4); // All built in year 20xx
+            queryResult.Should().Contain(CarPool.carAudiA1);
+            queryResult.Should().Contain(CarPool.carAudiA3);
+            queryResult.Should().Contain(CarPool.carBmwM1);
+            queryResult.Should().Contain(CarPool.carBmwM3);
+        }
+
+        [Fact]
+        public void ShouldRespectStringComparisonOrdinal()
+        {
+            // Arrange
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+
+            var propertyOperandModel = new PropertyOperand(ReflectionHelper<Car>.GetProperty(x => x.Model));
+            var constantOperand = new ConstantOperand("a");
+            var containsOperator = new ContainsOperator(StringComparison.Ordinal);
+            var binaryOperationModelContainsConst = new BinaryOperation(null, propertyOperandModel, constantOperand);
+
+            // Act
+            var containsExpression = containsOperator.Build(expressionBuilder, binaryOperationModelContainsConst);
+
+            // Assert
+            containsExpression.Should().NotBeNull();
+            containsExpression.Type.Should().Be<bool>();
+
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), containsExpression, parameterExpression);
+            queryResult.Should().HaveCount(1);
+            queryResult.Should().Contain(CarPool.carAudiA3); // Because of the 'a' in 'Sportback'
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using FluentAssertions;
 
 using ObservableView.Searching.Operators;
+using ObservableView.Searching.Processors;
 using ObservableView.Sorting;
 using ObservableView.Tests.TestData;
 
@@ -208,7 +209,7 @@ namespace ObservableView.Tests
             // Arrange
             var carsList = CarPool.GetDefaultCarsList();
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.SearchTextDelimiters = new [] {' '};
+            observableCarsView.SearchTextDelimiters = new[] { ' ' };
             observableCarsView.SearchTextLogic = SearchLogic.Or;
 
             // Act
@@ -232,7 +233,6 @@ namespace ObservableView.Tests
             var observableCarsView = new ObservableView<Car>(carsList);
             observableCarsView.SearchTextDelimiters = new[] { ' ' };
             observableCarsView.SearchTextLogic = SearchLogic.And;
-            observableCarsView.SearchSpecification.Add(c => c.Model, BinaryOperator.Contains);
 
             // Act
             observableCarsView.Search("M 3"); // The whitespace delimiter should act as logic AND operator
