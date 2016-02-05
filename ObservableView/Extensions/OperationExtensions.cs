@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using ObservableView.Filtering;
 using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;
 
