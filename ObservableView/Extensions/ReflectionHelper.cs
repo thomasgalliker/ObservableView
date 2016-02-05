@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace ObservableView.Extensions
 {
-    internal static class ReflectionHelper
+    internal static class ReflectionHelper // TODO : Move to TypeExtensions
     {
         public static Type GetGenericType(Type type)
         {
