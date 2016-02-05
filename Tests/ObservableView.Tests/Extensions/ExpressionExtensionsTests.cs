@@ -27,6 +27,23 @@ namespace ObservableView.Tests.Extensions
         }
 
         [Fact]
+        public void ShouldUpperExpressionTest()
+        {
+            // Arrange
+            const string InputString = "TeST";
+            var parameter = Expression.Parameter(typeof(string), "x");
+
+            // Act
+            var toLowerExpression = parameter.ToUpper();
+            var lambda = Expression.Lambda<Func<string, string>>(toLowerExpression, parameter);
+            var func = lambda.Compile();
+            var toLowerString = func(InputString);
+
+            // Assert
+            toLowerString.Should().Be("TEST");
+        }
+
+        [Fact]
         public void ShouldToStringExpressionTest()
         {
             // Arrange
@@ -41,42 +58,6 @@ namespace ObservableView.Tests.Extensions
 
             // Assert
             toString.Should().Be(InputString.ToString());
-        }
-
-        [Fact]
-        public void ShouldContainExpressionTest()
-        {
-            // Arrange
-            const string InputString = "testtesttesttest";
-            var parameter = Expression.Parameter(typeof(string), "x");
-            var testConstant = Expression.Constant("test");
-
-            // Act
-            var containsExpression = parameter.Contains(testConstant);
-            var lambda = Expression.Lambda<Func<string, bool>>(containsExpression, parameter);
-            var func = lambda.Compile();
-            var isContained = func(InputString);
-
-            // Assert
-            isContained.Should().BeTrue();
-        }
-
-        [Fact]
-        public void ShouldNotContainExpressionTest()
-        {
-            // Arrange
-            const string InputString = "nonononono";
-            var parameter = Expression.Parameter(typeof(string), "x");
-            var testConstant = Expression.Constant("test");
-
-            // Act
-            var containsExpression = parameter.Contains(testConstant);
-            var lambda = Expression.Lambda<Func<string, bool>>(containsExpression, parameter);
-            var func = lambda.Compile();
-            var isContained = func(InputString);
-
-            // Assert
-            isContained.Should().BeFalse();
         }
     }
 }

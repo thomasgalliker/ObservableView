@@ -1,27 +1,46 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 namespace ObservableView.Extensions
 {
-    internal static class ExpressionExtensions
+    public static class ExpressionExtensions
     {
-        internal static Expression ToLower(this Expression expression)
+        public static Expression ToLower(this Expression expression)
         {
-            var methodInfo = typeof(string).GetRuntimeMethod("ToLower", new Type[] { });
+            EnsureToString(ref expression);
+
+            var methodInfo = ReflectionHelper<string>.GetMethod(source => source.ToLower());
             return Expression.Call(expression, methodInfo);
         }
 
-        internal static Expression ToStringExpression(this Expression expression)
+        public static Expression ToUpper(this Expression expression)
         {
-            var methodInfo = typeof(object).GetRuntimeMethod("ToString", new Type[] { });
+            EnsureToString(ref expression);
+
+            var methodInfo = ReflectionHelper<string>.GetMethod(source => source.ToUpper());
             return Expression.Call(expression, methodInfo);
         }
 
-        internal static Expression Contains(this Expression expression, Expression containsExpression)
+        public static Expression Trim(this Expression expression)
         {
-            var methodInfo = typeof(string).GetRuntimeMethod("Contains", new[] { typeof(string) });
-            return Expression.Call(expression, methodInfo, containsExpression);
+            EnsureToString(ref expression);
+
+            var methodInfo = ReflectionHelper<string>.GetMethod(source => source.Trim());
+            return Expression.Call(expression, methodInfo);
+        }
+
+        public static Expression ToStringExpression(this Expression expression)
+        {
+            var methodInfo = ReflectionHelper<string>.GetMethod(source => source.ToString());
+            return Expression.Call(expression, methodInfo);
+        }
+
+        private static void EnsureToString(ref Expression expression)
+        {
+            if (expression.Type != typeof(string))
+            {
+                expression = expression.ToStringExpression();
+            }
         }
     }
 }
