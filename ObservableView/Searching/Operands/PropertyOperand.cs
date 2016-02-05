@@ -1,49 +1,39 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-using ObservableView.Extensions;
+using ObservableView.Searching.Processors;
 
 namespace ObservableView.Searching.Operands
 {
     [DataContract(Name = "PropertyOperand")]
-    [DebuggerDisplay("PropertyOperand: Name={PropertyInfo.Name}")]
-    public class PropertyOperand : IOperand
+    [DebuggerDisplay("PropertyOperand: Name={PropertyInfo.Name}, Type={PropertyInfo.PropertyType.Name}")]
+    public class PropertyOperand : Operand
     {
-        public PropertyOperand(PropertyInfo propertyInfo)
+        public PropertyOperand(PropertyInfo propertyInfo, IExpressionProcessor[] expressionProcessors = null)
         {
             this.PropertyInfo = propertyInfo;
+            this.ExpressionProcessors = expressionProcessors;
         }
 
         [DataMember(Name = "PropertyInfo", IsRequired = true)]
         public PropertyInfo PropertyInfo { get; set; }
 
-        public Expression Build(IExpressionBuilder expressionBuilder)
+        public override Expression Build(IExpressionBuilder expressionBuilder)
         {
-            Expression returnExpression = null;
             Expression propertyExpression = Expression.Property(expressionBuilder.ParameterExpression, this.PropertyInfo);
 
-            if (propertyExpression.Type == typeof(string))
+            // TODO Move ExpressionProcessors to PropertyOperand (not used anywhere else)...
+            if (this.ExpressionProcessors != null)
             {
-                // If the given property is of type string, we want to compare them in lower letters.
-                Expression toLowerExpression = propertyExpression.ToLower();
-                returnExpression = toLowerExpression;
-            }
-            else if (propertyExpression.Type == typeof(int))
-            {
-                // If the given property is of type integer, we want to convert it to string first.
-                Expression leftToLower = propertyExpression.ToStringExpression();
-                returnExpression = leftToLower;
-            }
-            else if (propertyExpression.Type.GetTypeInfo().IsEnum)
-            {
-                // TODO: Handle enum localized strings
-                throw new NotImplementedException("Handing of enums is not yet implemented.");
+                foreach (var expressionProcessor in this.ExpressionProcessors)
+                {
+                    propertyExpression = expressionProcessor.Process(propertyExpression);
+                }
             }
 
-            return returnExpression;
+            return propertyExpression;
         }
     }
 }

@@ -1,6 +1,11 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Linq.Expressions;
 
+using FluentAssertions;
+
+using ObservableView.Searching;
 using ObservableView.Searching.Operands;
+using ObservableView.Tests.TestData;
 
 using Xunit;
 
@@ -15,6 +20,7 @@ namespace ObservableView.Tests.Searching.Operands
             var constantOperand = new ConstantOperand("test");
 
             // Assert
+            constantOperand.Should().NotBeNull();
             constantOperand.Type.Should().Be<string>();
         }
 
@@ -30,7 +36,56 @@ namespace ObservableView.Tests.Searching.Operands
             constantOperand.Value = ChangedValue;
 
             // Assert
+            constantOperand.Should().NotBeNull();
             constantOperand.Type.Should().Be<int>();
+        }
+
+        [Fact]
+        public void ShouldBuildStringConstant()
+        {
+            // Arrange
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+
+            var constantOperand = new ConstantOperand(CarPool.carVwGolf.Model);
+
+            // Act
+            var expression = constantOperand.Build(expressionBuilder);
+
+            // Assert
+            expression.Should().NotBeNull();
+            expression.Type.Should().Be<string>();
+
+            var lambda = Expression.Lambda<Func<string>>(expression);
+            var func = lambda.Compile();
+            var modelName = func();
+
+            modelName.Should().Be(CarPool.carVwGolf.Model);
+        }
+
+        [Fact]
+        public void ShouldReturnDefaultValueOfNullableInteger()
+        {
+            // Arrange
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+
+            var constantOperand = new ConstantOperand(typeof(int?));
+
+            // Act
+            var expression = constantOperand.Build(expressionBuilder);
+
+            // Assert
+            constantOperand.Value.Should().BeNull();
+
+            expression.Should().NotBeNull();
+            expression.Type.Should().Be<int?>();
+
+            var lambda = Expression.Lambda<Func<int?>>(expression);
+            var func = lambda.Compile();
+            var constantValue = func();
+
+            constantValue.Should().Be(default(int?));
         }
     }
 }

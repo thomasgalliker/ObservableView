@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 
 namespace ObservableView.Searching.Processors
@@ -13,6 +14,14 @@ namespace ObservableView.Searching.Processors
             get
             {
                 return new ToLowerExpressionProcessor();
+            }
+        }
+
+        public static ToUpperExpressionProcessor ToUpper
+        {
+            get
+            {
+                return new ToUpperExpressionProcessor();
             }
         }
 

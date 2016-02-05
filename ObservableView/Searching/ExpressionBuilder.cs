@@ -29,31 +29,5 @@ namespace ObservableView.Searching
         {
             return operand.Build(this);
         }
-
-        /// <summary>
-        /// Checks if the type of the left openad mismatches the type of the right operand.
-        /// </summary>
-        /// <returns></returns>
-        public static bool CheckIfSourceToTargetTypeMismatch(IOperand left, IOperand right) // TODO GATH: Wrong place for this code
-        {
-            bool typeMismatch = false;
-
-            var propertyOperand = left as PropertyOperand;
-            var variableOperand = right as VariableOperand;
-
-            if (propertyOperand != null && variableOperand != null)
-            {
-                Type propertyType = propertyOperand.PropertyInfo.PropertyType;
-
-                if (propertyType != null && 
-                    propertyType.GetTypeInfo().IsValueType &&
-                    !ReflectionHelper.IsNullable(propertyType) &&
-                    variableOperand.Value == null)
-                {
-                    typeMismatch = true;
-                }
-            }
-            return typeMismatch;
-        }
     }
 }

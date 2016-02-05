@@ -8,16 +8,22 @@ using ObservableView.Extensions;
 
 namespace ObservableView.Searching.Operands
 {
-    [DebuggerDisplay("ConstantOperand: Value={Value}")]
-    public class ConstantOperand : IOperand
+    [DebuggerDisplay("ConstantOperand: Value={Value}, Type={Type}")]
+    public class ConstantOperand : Operand
     {
         private object value;
 
+        /// <summary>
+        /// Takes a <param name="type">target type</param>. The value is not (yet) specified.
+        /// </summary>
         public ConstantOperand(Type type)
         {
             this.Type = type;
         }
 
+        /// <summary>
+        /// Takes a <param name="value">value</param> of arbitrary data.
+        /// </summary>
         public ConstantOperand(object value)
         {
             if (value == null)
@@ -27,6 +33,16 @@ namespace ObservableView.Searching.Operands
 
             this.Value = value;
             this.Type = value.GetType();
+        }
+
+        /// <summary>
+        /// Takes a <param name="value">value</param> of arbitrary data
+        /// which will be converted to <param name="type">type</param> at build time.
+        /// </summary>
+        public ConstantOperand(object value, Type type)
+            : this(value)
+        {
+            this.Type = type;
         }
 
         public Type Type { get; private set; }
@@ -44,18 +60,12 @@ namespace ObservableView.Searching.Operands
             }
         }
 
-        public Expression Build(IExpressionBuilder expressionBuilder)
+        public override Expression Build(IExpressionBuilder expressionBuilder)
         {
             Expression constantExpression = null;
 
             var genericType = ReflectionHelper.GetGenericType(this.Type);
             object convertedValue = CheckAndConvertType(genericType, this.Value);
-
-            var str = convertedValue as string;
-            if (str != null)
-            {
-                convertedValue = str.ToLowerInvariant();
-            }
 
             if (convertedValue == null)
             {
