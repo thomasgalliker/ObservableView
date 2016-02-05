@@ -6,6 +6,7 @@ using System.Reflection;
 using FluentAssertions;
 
 using ObservableView.Extensions;
+using ObservableView.Tests.TestData;
 
 using Xunit;
 
@@ -14,15 +15,13 @@ namespace ObservableView.Tests.Extensions
     public class QueryableExtensionsTests
     {
         [Fact]
-        public void ShouldApplyWhereExpression()
+        public void ShouldApplyContainsExpressionToWhereExtensionMethod()
         {
             // Arrange
-            var parameterExpression = Expression.Parameter(typeof(Foo), "x");
-            Expression containsExpression = GetExpression<Foo>(parameterExpression, "Bar", "a");
-            var foo1 = new Foo { Bar = "aaa" };
-            var foo2 = new Foo { Bar = "bbb" };
-            IEnumerable<Foo> viewCollection = new List<Foo> { foo1, foo2 };
-            IQueryable<Foo> queryableDtos = viewCollection.AsQueryable();
+            var parameterExpression = Expression.Parameter(typeof(Car), "x");
+            Expression containsExpression = GetContainsExpression(parameterExpression, propertyName: "Model", propertyValue: "Golf");
+            IEnumerable<Car> viewCollection = CarPool.GetDefaultCarsList();
+            IQueryable<Car> queryableDtos = viewCollection.AsQueryable();
 
             // Act
             var whereList = queryableDtos.Where(containsExpression, parameterExpression).ToList();
@@ -30,15 +29,10 @@ namespace ObservableView.Tests.Extensions
             // Assert
             whereList.Should().NotBeNull();
             whereList.Should().HaveCount(1);
-            whereList.Should().Contain(foo1);
+            whereList.Should().Contain(CarPool.carVwGolf);
         }
 
-        class Foo
-        {
-            public string Bar { get; set; }
-        }
-
-        static Expression GetExpression<T>(ParameterExpression parameterExpression, string propertyName, string propertyValue)
+        private static Expression GetContainsExpression(ParameterExpression parameterExpression, string propertyName, string propertyValue)
         {
             var propertyExp = Expression.Property(parameterExpression, propertyName);
             MethodInfo containsMethodInfo = ReflectionHelper<string>.GetMethod<string>((source, argument) => source.Contains(argument));
