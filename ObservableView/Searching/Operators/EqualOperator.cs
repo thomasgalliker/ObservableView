@@ -20,7 +20,10 @@ namespace ObservableView.Searching.Operators
                 return Expression.Equal(Expression.Constant(true), Expression.Constant(false));
             }
 
-            Expression equalExpression = Expression.Equal(expressionBuilder.Build(binaryOperation.LeftOperand), expressionBuilder.Build(binaryOperation.RightOperand));
+            Expression leftExpression = expressionBuilder.Build(binaryOperation.LeftOperand);
+            Expression rightExpression = expressionBuilder.Build(binaryOperation.RightOperand);
+
+            Expression equalExpression = Expression.Equal(leftExpression, rightExpression);
             return equalExpression;
         }
     }
