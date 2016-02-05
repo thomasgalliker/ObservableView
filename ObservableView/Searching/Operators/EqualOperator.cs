@@ -1,7 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.Serialization;
 
+using ObservableView.Extensions;
 using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;
 
@@ -13,12 +16,7 @@ namespace ObservableView.Searching.Operators
     {
         public override Expression Build(IExpressionBuilder expressionBuilder, Operation operation)
         {
-            BinaryOperation binaryOperation = (BinaryOperation)operation;
-
-            if (ExpressionBuilder.CheckIfSourceToTargetTypeMismatch(binaryOperation.LeftOperand, binaryOperation.RightOperand))
-            {
-                return Expression.Equal(Expression.Constant(true), Expression.Constant(false));
-            }
+            BinaryOperation binaryOperation = (BinaryOperation)operation; // TODO : Move to BinaryOperator
 
             Expression leftExpression = expressionBuilder.Build(binaryOperation.LeftOperand);
             Expression rightExpression = expressionBuilder.Build(binaryOperation.RightOperand);
