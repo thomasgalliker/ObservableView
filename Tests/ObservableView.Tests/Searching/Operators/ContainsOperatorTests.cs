@@ -44,9 +44,10 @@ namespace ObservableView.Tests.Searching.Operators
             containsExpression.Type.Should().Be<bool>();
 
             var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), containsExpression, parameterExpression);
-            queryResult.Should().HaveCount(4); // All built in year 20xx
+            queryResult.Should().HaveCount(5); // All built in year 20xx
             queryResult.Should().Contain(CarPool.carAudiA1);
             queryResult.Should().Contain(CarPool.carAudiA3);
+            queryResult.Should().Contain(CarPool.carAudiA4);
             queryResult.Should().Contain(CarPool.carBmwM1);
             queryResult.Should().Contain(CarPool.carBmwM3);
         }
@@ -71,8 +72,9 @@ namespace ObservableView.Tests.Searching.Operators
             containsExpression.Type.Should().Be<bool>();
 
             var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), containsExpression, parameterExpression);
-            queryResult.Should().HaveCount(1);
+            queryResult.Should().HaveCount(2);
             queryResult.Should().Contain(CarPool.carAudiA3); // Because of the 'a' in 'Sportback'
+            queryResult.Should().Contain(CarPool.carAudiA4); // Because of the 'a' in 'Avant'
         }
     }
 }

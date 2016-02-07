@@ -38,6 +38,7 @@
     <Compile Include="Exceptions\SearchTextPreprocessorException.cs" />
     <Compile Include="Extensions\OperationExtensions.cs" />
     <Compile Include="Extensions\QueryableExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Searching\Operands\Operand.cs" />
     <Compile Include="Searching\Operands\VariableOperand.cs" />
     <Compile Include="Searching\Operands\ConstantOperand.cs" />

@@ -8,7 +8,7 @@ namespace ObservableView.Tests.TestData
     static class CarPool
     {
         public static readonly Car carAudiA1 = new Car(CarBrand.Audi, "A1", "AA6D11BF", 2013);
-        public static readonly Car carAudiA4 = new Car(CarBrand.Audi, "A4 Avant", "E92230D9", 2000);
+        public static readonly Car carAudiA4 = new Car(CarBrand.Audi, "A4 Avant", null, 2000);
         public static readonly Car carAudiA3 = new Car(CarBrand.Audi, "A3 Sportback", "AA8AFB35", 2015);
         public static readonly Car carBmwM1 = new Car(CarBrand.BMW, "M1", "9E837EB8", 2014);
         public static readonly Car carBmwM3 = new Car(CarBrand.BMW, "M3", "C1C2D592", 2012);
@@ -22,6 +22,7 @@ namespace ObservableView.Tests.TestData
             var carsList = new ObservableCollection<Car>
             {
                 CarPool.carAudiA1,
+                CarPool.carAudiA4,
                 CarPool.carAudiA3,
                 CarPool.carBmwM1,
                 CarPool.carBmwM3,

@@ -4,23 +4,6 @@ using System.Reflection;
 
 namespace ObservableView.Extensions
 {
-    internal static class ReflectionHelper // TODO : Move to TypeExtensions
-    {
-        public static Type GetGenericType(Type type)
-        {
-            if (IsNullable(type))
-            {
-                type = type.GetTypeInfo().GenericTypeArguments[0];
-            }
-            return type;
-        }
-
-        public static bool IsNullable(Type type)
-        {
-            return type != null && type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-        }
-    }
-
     internal static class ReflectionHelper<T>
     {
         /// <summary>
