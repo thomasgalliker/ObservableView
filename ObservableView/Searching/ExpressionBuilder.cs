@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
+﻿using System.Linq.Expressions;
 
-using ObservableView.Extensions;
 using ObservableView.Searching.Operands;
 
 namespace ObservableView.Searching
