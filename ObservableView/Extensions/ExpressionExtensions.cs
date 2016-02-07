@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 
 namespace ObservableView.Extensions
 {
@@ -10,7 +9,10 @@ namespace ObservableView.Extensions
             EnsureToString(ref expression);
 
             var methodInfo = ReflectionHelper<string>.GetMethod(source => source.ToLower());
-            return Expression.Call(expression, methodInfo);
+            var toLowerExpression = Expression.Call(expression, methodInfo);
+
+            expression = IsNotNull(expression, toLowerExpression);
+            return expression;
         }
 
         public static Expression ToUpper(this Expression expression)
@@ -18,7 +20,10 @@ namespace ObservableView.Extensions
             EnsureToString(ref expression);
 
             var methodInfo = ReflectionHelper<string>.GetMethod(source => source.ToUpper());
-            return Expression.Call(expression, methodInfo);
+            var toUpperExpression = Expression.Call(expression, methodInfo);
+
+            expression = IsNotNull(expression, toUpperExpression);
+            return expression;
         }
 
         public static Expression Trim(this Expression expression)
@@ -26,7 +31,10 @@ namespace ObservableView.Extensions
             EnsureToString(ref expression);
 
             var methodInfo = ReflectionHelper<string>.GetMethod(source => source.Trim());
-            return Expression.Call(expression, methodInfo);
+            var trimExpression = Expression.Call(expression, methodInfo);
+
+            expression = IsNotNull(expression, trimExpression);
+            return expression;
         }
 
         public static Expression ToStringExpression(this Expression expression)
@@ -41,6 +49,16 @@ namespace ObservableView.Extensions
             {
                 expression = expression.ToStringExpression();
             }
+        }
+
+        public static Expression IsNotNull(this Expression checkExpression, Expression expressionIfNotNull)
+        {
+            var expression = Expression.Condition(
+                 Expression.NotEqual(checkExpression, Expression.Constant(null, checkExpression.Type)),
+                 expressionIfNotNull,
+                 Expression.Constant(string.Empty));
+
+            return expression;
         }
     }
 }
