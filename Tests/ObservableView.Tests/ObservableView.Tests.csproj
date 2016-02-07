@@ -91,6 +91,8 @@
     <Compile Include="TestData\Car.cs" />
     <Compile Include="TestData\CarBrand.cs" />
     <Compile Include="TestData\CarPool.cs" />
+    <Compile Include="TestData\Engine.cs" />
+    <Compile Include="TestData\FuelType.cs" />
     <Compile Include="TestData\Person.cs" />
     <Compile Include="TestData\TestHelper.cs" />
   </ItemGroup>
