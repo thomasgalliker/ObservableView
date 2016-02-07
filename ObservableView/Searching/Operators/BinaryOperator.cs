@@ -15,7 +15,14 @@ namespace ObservableView.Searching.Operators
             ////derivedTypes = FindDerivedTypes<BinaryOperator>().ToList();
         }
 
-        public abstract Expression Build(IExpressionBuilder expressionBuilder, Operation operation);
+        public Expression Build(IExpressionBuilder expressionBuilder, Operation operation)
+        {
+            var binaryOperation = (BinaryOperation)operation;
+
+            return this.Build(expressionBuilder, binaryOperation);
+        }
+
+        public abstract Expression Build(IExpressionBuilder expressionBuilder, BinaryOperation operation);
 
         ////public static IEnumerable<Type> FindDerivedTypes<T>()
         ////{
@@ -27,7 +34,7 @@ namespace ObservableView.Searching.Operators
         ////                                            t.GetTypeInfo().IsAbstract == false &&
         ////                                            t.GetTypeInfo().IsSubclassOf(baseType));
         ////}
-        
+
         public static EqualOperator Equal
         {
             get
