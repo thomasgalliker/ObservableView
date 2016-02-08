@@ -19,8 +19,7 @@ namespace ObservableView.Tests.Searching
         public void ShouldBuildBasicSearchSpecification()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             ISearchSpecification<Car> searchSpecification = new SearchSpecification<Car>();
             searchSpecification
@@ -35,8 +34,37 @@ namespace ObservableView.Tests.Searching
             expression.Should().NotBeNull();
             expression.Type.Should().Be<bool>();
 
-            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, parameterExpression);
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, expressionBuilder.ParameterExpression);
+            queryResult.Should().HaveCount(1);
             queryResult.Should().Contain(CarPool.carVwGolf);
+        }
+
+        [Fact]
+        public void ShouldTakeParameterExpressionInConstructor()
+        {
+            // Arrange
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
+
+            // Act
+            var expressionBuilder = new ExpressionBuilder(parameterExpression: parameterExpression);
+
+            // Assert
+            expressionBuilder.ParameterExpression.Should().NotBeNull();
+            expressionBuilder.ParameterExpression.Name.Should().Be("c");
+        }
+
+        [Fact]
+        public void ShouldGenerateParameterExpressionBasedOnParameterType()
+        {
+            // Arrange
+            var parameterType = typeof(Car);
+
+            // Act
+            var expressionBuilder = new ExpressionBuilder(parameterType: parameterType);
+
+            // Assert
+            expressionBuilder.ParameterExpression.Should().NotBeNull();
+            expressionBuilder.ParameterExpression.Name.Should().Be("c");
         }
     }
 }

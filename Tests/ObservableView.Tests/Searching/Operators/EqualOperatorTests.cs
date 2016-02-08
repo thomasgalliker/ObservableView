@@ -21,8 +21,7 @@ namespace ObservableView.Tests.Searching.Operators
         public void ShouldCompareStringPropertyWithEqual()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Model);
             PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
@@ -38,7 +37,7 @@ namespace ObservableView.Tests.Searching.Operators
             expression.Should().NotBeNull();
             expression.Type.Should().Be<bool>();
 
-            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, parameterExpression);
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(1);
             queryResult.Should().Contain(CarPool.carAudiA1);
         }
@@ -47,8 +46,7 @@ namespace ObservableView.Tests.Searching.Operators
         public void ShouldCompareIntegerPropertyWithEqual()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year);
             PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
@@ -64,7 +62,7 @@ namespace ObservableView.Tests.Searching.Operators
             expression.Should().NotBeNull();
             expression.Type.Should().Be<bool>();
 
-            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, parameterExpression);
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(1);
             queryResult.Should().Contain(CarPool.carBmwM3);
         }
@@ -73,8 +71,7 @@ namespace ObservableView.Tests.Searching.Operators
         public void ShouldCompareReferenceTypePropertyWithEqual()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Engine);
             PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
@@ -89,7 +86,7 @@ namespace ObservableView.Tests.Searching.Operators
             expression.Should().NotBeNull();
             expression.Type.Should().Be<bool>();
 
-            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, parameterExpression);
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(1);
             queryResult.Should().Contain(CarPool.carVwGolf);
         }
@@ -98,8 +95,7 @@ namespace ObservableView.Tests.Searching.Operators
         public void ShouldCompareNullReferenceTypePropertyWithEqual()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Engine);
             PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
@@ -114,7 +110,7 @@ namespace ObservableView.Tests.Searching.Operators
             expression.Should().NotBeNull();
             expression.Type.Should().Be<bool>();
 
-            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, parameterExpression);
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(1);
             queryResult.Should().Contain(CarPool.carAudiA4);
         }
@@ -123,8 +119,7 @@ namespace ObservableView.Tests.Searching.Operators
         public void ShouldThrowInvalidOperationExceptionIfSourceAndTargetTypeMismatch()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year);
             PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
@@ -144,8 +139,7 @@ namespace ObservableView.Tests.Searching.Operators
         public void ShouldNotThrowIfConstantOperandIsConvertedToPropertyType()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year);
             PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
@@ -161,7 +155,7 @@ namespace ObservableView.Tests.Searching.Operators
             expression.Should().NotBeNull();
             expression.Type.Should().Be<bool>();
 
-            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, parameterExpression);
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(1);
             queryResult.Should().Contain(CarPool.carBmwM3);
         }

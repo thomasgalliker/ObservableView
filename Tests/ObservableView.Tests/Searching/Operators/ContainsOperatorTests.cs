@@ -26,8 +26,7 @@ namespace ObservableView.Tests.Searching.Operators
         public void ShouldAllowContainsOperatorWithIntegerValues()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Year);
             var propertyOperand = new PropertyOperand(propertyInfo);
@@ -43,7 +42,7 @@ namespace ObservableView.Tests.Searching.Operators
             containsExpression.Should().NotBeNull();
             containsExpression.Type.Should().Be<bool>();
 
-            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), containsExpression, parameterExpression);
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), containsExpression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(5); // All built in year 20xx
             queryResult.Should().Contain(CarPool.carAudiA1);
             queryResult.Should().Contain(CarPool.carAudiA3);
@@ -56,8 +55,7 @@ namespace ObservableView.Tests.Searching.Operators
         public void ShouldRespectStringComparisonOrdinal()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyOperandModel = new PropertyOperand(ReflectionHelper<Car>.GetProperty(x => x.Model));
             var constantOperand = new ConstantOperand("a");
@@ -71,7 +69,7 @@ namespace ObservableView.Tests.Searching.Operators
             containsExpression.Should().NotBeNull();
             containsExpression.Type.Should().Be<bool>();
 
-            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), containsExpression, parameterExpression);
+            var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), containsExpression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(2);
             queryResult.Should().Contain(CarPool.carAudiA3); // Because of the 'a' in 'Sportback'
             queryResult.Should().Contain(CarPool.carAudiA4); // Because of the 'a' in 'Avant'

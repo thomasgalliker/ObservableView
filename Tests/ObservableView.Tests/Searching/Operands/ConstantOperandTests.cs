@@ -44,8 +44,7 @@ namespace ObservableView.Tests.Searching.Operands
         public void ShouldBuildStringConstant()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var constantOperand = new ConstantOperand(CarPool.carVwGolf.Model);
 
@@ -67,8 +66,7 @@ namespace ObservableView.Tests.Searching.Operands
         public void ShouldReturnDefaultValueOfNullableInteger()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var constantOperand = new ConstantOperand(typeof(int?));
 

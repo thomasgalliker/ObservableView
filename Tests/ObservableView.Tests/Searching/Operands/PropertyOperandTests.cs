@@ -19,8 +19,7 @@ namespace ObservableView.Tests.Searching.Operands
         public void ShouldBuildWithoutExpressionProcessors()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Model);
             var propertyOperand = new PropertyOperand(propertyInfo: propertyInfo, expressionProcessors: null);
@@ -32,7 +31,7 @@ namespace ObservableView.Tests.Searching.Operands
             propertyExpression.Should().NotBeNull();
             propertyExpression.Type.Should().Be<string>();
 
-            var lambda = Expression.Lambda<Func<Car, string>>(propertyExpression, parameterExpression);
+            var lambda = Expression.Lambda<Func<Car, string>>(propertyExpression, expressionBuilder.ParameterExpression);
             var func = lambda.Compile();
             var modelName = func(CarPool.carVwGolf);
 
@@ -43,8 +42,7 @@ namespace ObservableView.Tests.Searching.Operands
         public void ShouldBuildWithExpressionProcessors()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
-            IExpressionBuilder expressionBuilder = new ExpressionBuilder(parameterExpression);
+            IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
             var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Model);
             var expressionProcessors = new IExpressionProcessor[] { ExpressionProcessor.ToLower, ExpressionProcessor.ToUpper };
@@ -57,7 +55,7 @@ namespace ObservableView.Tests.Searching.Operands
             propertyExpression.Should().NotBeNull();
             propertyExpression.Type.Should().Be<string>();
 
-            var lambda = Expression.Lambda<Func<Car, string>>(propertyExpression, parameterExpression);
+            var lambda = Expression.Lambda<Func<Car, string>>(propertyExpression, expressionBuilder.ParameterExpression);
             var func = lambda.Compile();
             var modelName = func(CarPool.carVwGolf);
 
