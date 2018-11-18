@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView.NuGet", "Obs
 	ProjectSection(ProjectDependencies) = postProject
 		{56A56F17-7DE1-4CA1-9617-BF32E971AC84} = {56A56F17-7DE1-4CA1-9617-BF32E971AC84}
 		{A6FCEF44-D2BA-42C7-B3CB-13667BCD7B54} = {A6FCEF44-D2BA-42C7-B3CB-13667BCD7B54}
+		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4} = {51F82CDE-4000-4FA3-AE4D-A62193B31FC4}
 		{2882AEEB-D4CD-4EB9-8A6C-6653B33681F0} = {2882AEEB-D4CD-4EB9-8A6C-6653B33681F0}
 	EndProjectSection
 EndProject
@@ -29,6 +30,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Data", "Samples\ObservableViewSample.Data\ObservableViewSample.Data.csproj", "{B49937EF-91FB-420A-8A1E-D268F6CC1E01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView.Netfx", "ObservableView.Netfx\ObservableView.Netfx.csproj", "{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5553677C-649F-4E04-A243-6AA1A31612ED}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		clean.bat = clean.bat
+		logo.png = logo.png
+		Readme.md = Readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

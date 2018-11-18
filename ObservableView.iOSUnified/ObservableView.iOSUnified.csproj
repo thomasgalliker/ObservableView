@@ -37,9 +37,6 @@
     <DefineConstants>TRACE;__UNIFIED__;__MOBILE__;__IOS__;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\ObservableView.iOS\ObservableViewTableViewController.cs">
-      <Link>ObservableViewTableViewController.cs</Link>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

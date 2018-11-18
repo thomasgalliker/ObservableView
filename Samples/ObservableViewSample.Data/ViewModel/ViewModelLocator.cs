@@ -1,6 +1,5 @@
+using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
-
-using Microsoft.Practices.ServiceLocation;
 
 using ObservableViewSample.Data.Model;
 using ObservableViewSample.Data.Service;
