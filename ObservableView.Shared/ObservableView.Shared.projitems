@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>19623a92-f3f3-49a8-85b6-ffdb96828350</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ObservableView.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ExpressionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filtering\FilterEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filtering\FilterEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\AlphaGroupKeyAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\Grouping.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\IGroupKeyAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IObservableView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObservableView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\SearchableAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sorting\NaturalSortComparable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sorting\OrderDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sorting\OrderSpecification.cs" />
+  </ItemGroup>
+</Project>

@@ -3,16 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28306.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{B5AEA046-0E87-4A7B-8F11-80B6BDDA1F2A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView.NuGet", "ObservableView.NuGet\ObservableView.NuGet.csproj", "{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{56A56F17-7DE1-4CA1-9617-BF32E971AC84} = {56A56F17-7DE1-4CA1-9617-BF32E971AC84}
-		{A6FCEF44-D2BA-42C7-B3CB-13667BCD7B54} = {A6FCEF44-D2BA-42C7-B3CB-13667BCD7B54}
-		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4} = {51F82CDE-4000-4FA3-AE4D-A62193B31FC4}
-		{2882AEEB-D4CD-4EB9-8A6C-6653B33681F0} = {2882AEEB-D4CD-4EB9-8A6C-6653B33681F0}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView.Android", "ObservableView.Android\ObservableView.Android.csproj", "{56A56F17-7DE1-4CA1-9617-BF32E971AC84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView.iOSUnified", "ObservableView.iOSUnified\ObservableView.iOSUnified.csproj", "{2882AEEB-D4CD-4EB9-8A6C-6653B33681F0}"
@@ -36,10 +26,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		clean.bat = clean.bat
 		logo.png = logo.png
+		Package.nuspec = Package.nuspec
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableView.NetStandard", "ObservableView.NetStandard\ObservableView.NetStandard.csproj", "{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ObservableView.Shared", "ObservableView.Shared\ObservableView.Shared.shproj", "{19623A92-F3F3-49A8-85B6-FFDB96828350}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ObservableView.Shared\ObservableView.Shared.projitems*{19623a92-f3f3-49a8-85b6-ffdb96828350}*SharedItemsImports = 13
+		ObservableView.Shared\ObservableView.Shared.projitems*{2882aeeb-d4cd-4eb9-8a6c-6653b33681f0}*SharedItemsImports = 4
+		ObservableView.Shared\ObservableView.Shared.projitems*{51f82cde-4000-4fa3-ae4d-a62193b31fc4}*SharedItemsImports = 4
+		ObservableView.Shared\ObservableView.Shared.projitems*{56a56f17-7de1-4ca1-9617-bf32e971ac84}*SharedItemsImports = 4
+		ObservableView.Shared\ObservableView.Shared.projitems*{a6fcef44-d2ba-42c7-b3cb-13667bcd7b54}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -51,15 +53,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Release|ARM.ActiveCfg = Release|Any CPU
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Release|x64.ActiveCfg = Release|Any CPU
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE}.Release|x86.ActiveCfg = Release|Any CPU
 		{56A56F17-7DE1-4CA1-9617-BF32E971AC84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56A56F17-7DE1-4CA1-9617-BF32E971AC84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56A56F17-7DE1-4CA1-9617-BF32E971AC84}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -130,12 +123,27 @@ Global
 		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Release|ARM.ActiveCfg = Release|Any CPU
 		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Release|x64.ActiveCfg = Release|Any CPU
 		{51F82CDE-4000-4FA3-AE4D-A62193B31FC4}.Release|x86.ActiveCfg = Release|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Debug|ARM.Build.0 = Debug|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Debug|x64.Build.0 = Debug|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Debug|x86.Build.0 = Debug|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Release|ARM.ActiveCfg = Release|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Release|ARM.Build.0 = Release|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Release|x64.ActiveCfg = Release|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Release|x64.Build.0 = Release|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Release|x86.ActiveCfg = Release|Any CPU
+		{2AFB1D7C-1A33-44B8-98F1-FFCEE60FDE51}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2CF5E868-1098-4C6D-9001-27D8DC0D87BE} = {B5AEA046-0E87-4A7B-8F11-80B6BDDA1F2A}
 		{C99D79B8-EB49-4F3D-94EE-B7D0F172CB75} = {533683F1-B92C-4149-A2AD-6045623BC6D8}
 		{438799A2-BCC0-458D-88DC-E41A1C82AF22} = {6A8A489A-4C74-498F-9664-DDB7600F8AC5}
 		{B49937EF-91FB-420A-8A1E-D268F6CC1E01} = {6A8A489A-4C74-498F-9664-DDB7600F8AC5}

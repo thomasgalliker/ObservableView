@@ -35,22 +35,9 @@
     <DocumentationFile>bin\Release\ObservableView.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Filtering\FilterEventArgs.cs" />
-    <Compile Include="Filtering\FilterEventHandler.cs" />
-    <Compile Include="Grouping\Grouping.cs" />
-    <Compile Include="Grouping\AlphaGroupKeyAlgorithm.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Extensions\ExpressionExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Grouping\IGroupKeyAlgorithm.cs" />
-    <Compile Include="IObservableView.cs" />
-    <Compile Include="ObservableView.cs" />
-    <Compile Include="Sorting\OrderDirection.cs" />
-    <Compile Include="Sorting\OrderSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Searching\SearchableAttribute.cs" />
-    <Compile Include="Sorting\NaturalSortComparable.cs" />
   </ItemGroup>
+  <Import Project="..\ObservableView.Shared\ObservableView.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
