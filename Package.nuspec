@@ -11,10 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering and sorting.</summary>
     <description>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering and sorting.</description>
-    <tags>
-      xamarin pcl ObservableView plugin for settings ObservableView ObservableCollection
-      android xamarin.forms xamarin.ios ios monoandroid monodroid monotouch
-    </tags>
+    <tags>ObservableView;ObservableCollection;observable;collection;view;search;searching;filter;filtering;sort;sorting</tags>
     <releaseNotes>
 2.0.0
 - Support for .Net Standard 2.0
@@ -31,19 +28,19 @@
   </metadata>
   <files>
     <!--PCL-->
-    <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.dll" />
-    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.pdb" />
-    <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.xml" />
+    <file src="ObservableView\bin\Release\ObservableView.dll" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.dll" />
+    <file src="ObservableView\bin\Release\ObservableView.pdb" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.pdb" />
+    <file src="ObservableView\bin\Release\ObservableView.xml" target="lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\ObservableView.xml" />
 
     <!--Xamarin.Android-->
-    <file src="..\ObservableView.Android\bin\Release\ObservableView.dll" target="lib\monoandroid10\ObservableView.dll" />
-    <file src="..\ObservableView.Android\bin\Release\ObservableView.pdb" target="lib\monoandroid10\ObservableView.pdb" />
-    <file src="..\ObservableView.Android\bin\Release\ObservableView.xml" target="lib\monoandroid10\ObservableView.xml" />
+    <file src="ObservableView.Android\bin\Release\ObservableView.dll" target="lib\monoandroid10\ObservableView.dll" />
+    <file src="ObservableView.Android\bin\Release\ObservableView.pdb" target="lib\monoandroid10\ObservableView.pdb" />
+    <file src="ObservableView.Android\bin\Release\ObservableView.xml" target="lib\monoandroid10\ObservableView.xml" />
     
     <!--Xamarin.iOS Unified API-->
-    <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.dll" target="lib\xamarin.ios10\ObservableView.dll" />
-    <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.pdb" target="lib\xamarin.ios10\ObservableView.pdb" />
-    <file src="..\ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.xml" target="lib\xamarin.ios10\ObservableView.xml" />
+    <file src="ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.dll" target="lib\xamarin.ios10\ObservableView.dll" />
+    <file src="ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.pdb" target="lib\xamarin.ios10\ObservableView.pdb" />
+    <file src="ObservableView.iOSUnified\bin\iPhone\Release\ObservableView.xml" target="lib\xamarin.ios10\ObservableView.xml" />
 
     <!--Net Standard 1.0-->
     <file src="ObservableView.NetStandard\bin\Release\netstandard1.0\ObservableView.dll" target="lib\netstandard1.0\ObservableView.dll" />
