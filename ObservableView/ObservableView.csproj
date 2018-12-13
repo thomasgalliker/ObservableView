@@ -33,8 +33,21 @@
     <Product>ObservableView</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RootNamespace>ObservableView</RootNamespace>
-    <PackageReleaseNotes>
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>2.0.0
+- Support for .Net Standard 2.0
+
+1.1.0-pre1
+- Complete overwork of the search API
+- Added custom SearchTextDelimiters
+- Added SearchTextPreprocessor
+- Added configurable SearchTextLogic (AND, OR)
+      
+1.0.2
+- Bug fix: Sorting in WPF DataGrid headers not reflected correctly
+- Bug fix: Sorting not updated on View property refresh
+      
+1.0.1
+- Initial release</PackageReleaseNotes>
     <Copyright>Copyright 2018</Copyright>
   </PropertyGroup>
 

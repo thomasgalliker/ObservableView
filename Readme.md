@@ -1,5 +1,5 @@
 # ObservableView
-<img src="https://raw.githubusercontent.com/thomasgalliker/ObservableView/master/logo_gradient.png" alt="ObservableView" align="right" height="100">
+<img src="https://raw.githubusercontent.com/thomasgalliker/ObservableView/master/logo_gradient.png" alt="ObservableView" align="right" height="140">
 ObservableView is a simple wrapper for collections which provides an easy-to-use API for searching, filtering, sorting and grouping of collections. This project enhances the well-known ObservableCollection of the .Net Framework with addition, commonly-used features. The goal is to have a Swiss army knife of a collection utility which provides an easy-to-use but very powerful API while preserving maximum platform compatibility.
 
 ### Download and Install ObservableView
@@ -8,14 +8,14 @@ Use the following command to install ObservableView using NuGet package manager 
 
     PM> Install-Package ObservableView
 
-You can use this library in any .Net project which is compatible to .Net Framework 4.5+ and .Net Standard 1.3+ (e.g. Xamarin, WPF)
+You can use this library in any .Net project which is compatible to PCL (e.g. Xamarin Android, iOS, Windows Phone, Windows Store, Universal Apps, etc.)
 
 ### API Usage
 #### Basic data binding in XAML with MVVM
 The usage of ObservableView is not much different from ObservableCollection: Declare and instantiate ObservableView<T> in a ViewModel, bind it to a View and finally fill it with data.
 
 Excerpt from a basic ViewModel which loads data into MallList:
-```C#
+```
 public ObservableView<Mall> MallList { get; }
 
 public MallListViewModel(IMallService mallService)
@@ -26,7 +26,7 @@ public MallListViewModel(IMallService mallService)
 ```
 
 Excerpt from a View which binds MallList.View to a WPF ListView:
-```C#
+```
 <ListView ItemsSource="{Binding MallList.View}">
 	<ListView.View>
 		<GridView>
@@ -59,40 +59,25 @@ If you need to add or remove items of the source collection, you can simply do s
 
 #### Search
 Two steps are necessary in order to enable the search functionality:
-1) Define search specification(s) for properties of your collection item type ```T```:
-- Call ```SearchSpecification.Add``` for searchable properties:
-```C#
-this.MallsList.SearchSpecification.Add(x => x.Title, BinaryOperator.Contains);
-this.MallsList.SearchSpecification.Add(x => x.Subtitle, BinaryOperator.Contains);
-```
-- Alternative: Annotate searchable properties with ```[Searchable]``` 
-2) The search operation can be triggered either from within the ViewModel using ```ObservableView.Search(...)``` method or by binding ```ObservableView.SearchText``` in XAML to an input textbox.
 
-#### Filtering
-Subscribe FilterHandler event:
-```C#
-this.MallsList.FilterHandler += this.MallsList_FilterHandler;
-```
-Specify with each collection item if it is filtered or not:
-```C#
-private void MallsList_FilterHandler(object sender, ObservableView.Filtering.FilterEventArgs<Mall> e)
-{
-	if (e.Item.Title.Contains("Aber"))
-	{
-		e.IsAllowed = false;
-	}
-}
-```
+1) Define search specification(s) for properties of your collection item type T:
+- a) Call ```this.MallList.AddSearchSpecification(x => x.Title);``` for searchable properties
+- b) Annotate searchable properties with ```[Searchable]``` 
 
-#### Sorting
+2) The search operation can be done either from within the ViewModel using ```ObservableView.Search(...)``` method or by binding ```ObservableView.SearchText``` in XAML to a search input textbox.
+
+#### Filter
+TODO: Document
+
+#### Sort
 There are many ways of how collections can be presented with defined sort orders. Method AddOrderSpecification can be used to set-up sort specifications for properties of type T.
-```C#
+```
 this.MallsList.AddOrderSpecification(x => x.Title, OrderDirection.Ascending);
 this.MallsList.AddOrderSpecification(x => x.Subtitle, OrderDirection.Descending);
 ```
 
 In the XAML, we could either bind the ItemsSource property to MallsList.View or we can use the attached dependency property ```ObservableViewExtensions.ObservableView``` to bind MallsList directly to the DataGrid. The latter approach enables you to make use of multi-column sorting using the DataGrid headers.
-```C#
+```
 <DataGrid netfx:ObservableViewExtensions.ObservableView="{Binding MallsList}"
 		  AutoGenerateColumns="False">
 	<DataGrid.Columns>
@@ -104,15 +89,11 @@ In the XAML, we could either bind the ItemsSource property to MallsList.View or 
 
 TODO: Describe how to use IComparer with custom column sort algorithms.
 
-#### Grouping
-ObservableView allows to specify a grouping algorithm as well as the key by which the collection is grouped:
-```C#
-this.MallsList.GroupKeyAlogrithm = new AlphaGroupKeyAlgorithm();
-this.MallsList.GroupKey = mall => mall.Title;
-```
+#### Group
+TODO: Document
 
 ### Performance considerations
-Performance is a critical success factor for ObservableView. ObservableView has been tested with ten thousands of data records with good results. If you run into performance bottlenecks caused by ObservableView, do not hesitate to open a new issue.
+Performance is a critical success factor for component such as the ObservableView. ObservableView has been tested with ten thousands of data records with good results. If you, however, have issues in certain situations, do not hesitate to open a new issue.
 
 ### License
-This project is Copyright &copy; 2018 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is Copyright &copy; 2015 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
