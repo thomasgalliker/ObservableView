@@ -1,5 +1,5 @@
 ####################################################################
-# VSTS Build Configuration, Version 1.1
+# VSTS Build Configuration, Version 1.2
 #
 # (c)2018 superdev GmbH
 ####################################################################
@@ -19,11 +19,11 @@ trigger:
 - release/*
 
 variables:
-  solution: 'Paging.Queryable.sln'
+  solution: 'ObservableView.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   buildVersionPostfix: '-pre'
-  nuspecFile: 'Paging.Queryable.nuspec'
+  nuspecFile: 'ObservableView.nuspec'
 
 steps:
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
@@ -31,7 +31,6 @@ steps:
   inputs:
     FileNames: |
      ObservableView.csproj
-     AssemblyInfo.cs
     InsertAttributes: true
     Title: 'ObservableView'
     Description: ''
@@ -61,30 +60,33 @@ steps:
 - task: VSBuild@1
   displayName: 'Build solution'
   inputs:
-    solution: '$(Parameters.solution)'
+    solution: '$(solution)'
     msbuildArgs: ''
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: 'Run UnitTests'
-  continueOnError: false
   inputs:
     command: test
     projects: '**/*.Tests.csproj'
     arguments: ''
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'Pack NuGet PreRelease'
   inputs:
-    command: custom
-    arguments: pack Package.nuspec -Version $(PackageVersionPre) -NoPackageAnalysis -outputdirectory $(Build.ArtifactStagingDirectory)\artifacts
+    command: pack
+    packagesToPack: ObservableView/ObservableView.csproj
+    versioningScheme: byEnvVar
+    versionEnvVar: PackageVersionPre
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'Pack NuGet Prod'
   inputs:
-    command: custom
-    arguments: pack Package.nuspec -Version $(PackageVersion) -NoPackageAnalysis -outputdirectory $(Build.ArtifactStagingDirectory)\artifacts
+    command: pack
+    packagesToPack: ObservableView/ObservableView.csproj
+    versioningScheme: byEnvVar
+    versionEnvVar: PackageVersion
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
