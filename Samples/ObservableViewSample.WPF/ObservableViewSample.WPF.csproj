@@ -44,9 +44,6 @@
     <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MvvmLightLibsStd10.5.4.1.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="ObservableView">
-      <HintPath>..\..\ObservableView\bin\Debug\net45\ObservableView.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -126,6 +123,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ObservableView\ObservableView.csproj">
+      <Project>{F6ED6A22-FDBA-41B6-B22C-64345ED5E63D}</Project>
+      <Name>ObservableView</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObservableViewSample\ObservableViewSample.csproj">
       <Project>{23452c3b-4326-4e1d-8317-8ef6c03cca29}</Project>
       <Name>ObservableViewSample</Name>
