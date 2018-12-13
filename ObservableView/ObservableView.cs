@@ -413,22 +413,10 @@ namespace ObservableView
             this.Refresh();
         }
 
-        [Obsolete("AddSearchSpecification has been replaced with SearchSpecification property. Call SearchSpecification.Add(...) to add new search specifications.")]
-        public void AddSearchSpecification<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
-        {
-            throw new NotSupportedException("AddSearchSpecification has been replaced with SearchSpecification property.Call SearchSpecification.Add(...) to add new search specifications.");
-        }
-
         private void OnSearchSpecificationsCleared(object sender, EventArgs e)
         {
             this.SearchText = string.Empty;
             this.Refresh();
-        }
-
-        [Obsolete("ClearSearchSpecifications has been replaced with SearchSpecification property. Call SearchSpecification.Clear() to remove all specifications.")]
-        public void ClearSearchSpecifications()
-        {
-            throw new NotSupportedException("ClearSearchSpecifications has been replaced with SearchSpecification property. Call SearchSpecification.Clear() to remove all specifications.");
         }
 
         private IEnumerable<PropertyInfo> GetSearchableAttributes()

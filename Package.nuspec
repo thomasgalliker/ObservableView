@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>ObservableView</id>
+    <version>2.0.0</version>
+    <title>ObservableView</title>
+    <authors>Thomas Galliker</authors>
+    <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
+    <projectUrl>https://github.com/thomasgalliker/ObservableView</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/thomasgalliker/ObservableView/master/ObservableView.NuGet/packageIcon50x50.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting of collections.</summary>
+    <description>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting of collections.</description>
+    <tags>ObservableView;ObservableCollection;View;Search;Group;Sort;Searching;Grouping;Sorting;Filter;Filtering</tags>
+    <releaseNotes>
+1.1.0-pre1
+- Complete overwork of the search API
+- Added custom SearchTextDelimiters
+- Added SearchTextPreprocessor
+- Added configurable SearchTextLogic (AND, OR)
+      
+1.0.2
+- Bug fix: Sorting in WPF DataGrid headers not reflected correctly
+- Bug fix: Sorting not updated on View property refresh
+      
+1.0.1
+- Initial release
+    </releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <language>en-US</language>
+    <dependencies>
+    </dependencies>
+  </metadata>
+  <files>
+    <!--Xamarin.Android-->
+    <file src="..\ObservableView\bin\Release\ObservableView.dll" target="lib\monoandroid10\ObservableView.dll" />
+    <file src="..\ObservableView\bin\Release\ObservableView.pdb" target="lib\monoandroid10\ObservableView.pdb" />
+    <file src="..\ObservableView\bin\Release\ObservableView.xml" target="lib\monoandroid10\ObservableView.xml" />
+  </files>
+</package>

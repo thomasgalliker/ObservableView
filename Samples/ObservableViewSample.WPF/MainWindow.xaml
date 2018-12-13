@@ -5,11 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:command="http://www.galasoft.ch/mvvmlight"
-        xmlns:netfx="clr-namespace:ObservableView.Netfx;assembly=ObservableView.Netfx"
-        xmlns:wpf="clr-namespace:ObservableViewSample.WPF"
+        xmlns:extensions="clr-namespace:ObservableView.Extensions;assembly=ObservableView"
         mc:Ignorable="d"
-        Title="MainWindow" Height="480" Width="640"
-        DataContext="{Binding Source={StaticResource Locator},  Path=Main}">
+        Title="MainWindow" Height="480" Width="640">
     <Window.Resources>
         <DataTemplate x:Key="DeleteButtonCellTemplate">
             <Button Content="Delete" >
@@ -75,7 +73,7 @@
         </Grid>
 
         <DataGrid Grid.Row="1" Grid.Column="0"
-                  netfx:ObservableViewExtensions.ObservableView="{Binding MallsList}"
+                  extensions:ObservableViewExtensions.ObservableView="{Binding MallsList}"
                   AutoGenerateColumns="False"
                   HorizontalAlignment="Stretch" 
                   HorizontalContentAlignment="Stretch" 

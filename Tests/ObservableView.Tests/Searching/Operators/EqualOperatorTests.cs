@@ -132,7 +132,7 @@ namespace ObservableView.Tests.Searching.Operators
             Action action = () => equalOperator.Build(expressionBuilder, binaryOperation);
 
             // Assert
-            action.ShouldThrow<InvalidOperationException>();
+            action.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
