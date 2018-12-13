@@ -470,10 +470,8 @@ namespace ObservableView
             if (!this.SearchSpecification.Any())
             {
                 throw new InvalidOperationException(
-                    string.Format(
-                        "Please add at least one search specification either by calling SearchSpecification.Add " +
-                        "or by defining [Searchable] annotations on properties in type {0} to mark them as searchable.",
-                        typeof(T).Name));
+                    "Please add at least one search specification either by calling SearchSpecification.Add " +
+                    $"or by defining [Searchable] annotations on properties in type {typeof(T).Name} to mark them as searchable.");
             }
 
             ParameterExpression parameterExpression = Expression.Parameter(typeof(T), "x");
@@ -517,7 +515,7 @@ namespace ObservableView
                         }
                         else
                         {
-                            throw new InvalidOperationException(string.Format("Provided searchLogic '{0}' is not valid.", searchLogic));
+                            throw new InvalidOperationException($"Provided searchLogic '{searchLogic}' is not valid.");
                         }
                     }
                 }
