@@ -1,3 +1,4 @@
+
 ####################################################################
 # VSTS Build Configuration, Version 1.2
 #
@@ -23,7 +24,6 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   buildVersionPostfix: '-pre'
-  nuspecFile: 'ObservableView.nuspec'
 
 steps:
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
