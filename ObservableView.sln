@@ -21,11 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObservableView", "Observabl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObservableViewSample", "Samples\ObservableViewSample\ObservableViewSample.csproj", "{23452C3B-4326-4E1D-8317-8EF6C03CCA29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms.Android", "Samples\ObservableViewSample.Forms\ObservableViewSample.Forms.Android\ObservableViewSample.Forms.Android.csproj", "{22588AAC-ED6C-4FF0-A617-16056C6265BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms.Android", "Samples\ObservableViewSample.Forms.Android\ObservableViewSample.Forms.Android.csproj", "{22588AAC-ED6C-4FF0-A617-16056C6265BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms.iOS", "Samples\ObservableViewSample.Forms\ObservableViewSample.Forms.iOS\ObservableViewSample.Forms.iOS.csproj", "{45D6FB85-C338-4007-AE50-8C73ADFF2629}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms.iOS", "Samples\ObservableViewSample.Forms.iOS\ObservableViewSample.Forms.iOS.csproj", "{45D6FB85-C338-4007-AE50-8C73ADFF2629}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms", "Samples\ObservableViewSample.Forms\ObservableViewSample.Forms\ObservableViewSample.Forms.csproj", "{D0ABCD00-44DF-4B99-AADA-4D83F235682D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms", "Samples\ObservableViewSample.Forms\ObservableViewSample.Forms.csproj", "{D0ABCD00-44DF-4B99-AADA-4D83F235682D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
