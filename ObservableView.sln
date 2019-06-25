@@ -25,9 +25,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms.iOS", "Samples\ObservableViewSample.Forms.iOS\ObservableViewSample.Forms.iOS.csproj", "{45D6FB85-C338-4007-AE50-8C73ADFF2629}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableViewSample.Forms", "Samples\ObservableViewSample.Forms\ObservableViewSample.Forms.csproj", "{D0ABCD00-44DF-4B99-AADA-4D83F235682D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObservableViewSample.Forms", "Samples\ObservableViewSample.Forms\ObservableViewSample.Forms.csproj", "{D0ABCD00-44DF-4B99-AADA-4D83F235682D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ObservableView.Shared", "ObservableView.Shared\ObservableView.Shared.shproj", "{19623A92-F3F3-49A8-85B6-FFDB96828350}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ObservableView.Shared\ObservableView.Shared.projitems*{19623a92-f3f3-49a8-85b6-ffdb96828350}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
 		Ad-Hoc|ARM = Ad-Hoc|ARM
