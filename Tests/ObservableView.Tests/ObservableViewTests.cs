@@ -339,15 +339,15 @@ namespace ObservableView.Tests
             groups.Should().NotBeNull();
             groups.Should().HaveCount(3);
 
-            var groupAudi = groups.Single(g => g.Key == "a");
+            var groupAudi = groups.Single(g => g.Key == "A");
             groupAudi.Should().NotBeNull("AlphaGroupKeyAlgorithm should generate 'a' with the CarBrand.Audi.ToString()");
             groupAudi.Should().HaveCount(3);
 
-            var groupBMW = groups.SingleOrDefault(g => g.Key == "b");
+            var groupBMW = groups.SingleOrDefault(g => g.Key == "B");
             groupBMW.Should().NotBeNull("AlphaGroupKeyAlgorithm should generate 'b' with the CarBrand.BMW.ToString()");
             groupBMW.Should().HaveCount(2);
 
-            var groupVW = groups.Single(g => g.Key == "v");
+            var groupVW = groups.Single(g => g.Key == "V");
             groupVW.Should().NotBeNull("AlphaGroupKeyAlgorithm should generate 'v' with the CarBrand.VW.ToString()");
             groupVW.Should().HaveCount(2);
         }
