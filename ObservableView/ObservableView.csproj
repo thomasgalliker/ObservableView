@@ -10,7 +10,7 @@
     <AssemblyName>ObservableView</AssemblyName>
     <PackageId>ObservableView</PackageId>
     <PackageTags>test;test;test</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObservableView/master/ObservableView.png</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObservableView/develop/logo_gradient.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/thomasgalliker/ObservableView</PackageProjectUrl>
     <PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
