@@ -3,7 +3,7 @@ using ObservableView.Extensions;
 
 namespace ObservableView.Grouping
 {
-    public class AlphaGroupKeyAlgorithm : IGroupKeyAlgorithm
+    public class AlphaGroupKeyAlgorithm : GroupKeyAlgorithm<string>
     {
         private readonly bool upperCase;
 
@@ -12,15 +12,15 @@ namespace ObservableView.Grouping
             this.upperCase = upperCase;
         }
 
-        public string GetGroupKey(string inputString)
+        public override string GetGroupKey(string date)
         {
-            char firstChar = inputString[0];
+            char firstChar = date[0];
             if (char.IsNumber(firstChar))
             {
                 return "#";
             }
 
-            if (upperCase)
+            if (this.upperCase)
             {
                 return firstChar.ToString().ToUpper();
             }

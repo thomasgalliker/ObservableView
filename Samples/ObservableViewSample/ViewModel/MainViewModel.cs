@@ -38,7 +38,7 @@ namespace ObservableViewSample.ViewModel
             this.MallsList.SearchSpecification.Add(x => x.Subtitle, BinaryOperator.Contains);
 
             // Add grouping specifications
-            this.MallsList.GroupKeyAlogrithm = new AlphaGroupKeyAlgorithm();
+            this.MallsList.GroupKeyAlgorithm = new AlphaGroupKeyAlgorithm();
             this.MallsList.GroupKey = mall => mall.Title;
 
             this.MallsList.FilterHandler += this.MallsList_FilterHandler;

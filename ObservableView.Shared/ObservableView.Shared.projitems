@@ -15,7 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Filtering\FilterEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Grouping\AlphaGroupKeyAlgorithm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Grouping\Grouping.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\GroupKeyAlgorithm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Grouping\IGroupKeyAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\MonthGroupAlgorithm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IObservableView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ObservableView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Searching\SearchableAttribute.cs" />

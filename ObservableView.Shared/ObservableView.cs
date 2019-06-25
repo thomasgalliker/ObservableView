@@ -28,8 +28,8 @@ namespace ObservableView
 
         private string searchText = string.Empty;
         private FilterEventHandler<T> filterHandler;
-        private Func<T, string> groupKey;
-        private IGroupKeyAlgorithm groupKeyAlogrithm;
+        private Func<T, object> groupKey;
+        private IGroupKeyAlgorithm groupKeyAlgorithm;
         private Func<string, string> searchTextPreprocessor;
 
         public ObservableView(ObservableCollection<T> collection)
@@ -44,7 +44,7 @@ namespace ObservableView
             this.SearchSpecification.SearchSpecificationAdded += this.OnSearchSpecificationChanged;
             this.SearchSpecification.SearchSpecificationsCleared += this.OnSearchSpecificationsCleared;
 
-            this.GroupKeyAlogrithm = new AlphaGroupKeyAlgorithm();
+            this.GroupKeyAlgorithm = new AlphaGroupKeyAlgorithm();
 
             this.SearchTextDelimiters = new[] { ' ' };
             this.SearchTextLogic = SearchLogic.Or;
@@ -98,12 +98,9 @@ namespace ObservableView
             }
         }
 
-        public Func<T, string> GroupKey
+        public Func<T, object> GroupKey
         {
-            get
-            {
-                return this.groupKey;
-            }
+            get => this.groupKey;
             set
             {
                 this.groupKey = value;
@@ -111,15 +108,12 @@ namespace ObservableView
             }
         }
 
-        public IGroupKeyAlgorithm GroupKeyAlogrithm
+        public IGroupKeyAlgorithm GroupKeyAlgorithm
         {
-            get
-            {
-                return this.groupKeyAlogrithm;
-            }
+            get => this.groupKeyAlgorithm;
             set
             {
-                this.groupKeyAlogrithm = value;
+                this.groupKeyAlgorithm = value;
                 this.OnPropertyChanged(() => this.Groups);
             }
         }
@@ -128,13 +122,13 @@ namespace ObservableView
         {
             get
             {
-                if (this.GroupKey == null || this.GroupKeyAlogrithm == null)
+                if (this.GroupKey == null || this.GroupKeyAlgorithm == null)
                 {
                     return Enumerable.Empty<Grouping<T>>();
                 }
 
                 var groupedList = this.View
-                        .GroupBy(item => this.GroupKeyAlogrithm.GetGroupKey(this.GroupKey.Invoke(item)))
+                        .GroupBy(item => this.GroupKeyAlgorithm.GetGroupKey(this.GroupKey.Invoke(item)))
                         .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup))
                         .OrderBy(itemGroup => itemGroup.Key)
                         .ToList();
