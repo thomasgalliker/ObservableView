@@ -18,6 +18,7 @@ namespace ObservableView
         ///     or
         ///     'propertyExpression' body should be a constant expression.
         /// </exception>
+        [Obsolete("Get rid of expression based property change notifications!")]
         protected virtual void OnPropertyChanged<T>(Expression<Func<T>> propertyExpression)
         {
             PropertyChangedEventHandler handler = this.PropertyChanged;
