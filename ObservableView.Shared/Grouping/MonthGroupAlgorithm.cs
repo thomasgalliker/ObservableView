@@ -16,14 +16,14 @@ namespace ObservableView.Grouping
             this.nullString = nullString;
         }
 
-        public override string GetGroupKey(DateTime? date)
+        public override string GetGroupKey(DateTime? value)
         {
-            if (!date.HasValue)
+            if (!value.HasValue)
             {
                 return this.nullString();
             }
 
-            var dateTime = date.Value;
+            var dateTime = value.Value;
             var str = dateTime.ToString("MMMM");
             if (DateTime.Today.Year == dateTime.Year)
             {

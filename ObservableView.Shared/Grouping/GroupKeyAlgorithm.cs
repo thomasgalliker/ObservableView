@@ -7,6 +7,6 @@
             return this.GetGroupKey((T)item);
         }
 
-        public abstract string GetGroupKey(T date);
+        public abstract string GetGroupKey(T value);
     }
 }

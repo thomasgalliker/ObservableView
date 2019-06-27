@@ -12,9 +12,19 @@ namespace ObservableView.Grouping
             this.upperCase = upperCase;
         }
 
-        public override string GetGroupKey(string date)
+        public override string GetGroupKey(string value)
         {
-            char firstChar = date[0];
+            if (value == null)
+            {
+                return null;
+            }
+
+            if (value == "")
+            {
+                return "";
+            }
+
+            char firstChar = value[0];
             if (char.IsNumber(firstChar))
             {
                 return "#";
