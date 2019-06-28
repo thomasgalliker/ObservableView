@@ -1,10 +1,11 @@
+
 ####################################################################
-# VSTS Build Configuration, Version 1.1
+# VSTS Build Configuration, Version 1.2
 #
 # (c)2018 superdev GmbH
 ####################################################################
 
-name: 2.0.$(date:yy)$(DayOfYear).$(rev:rr)
+name: 2.1.$(date:yy)$(DayOfYear).$(rev:rr)
   
 queue:
   name: Hosted VS2017
@@ -18,15 +19,20 @@ trigger:
 - develop
 - release/*
 
+variables:
+  solution: 'ObservableView.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  buildVersionPostfix: '-pre'
+
 steps:
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
   displayName: 'Set Assembly Manifest Data'
   inputs:
     FileNames: |
-     Tracing.NetStandard.csproj # Refactor to netstandard and use Tracing.csproj here
-     AssemblyInfo.cs
+     ObservableView.csproj
     InsertAttributes: true
-    Title: 'Tracing'
+    Title: 'ObservableView'
     Description: ''
     Company: 'superdev GmbH'
     Copyright: '(c) $(date:yyyy) superdev GmbH'
@@ -39,12 +45,10 @@ steps:
   inputs:
     versionSpec: 4.4.1
 
-
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
   inputs:
-    restoreSolution: '$(Parameters.solution)'
-
+    restoreSolution: '$(solution)'
 
 - powershell: |
    Write-Host "##vso[task.setvariable variable=PackageVersion]$(Build.BuildNumber)"
@@ -54,30 +58,33 @@ steps:
 - task: VSBuild@1
   displayName: 'Build solution'
   inputs:
-    solution: '$(Parameters.solution)'
+    solution: '$(solution)'
     msbuildArgs: ''
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: 'Run UnitTests'
-  continueOnError: false
   inputs:
     command: test
     projects: '**/*.Tests.csproj'
     arguments: ''
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'Pack NuGet PreRelease'
   inputs:
-    command: custom
-    arguments: pack Package.nuspec -Version $(PackageVersionPre) -NoPackageAnalysis -outputdirectory $(Build.ArtifactStagingDirectory)\artifacts
+    command: pack
+    packagesToPack: ObservableView/ObservableView.csproj
+    versioningScheme: byEnvVar
+    versionEnvVar: PackageVersionPre
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'Pack NuGet Prod'
   inputs:
-    command: custom
-    arguments: pack Package.nuspec -Version $(PackageVersion) -NoPackageAnalysis -outputdirectory $(Build.ArtifactStagingDirectory)\artifacts
+    command: pack
+    packagesToPack: ObservableView/ObservableView.csproj
+    versioningScheme: byEnvVar
+    versionEnvVar: PackageVersion
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'

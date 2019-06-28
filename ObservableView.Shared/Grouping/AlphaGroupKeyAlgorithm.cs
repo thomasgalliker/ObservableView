@@ -3,18 +3,39 @@ using ObservableView.Extensions;
 
 namespace ObservableView.Grouping
 {
-    public class AlphaGroupKeyAlgorithm : IGroupKeyAlgorithm
+    public class AlphaGroupKeyAlgorithm : GroupKeyAlgorithm<string>
     {
-        public string GetGroupKey(string inputString)
+        private readonly bool upperCase;
+
+        public AlphaGroupKeyAlgorithm(bool upperCase = true)
         {
-            char firstChar = inputString[0];
+            this.upperCase = upperCase;
+        }
+
+        public override string GetGroupKey(string value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            if (value == "")
+            {
+                return "";
+            }
+
+            char firstChar = value[0];
             if (char.IsNumber(firstChar))
             {
                 return "#";
             }
 
-            return firstChar.ToString()
-                            .ToLower();
+            if (this.upperCase)
+            {
+                return firstChar.ToString().ToUpper();
+            }
+
+            return firstChar.ToString().ToLower();
         }
     }
 }

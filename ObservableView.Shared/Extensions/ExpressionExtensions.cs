@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
+﻿using System.Linq.Expressions;
 
 namespace ObservableView.Extensions
 {
@@ -8,41 +6,59 @@ namespace ObservableView.Extensions
     {
         public static Expression ToLower(this Expression expression)
         {
-            var methodInfo = typeof(string).GetRuntimeMethod("ToLower", new Type[] { });
+            EnsureToString(ref expression);
+
+            var methodInfo = ReflectionHelper<string>.GetMethod(source => source.ToLower());
+            var toLowerExpression = Expression.Call(expression, methodInfo);
+
+            expression = IsNotNull(expression, toLowerExpression);
+            return expression;
+        }
+
+        public static Expression ToUpper(this Expression expression)
+        {
+            EnsureToString(ref expression);
+
+            var methodInfo = ReflectionHelper<string>.GetMethod(source => source.ToUpper());
+            var toUpperExpression = Expression.Call(expression, methodInfo);
+
+            expression = IsNotNull(expression, toUpperExpression);
+            return expression;
+        }
+
+        public static Expression Trim(this Expression expression)
+        {
+            EnsureToString(ref expression);
+
+            var methodInfo = ReflectionHelper<string>.GetMethod(source => source.Trim());
+            var trimExpression = Expression.Call(expression, methodInfo);
+
+            expression = IsNotNull(expression, trimExpression);
+            return expression;
+        }
+
+        public static Expression ToStringExpression(this Expression expression)
+        {
+            var methodInfo = ReflectionHelper<string>.GetMethod(source => source.ToString());
             return Expression.Call(expression, methodInfo);
         }
 
-        public static Expression Contains(this Expression expression, Expression containsExpression)
+        private static void EnsureToString(ref Expression expression)
         {
-            var methodInfo = typeof(string).GetRuntimeMethod("Contains", new[] { typeof(string) });
-            return Expression.Call(expression, methodInfo, containsExpression);
+            if (expression.Type != typeof(string))
+            {
+                expression = expression.ToStringExpression();
+            }
         }
 
-        public static MemberExpression GetMemberExpression(this LambdaExpression lambdaExpression)
+        public static Expression IsNotNull(this Expression checkExpression, Expression expressionIfNotNull)
         {
-            var member = lambdaExpression.Body as MemberExpression;
-            var unary = lambdaExpression.Body as UnaryExpression;
-            var memberExpression = member ?? (unary != null ? unary.Operand as MemberExpression : null);
+            var expression = Expression.Condition(
+                 Expression.NotEqual(checkExpression, Expression.Constant(null, checkExpression.Type)),
+                 expressionIfNotNull,
+                 Expression.Constant(string.Empty));
 
-            if (memberExpression == null)
-            {
-                throw new ArgumentException("'lambdaExpression' should be a member expression");
-            }
-
-            return memberExpression;
-        }
-
-        public static PropertyInfo GetPropertyInfo(this LambdaExpression lambdaExpression)
-        {
-            var memberExpression = GetMemberExpression(lambdaExpression);
-
-            var propertyInfo = memberExpression.Member as PropertyInfo;
-            if (propertyInfo == null)
-            {
-                throw new ArgumentException("'lambdaExpression' should be a property");
-            }
-
-            return propertyInfo;
+            return expression;
         }
     }
 }
