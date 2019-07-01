@@ -130,7 +130,6 @@ namespace ObservableView
                 var groupedList = this.View
                         .GroupBy(item => this.GroupKeyAlgorithm.GetGroupKey(this.GroupKey.Invoke(item)))
                         .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup))
-                        .OrderBy(itemGroup => itemGroup.Key)
                         .ToList();
 
                 return groupedList;

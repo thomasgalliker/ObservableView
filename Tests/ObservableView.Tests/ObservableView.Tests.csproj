@@ -25,7 +25,6 @@
     <EmbeddedResource Include="Resources\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Grouping\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

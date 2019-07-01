@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-
 using FluentAssertions;
-
+using ObservableView.Grouping;
 using ObservableView.Searching.Operators;
 using ObservableView.Sorting;
 using ObservableView.Tests.TestData;
-
+using ObservableView.Tests.TestHelpers;
 using Xunit;
 
 namespace ObservableView.Tests
@@ -29,7 +28,7 @@ namespace ObservableView.Tests
             var observableStringView = new ObservableView<string>(stringList);
 
             // Act
-            ObservableCollection<string> unfilteredView = observableStringView.View;
+            var unfilteredView = observableStringView.View;
 
             // Assert
             unfilteredView.Should().NotBeNull();
@@ -324,7 +323,7 @@ namespace ObservableView.Tests
         #region Grouping
 
         [Fact]
-        public void ShouldUseAlphaGroupKeyAlgorithmByDefaultToGenerateGroupKeys()
+        public void ShouldGroup_UsingAlphaGroupKeyAlgorithm_ByDefaultToGenerateGroupKeys()
         {
             // Arrange
             var carsList = CarPool.GetDefaultCarsList();
@@ -333,9 +332,12 @@ namespace ObservableView.Tests
             observableCarsView.GroupKey = car => car.Brand.ToString();
 
             // Act
-            var groups = observableCarsView.Groups;
+            var groups = observableCarsView.Groups.ToList();
 
             // Assert
+            observableCarsView.GroupKeyAlgorithm.Should().NotBeNull();
+            observableCarsView.GroupKeyAlgorithm.Should().BeOfType<AlphaGroupKeyAlgorithm>();
+
             groups.Should().NotBeNull();
             groups.Should().HaveCount(3);
 
@@ -350,6 +352,34 @@ namespace ObservableView.Tests
             var groupVW = groups.Single(g => g.Key == "V");
             groupVW.Should().NotBeNull("AlphaGroupKeyAlgorithm should generate 'v' with the CarBrand.VW.ToString()");
             groupVW.Should().HaveCount(2);
+        }
+
+        [Fact]
+        [UseCulture("en-US")]
+        public void ShouldGroupAndSort_UsingAlphaGroupKeyAlgorithm()
+        {
+            // Arrange
+            var carsList = CarPool.GetAllCars();
+
+            var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.GroupKey = t => t.CreatedDate;
+            observableCarsView.GroupKeyAlgorithm = new MonthGroupAlgorithm();
+            observableCarsView.AddOrderSpecification(t => t.CreatedDate, OrderDirection.Descending);
+
+            // Act
+            var groups = observableCarsView.Groups.ToList();
+
+            // Assert
+            groups.Should().NotBeNull();
+            groups.Should().HaveCount(8);
+
+            var groupDecember2016 = groups.ElementAt(0);
+            groupDecember2016.Key.EndsWith("December 2016").Should().BeTrue("MonthGroupAlgorithm should generate group 'December 2016' at position 0 (first)");
+            groupDecember2016.Should().HaveCount(1);
+
+            var groupXy = groups.ElementAt(7);
+            groupXy.Key.EndsWith("January 1990").Should().BeTrue("MonthGroupAlgorithm should generate group 'January 1990' at position 0 (first)");
+            groupXy.Should().HaveCount(1);
         }
 
         #endregion
@@ -459,5 +489,6 @@ namespace ObservableView.Tests
         }
 
         #endregion
+
     }
 }
