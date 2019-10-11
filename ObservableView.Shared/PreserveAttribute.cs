@@ -1,6 +1,6 @@
 ﻿using System;
 
-[assembly: Preserve]
+[assembly: Preserve(AllMembers = true)]
 
 [AttributeUsage(
     AttributeTargets.Assembly

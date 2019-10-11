@@ -1,7 +1,7 @@
-﻿//[assembly: Foundation.Preserve(typeof(System.Linq.Queryable), AllMembers = true)]
-//[assembly: Foundation.Preserve(typeof(System.Linq.Enumerable), AllMembers = true)]
+﻿[assembly: Foundation.Preserve(typeof(System.Linq.Queryable), AllMembers = true)]
+[assembly: Foundation.Preserve(typeof(System.Linq.Enumerable), AllMembers = true)]
 
-[assembly: Preserve]
+[assembly: Preserve(AllMembers = true)]
 
 namespace ObservableView
 {
@@ -10,8 +10,8 @@ namespace ObservableView
     {
         public static void Init()
         {
-            var observableView = typeof(ObservableView<>);
-            var queryable = typeof(System.Linq.Queryable);
+            var observableView = new ObservableView<object>();
+            observableView.PropertyChanged += (s, e) => observableView.SearchText = "";
         }
     }
 }

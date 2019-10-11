@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 
 namespace ObservableView
 {
+    [Preserve(AllMembers = true)]
     public abstract class ObservableObject : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

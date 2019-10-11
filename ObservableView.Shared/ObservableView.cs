@@ -19,6 +19,7 @@ namespace ObservableView
     ///     ObservableView is a class which adds sorting, filtering, searching and grouping
     ///     on top of collections.
     /// </summary>
+    [Preserve(AllMembers = true)]
     public class ObservableView<T> : ObservableObject, IObservableView
     {
         private static readonly object FilterHandlerEventLock = new object();
