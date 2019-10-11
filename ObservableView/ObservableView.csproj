@@ -5,10 +5,10 @@
     <RootNamespace>ObservableView</RootNamespace>
     <PackageId>ObservableView</PackageId>
     <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObservableView/develop/logo_gradient.png</PackageIconUrl>
-    <Summary>ObservableView: a kit of essential API's for your apps</Summary>
+    <Summary>Collections overlay for searching, filtering, sorting and grouping</Summary>
     <PackageTags>ObservableView;ObservableCollection;sorting;filtering;searching;collections;xamarin</PackageTags>
     <Title>ObservableView</Title>
-    <Description>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting of collections.</Description>
+    <Description>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting and grouping of collections.</Description>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
