@@ -19,6 +19,7 @@ namespace ObservableView
     ///     ObservableView is a class which adds sorting, filtering, searching and grouping
     ///     on top of collections.
     /// </summary>
+    [Preserve(AllMembers = true)]
     public class ObservableView<T> : ObservableObject, IObservableView
     {
         private static readonly object FilterHandlerEventLock = new object();
@@ -130,7 +131,6 @@ namespace ObservableView
                 var groupedList = this.View
                         .GroupBy(item => this.GroupKeyAlgorithm.GetGroupKey(this.GroupKey.Invoke(item)))
                         .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup))
-                        .OrderBy(itemGroup => itemGroup.Key)
                         .ToList();
 
                 return groupedList;

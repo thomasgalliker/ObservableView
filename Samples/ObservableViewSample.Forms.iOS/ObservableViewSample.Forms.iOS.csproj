@@ -52,6 +52,8 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchSdkVersion>
+    </MtouchSdkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -94,7 +96,6 @@
     <Compile Include="AppDelegate.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -148,13 +149,24 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />
+    <PackageReference Include="Xamarin.Forms" Version="4.2.0.848062" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\..\ObservableView\ObservableView.csproj">
+      <Project>{f6ed6a22-fdba-41b6-b22c-64345ed5e63d}</Project>
+      <Name>ObservableView</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObservableViewSample.Forms\ObservableViewSample.Forms.csproj">
       <Project>{B36B1E0D-0F6F-4A7F-A10F-60E119361C11}</Project>
       <Name>ObservableViewSample.Forms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ObservableViewSample\ObservableViewSample.csproj">
+      <Project>{3de0e72e-890a-418c-a41e-b5e7f053e450}</Project>
+      <Name>ObservableViewSample</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>

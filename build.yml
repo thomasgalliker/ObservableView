@@ -5,7 +5,7 @@
 # (c)2018 superdev GmbH
 ####################################################################
 
-name: 2.1.$(date:yy)$(DayOfYear).$(rev:rr)
+name: 2.2.$(date:yy)$(DayOfYear).$(rev:rr)
   
 queue:
   name: Hosted VS2017
@@ -45,46 +45,38 @@ steps:
   inputs:
     versionSpec: 4.4.1
 
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
-  inputs:
-    restoreSolution: '$(solution)'
-
 - powershell: |
    Write-Host "##vso[task.setvariable variable=PackageVersion]$(Build.BuildNumber)"
    Write-Host "##vso[task.setvariable variable=PackageVersionPre]$(Build.BuildNumber)$(BuildVersionPostfix)"
   displayName: 'Set PackageVersion'
 
-- task: VSBuild@1
-  displayName: 'Build solution'
+- task: MSBuild@1
+  displayName: Build Solution
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: ''
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+      solution: ObservableView/ObservableView.csproj
+      configuration: Release
+      msbuildArguments: '/restore /t:Build /p:ContinuousIntegrationBuild=true /p:Deterministic=false'
 
 - task: DotNetCoreCLI@2
   displayName: 'Run UnitTests'
   inputs:
     command: test
     projects: '**/*.Tests.csproj'
-    arguments: ''
+    arguments: '--configuration $(BuildConfiguration)'
 
-- task: DotNetCoreCLI@2
+- task: MSBuild@1
   displayName: 'Pack NuGet PreRelease'
   inputs:
-    command: pack
-    packagesToPack: ObservableView/ObservableView.csproj
-    versioningScheme: byEnvVar
-    versionEnvVar: PackageVersionPre
-
-- task: DotNetCoreCLI@2
+     solution: ObservableView/ObservableView.csproj
+     configuration: $(BuildConfiguration)
+     msbuildArguments: '/t:Pack /p:PackageVersion=$(PackageVersionPre) /p:PackageOutputPath="$(Build.ArtifactStagingDirectory)/nuget"'
+     
+- task: MSBuild@1
   displayName: 'Pack NuGet Prod'
   inputs:
-    command: pack
-    packagesToPack: ObservableView/ObservableView.csproj
-    versioningScheme: byEnvVar
-    versionEnvVar: PackageVersion
+     solution: ObservableView/ObservableView.csproj
+     configuration: $(BuildConfiguration)
+     msbuildArguments: '/t:Pack /p:PackageVersion=$(PackageVersion) /p:PackageOutputPath="$(Build.ArtifactStagingDirectory)/nuget"'
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'

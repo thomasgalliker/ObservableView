@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 using FluentAssertions;
-
-using ObservableView.Extensions;
 using ObservableView.Searching;
 using ObservableView.Searching.Operators;
 using ObservableView.Tests.TestData;
@@ -43,7 +39,7 @@ namespace ObservableView.Tests.Searching
         public void ShouldTakeParameterExpressionInConstructor()
         {
             // Arrange
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(Car), "c");
+            var parameterExpression = Expression.Parameter(typeof(Car), "c");
 
             // Act
             var expressionBuilder = new ExpressionBuilder(parameterExpression: parameterExpression);
