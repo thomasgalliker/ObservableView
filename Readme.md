@@ -10,14 +10,37 @@ Use the following command to install ObservableView using NuGet package manager 
 
 You can use this library in any .Net project which is compatible to .Net Framework 4.5+ and .Net Standard 1.3+ (e.g. Xamarin, WPF)
 
-### API Usage
-#### Basic data binding in XAML with MVVM
-The usage of ObservableView is not much different from ObservableCollection: Declare and instantiate ObservableView<T> in a ViewModel, bind it to a View and finally fill it with data.
+### Platform Support
 
-Excerpt from a basic ViewModel which loads data into MallList:
+|Platform|Version|
+| ------------------- | :-----------: |
+|Xamarin.iOS|iOS 8+|
+|Xamarin.Android|API 14+|
+|WPF|.NET 4.5+|
+
+**Xamarin.iOS  Setup**
+You must set the line `ObservableView.Platform.Init();` in your projects AppDelegate:
+```C#
+public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+{
+    Xamarin.Forms.Forms.Init();
+    ObservableView.Platform.Init(); // <--
+    this.LoadApplication(new App());
+
+    return base.FinishedLaunching(app, options);
+}
+```
+
+### API Usage
+#### Basic MVVM data binding with List Views
+The usage of `ObservableView<T>` is not much different from `ObservableCollection<T>`:
+1) Create a public `ObservableView<T>` property in your ViewModel.
 ```C#
 public ObservableView<Mall> MallList { get; }
+```
 
+2) Fill the `ObservableView<T>.Source` with item view models.
+```C#
 public MallListViewModel(IMallService mallService)
 {
 	var allMalls = mallService.GetAllMalls();
@@ -25,7 +48,7 @@ public MallListViewModel(IMallService mallService)
 }
 ```
 
-Excerpt from a View which binds MallList.View to a WPF ListView:
+3) Create a View with a ListView (or any other collection control) and bind the items source to `ObservableView<T>.View`.
 ```C#
 <ListView ItemsSource="{Binding MallList.View}">
 	<ListView.View>
@@ -52,7 +75,7 @@ Excerpt from a View which binds MallList.View to a WPF ListView:
 </ListView>
 ```
 
-As you can observe in the example above, the XAML view binds to MallList.View. This is important in order to reflect operation (search, filter,...) performed on the source collection.
+As you can observe in the example above, the XAML view binds to `MallList.View`. This is important in order to reflect operation (search, filter, group...) performed on the source collection.
 
 #### Add, remove, update source collection
 If you need to add or remove items of the source collection, you can simply do so by manipulating the MallList.Source property. By doing so, it automatically refreshes all dependent properties (e.g. View).
@@ -69,11 +92,12 @@ this.MallsList.SearchSpecification.Add(x => x.Subtitle, BinaryOperator.Contains)
 2) The search operation can be triggered either from within the ViewModel using ```ObservableView.Search(...)``` method or by binding ```ObservableView.SearchText``` in XAML to an input textbox.
 
 #### Filtering
-Subscribe FilterHandler event:
+1) Subscribe FilterHandler event:
 ```C#
 this.MallsList.FilterHandler += this.MallsList_FilterHandler;
 ```
-Specify with each collection item if it is filtered or not:
+
+2) Specify with each collection item if it is filtered or not:
 ```C#
 private void MallsList_FilterHandler(object sender, ObservableView.Filtering.FilterEventArgs<Mall> e)
 {
@@ -115,4 +139,4 @@ this.MallsList.GroupKey = mall => mall.Title;
 Performance is a critical success factor for ObservableView. ObservableView has been tested with ten thousands of data records with good results. If you run into performance bottlenecks caused by ObservableView, do not hesitate to open a new issue.
 
 ### License
-This project is Copyright &copy; 2018 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is Copyright &copy; 2019 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
