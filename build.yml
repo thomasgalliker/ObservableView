@@ -64,28 +64,19 @@ steps:
     projects: '**/*.Tests.csproj'
     arguments: '--configuration $(BuildConfiguration)'
 
-  #  - task: MSBuild@1
-  #displayName: Pack NuGets
-  #inputs:
-  #    solution: ObservableView/ObservableView.csproj
-  #    configuration: Release
-  #   msbuildArguments: '/t:Pack /p:PackageVersion=$(NugetPackageVersion) /p:PackageOutputPath="$(Build.ArtifactStagingDirectory)/nuget"'
-
-- task: DotNetCoreCLI@2
+- task: MSBuild@1
   displayName: 'Pack NuGet PreRelease'
   inputs:
-    command: pack
-    packagesToPack: ObservableView/ObservableView.csproj
-    versioningScheme: byEnvVar
-    versionEnvVar: PackageVersionPre
-
-- task: DotNetCoreCLI@2
+     solution: ObservableView/ObservableView.csproj
+     configuration: $(BuildConfiguration)
+     msbuildArguments: '/t:Pack /p:PackageVersion=$(PackageVersionPre) /p:PackageOutputPath="$(Build.ArtifactStagingDirectory)/nuget"'
+     
+- task: MSBuild@1
   displayName: 'Pack NuGet Prod'
   inputs:
-    command: pack
-    packagesToPack: ObservableView/ObservableView.csproj
-    versioningScheme: byEnvVar
-    versionEnvVar: PackageVersion
+     solution: ObservableView/ObservableView.csproj
+     configuration: $(BuildConfiguration)
+     msbuildArguments: '/t:Pack /p:PackageVersion=$(PackageVersion) /p:PackageOutputPath="$(Build.ArtifactStagingDirectory)/nuget"'
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
