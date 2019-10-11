@@ -13,7 +13,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Text="{Binding Title}" />
-                        <Label Grid.Row="0" Text="{Binding SubTitle}" />
+                        <Label Grid.Row="0" Text="{Binding Subtitle}" />
                     </Grid>
                 </ViewCell>
             </DataTemplate>
