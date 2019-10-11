@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ObservableViewSample.Forms.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="MallViewCell">
+                <ViewCell>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label
+                            Grid.Row="0"
+                            Text="{Binding Title}"
+                            FontAttributes="Bold" />
+                        <Label Grid.Row="1" Text="{Binding Subtitle}" />
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid IsVisible="{Binding IsNotBusy}" RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <SearchBar
+            Grid.Row="0"
+            Placeholder="SearchText"
+            Text="{Binding MallsList.SearchText, Mode=TwoWay}" />
+
+        <ListView
+            Grid.Row="1"
+            BackgroundColor="Transparent"
+            CachingStrategy="RetainElement"
+            HasUnevenRows="true"
+            IsGroupingEnabled="False"
+            IsPullToRefreshEnabled="true"
+            IsRefreshing="{Binding IsRefreshing}"
+            ItemTemplate="{StaticResource MallViewCell}"
+            ItemsSource="{Binding MallsList.View}"
+            RefreshCommand="{Binding RefreshCommand}"
+            SeparatorColor="LightGray"
+            SeparatorVisibility="Default"
+            VerticalOptions="FillAndExpand" />
+    </Grid>
+</ContentPage>

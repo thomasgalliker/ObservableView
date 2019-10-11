@@ -1,13 +1,13 @@
-﻿using FluentAssertions;
-using ObservableView.Searching;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-
+using FluentAssertions;
+using ObservableView.Grouping;
+using ObservableView.Searching.Operators;
 using ObservableView.Sorting;
-
+using ObservableView.Tests.TestData;
+using ObservableView.Tests.TestHelpers;
 using Xunit;
 
 namespace ObservableView.Tests
@@ -19,20 +19,16 @@ namespace ObservableView.Tests
         private const string FilteredStringItemC = "C";
 
         #region Filtering
+
         [Fact]
         public void ShouldRetrieveAnUnfilteredView()
         {
             // Arrange
-            var stringList = new List<string>
-            {
-                FilteredStringItemA, 
-                FilteredStringItemB, 
-                FilteredStringItemC
-            };
+            var stringList = new List<string> { FilteredStringItemA, FilteredStringItemB, FilteredStringItemC };
             var observableStringView = new ObservableView<string>(stringList);
 
             // Act
-            ObservableCollection<string> unfilteredView = observableStringView.View;
+            var unfilteredView = observableStringView.View;
 
             // Assert
             unfilteredView.Should().NotBeNull();
@@ -58,12 +54,7 @@ namespace ObservableView.Tests
         public void ShouldTestFilterHandlerWithNoFilterApplied()
         {
             // Arrange
-            var stringList = new List<string>
-            {
-                FilteredStringItemA, 
-                FilteredStringItemB, 
-                FilteredStringItemC
-            };
+            var stringList = new List<string> { FilteredStringItemA, FilteredStringItemB, FilteredStringItemC };
             var observableStringView = new ObservableView<string>(stringList);
             observableStringView.FilterHandler += (sender, e) => { };
 
@@ -82,15 +73,7 @@ namespace ObservableView.Tests
         public void ShouldTestFilterHandlerWithDefinedFilterCriteria()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
             observableCarsView.FilterHandler += (sender, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
@@ -101,8 +84,8 @@ namespace ObservableView.Tests
             // Assert
             filteredView.Should().NotBeNull();
             filteredView.Should().HaveCount(2);
-            filteredView.Single(x => x.Model == this.carBmwM1.Model).Should().NotBeNull();
-            filteredView.Single(x => x.Model == this.carBmwM3.Model).Should().NotBeNull();
+            filteredView.Single(x => x.Model == CarPool.carBmwM1.Model).Should().NotBeNull();
+            filteredView.Single(x => x.Model == CarPool.carBmwM3.Model).Should().NotBeNull();
         }
 
         [Fact]
@@ -110,35 +93,27 @@ namespace ObservableView.Tests
         {
             // Arrange
             var receivedEvents = new List<string>();
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.FilterHandler += (sender, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW; ;
+            observableCarsView.FilterHandler += (sender, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
             observableCarsView.PropertyChanged += (sender, e) => receivedEvents.Add(e.PropertyName);
 
             // Act
             // Let's add 3 new cars. One of them is a BMW which is 'allowed' by the filter criteria.
             // So, all 3 cards should raise a Source PropertyChanged event - but only the BMW should raise a View PropertyChanged event.
-            carsList.Add(this.carAudiA4);
-            carsList.Add(this.carBmwX5);
-            carsList.Add(this.carVwGolfGti);
+            carsList.Add(CarPool.carAudiA4);
+            carsList.Add(CarPool.carBmwX5);
+            carsList.Add(CarPool.carVwGolfGti);
 
             ObservableCollection<Car> filteredView = observableCarsView.View;
 
             // Assert
             filteredView.Should().NotBeNull();
             filteredView.Should().HaveCount(3);
-            filteredView.Single(x => x.Model == this.carBmwM1.Model).Should().NotBeNull();
-            filteredView.Single(x => x.Model == this.carBmwM3.Model).Should().NotBeNull();
-            filteredView.Single(x => x.Model == this.carBmwX5.Model).Should().NotBeNull();
+            filteredView.Single(x => x.Model == CarPool.carBmwM1.Model).Should().NotBeNull();
+            filteredView.Single(x => x.Model == CarPool.carBmwM3.Model).Should().NotBeNull();
+            filteredView.Single(x => x.Model == CarPool.carBmwX5.Model).Should().NotBeNull();
 
             receivedEvents.Should().HaveCount(9);
             receivedEvents.Count(x => x == "Source").Should().Be(3);
@@ -151,55 +126,41 @@ namespace ObservableView.Tests
         {
             // Arrange
             var receivedEvents = new List<string>();
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.FilterHandler += (sender, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW; ;
+            observableCarsView.FilterHandler += (sender, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
+            ;
             observableCarsView.PropertyChanged += (sender, e) => receivedEvents.Add(e.PropertyName);
 
             // Act
             // Let's remove 3 existing cars. The View should then only contain the remaining BMW (M3).
-            carsList.Remove(this.carBmwM1);
-            carsList.Remove(this.carVwPolo);
-            carsList.Remove(this.carAudiA1);
+            carsList.Remove(CarPool.carBmwM1);
+            carsList.Remove(CarPool.carVwPolo);
+            carsList.Remove(CarPool.carAudiA1);
 
             ObservableCollection<Car> filteredView = observableCarsView.View;
 
             // Assert
             filteredView.Should().NotBeNull();
             filteredView.Should().HaveCount(1);
-            filteredView.Single(x => x.Model == this.carBmwM3.Model).Should().NotBeNull();
+            filteredView.Single(x => x.Model == CarPool.carBmwM3.Model).Should().NotBeNull();
 
             receivedEvents.Should().HaveCount(9);
-            receivedEvents.Count(x => x == "Source").Should().Be(3);    // 3 Source changes, because we removed 3 new elements
+            receivedEvents.Count(x => x == "Source").Should().Be(3); // 3 Source changes, because we removed 3 new elements
             receivedEvents.Count(x => x == "View").Should().Be(3);
             receivedEvents.Count(x => x == "Groups").Should().Be(3);
         }
+
         #endregion
 
         #region Searching
+
         [Fact]
         public void ShouldFindItemsOnSearchUsingSearchableAnnotation()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
-
+            var carsList = CarPool.GetDefaultCarsList();
             var observableCarsView = new ObservableView<Car>(carsList);
 
             // Act
@@ -210,84 +171,109 @@ namespace ObservableView.Tests
             searchView.Should().NotBeNull();
             searchView.Should().HaveCount(1);
 
-            searchView.Single(x => x.Model == this.carVwPolo.Model).Should().NotBeNull();
+            searchView.Single(x => x.Model == CarPool.carVwPolo.Model).Should().NotBeNull();
         }
 
         [Fact]
         public void ShouldFindItemsOnSearchUsingAddSearchSpecification()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
-
+            var carsList = CarPool.GetDefaultCarsList();
             var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchSpecification
+                .Add(c => c.Model, BinaryOperator.Contains)
+                .Or(c => c.Year, BinaryOperator.Contains);
 
             // Act
-            observableCarsView.AddSearchSpecification(c => c.Year);
             observableCarsView.Search("20");
 
             // Assert
             var searchView = observableCarsView.View;
             searchView.Should().NotBeNull();
-            searchView.Should().HaveCount(5); // This not only includes 'Year' filtered items, but also the [Searchable] annotated ones
+            searchView.Should().HaveCount(6); // This not only includes 'Year' filtered items, but also the [Searchable] annotated ones
 
-            searchView.Single(x => x.Model == this.carAudiA1.Model).Should().NotBeNull();
-            searchView.Single(x => x.Model == this.carAudiA3.Model).Should().NotBeNull();
-            searchView.Single(x => x.Model == this.carBmwM1.Model).Should().NotBeNull();
-            searchView.Single(x => x.Model == this.carBmwM3.Model).Should().NotBeNull();
-            searchView.Single(x => x.Model == this.carVwGolf.Model).Should().NotBeNull();
+            searchView.Should().Contain(CarPool.carAudiA1);
+            searchView.Should().Contain(CarPool.carAudiA4);
+            searchView.Should().Contain(CarPool.carAudiA3);
+            searchView.Should().Contain(CarPool.carBmwM1);
+            searchView.Should().Contain(CarPool.carBmwM3);
+            searchView.Should().Contain(CarPool.carVwGolf);
         }
 
-
         [Fact]
-        public void ShouldThrowExceptionWhenAddingDuplicatedSearchSpecification()
+        public void ShouldSplitMultipleWordsWithLogicOrOperator()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
-
+            var carsList = CarPool.GetDefaultCarsList();
             var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchTextDelimiters = new[] { ' ' };
+            observableCarsView.SearchTextLogic = SearchLogic.Or;
 
             // Act
-            observableCarsView.AddSearchSpecification(c => c.Year);
-            Action action = () => observableCarsView.AddSearchSpecification(c => c.Year);
+            observableCarsView.Search("M 3");
 
             // Assert
-            Assert.Throws<InvalidOperationException>(action);
+            var searchView = observableCarsView.View;
+            searchView.Should().NotBeNull();
+            searchView.Should().HaveCount(3); // The whitespace delimiter should act as logic OR operator
+
+            searchView.Should().Contain(CarPool.carAudiA3);
+            searchView.Should().Contain(CarPool.carBmwM1);
+            searchView.Should().Contain(CarPool.carBmwM3);
         }
 
         [Fact]
-        public void ShouldThrowExceptionWhenAddingDuplicatedSearchSpecificationWithSearchableAttribute()
+        public void ShouldSplitMultipleWordsWithLogicAndOperator()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
-
+            var carsList = CarPool.GetDefaultCarsList();
             var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchTextDelimiters = new[] { ' ' };
+            observableCarsView.SearchTextLogic = SearchLogic.And;
 
             // Act
-            Action action = () => observableCarsView.AddSearchSpecification(c => c.Model);
+            observableCarsView.Search("M 3"); // The whitespace delimiter should act as logic AND operator
+
+            // Assert
+            var searchView = observableCarsView.View;
+            searchView.Should().NotBeNull();
+            searchView.Should().HaveCount(1);
+
+            searchView.Should().Contain(CarPool.carBmwM3);
+        }
+
+        [Fact]
+        public void ShouldUseCustomSearchTextPreprocessor()
+        {
+            // Arrange
+            var carsList = CarPool.GetDefaultCarsList();
+            var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchTextDelimiters = new[] { ' ' };
+            observableCarsView.SearchTextPreprocessor = searchText => { return searchText.Replace("AND", ""); };
+
+            // Act
+            observableCarsView.Search("Birthday AND Golf");
+
+            // Assert
+            var searchView = observableCarsView.View;
+            searchView.Should().NotBeNull();
+            searchView.Should().HaveCount(1);
+
+            searchView.Should().Contain(CarPool.carVwGolf);
+        }
+
+        [Fact]
+        public void ShouldThrowExceptionWhenThereAreNoSearchSpecificationsDefined()
+        {
+            // Arrange
+            var carsList = CarPool.GetDefaultCarsList();
+
+            var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.SearchSpecification.Clear();
+
+            // Act
+            observableCarsView.Search("Polo");
+            Action action = () => { var searchView = observableCarsView.View; };
 
             // Assert
             Assert.Throws<InvalidOperationException>(action);
@@ -297,15 +283,7 @@ namespace ObservableView.Tests
         public void ShouldClearSearch()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
             observableCarsView.Search("Polo");
@@ -323,22 +301,14 @@ namespace ObservableView.Tests
         public void ShouldClearSearchSpecifications()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.AddSearchSpecification(c => c.Year);
+            observableCarsView.SearchSpecification.Add(c => c.Year, BinaryOperator.Equal); //TODO: Should work with default operator now.
             observableCarsView.Search("2000");
 
             // Act
-            observableCarsView.ClearSearchSpecifications();
+            observableCarsView.SearchSpecification.Clear();
 
             // Assert
             observableCarsView.SearchText.Should().Be(string.Empty);
@@ -347,61 +317,80 @@ namespace ObservableView.Tests
             searchView.Should().NotBeNull();
             searchView.Should().HaveCount(carsList.Count);
         }
+
         #endregion
 
         #region Grouping
+
         [Fact]
-        public void ShouldUseAlphaGroupKeyAlgorithmByDefaultToGenerateGroupKeys()
+        public void ShouldGroup_UsingAlphaGroupKeyAlgorithm_ByDefaultToGenerateGroupKeys()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
             observableCarsView.GroupKey = car => car.Brand.ToString();
 
             // Act
-            var groups = observableCarsView.Groups;
+            var groups = observableCarsView.Groups.ToList();
 
             // Assert
+            observableCarsView.GroupKeyAlgorithm.Should().NotBeNull();
+            observableCarsView.GroupKeyAlgorithm.Should().BeOfType<AlphaGroupKeyAlgorithm>();
+
             groups.Should().NotBeNull();
             groups.Should().HaveCount(3);
 
-            var groupAudi = groups.Single(g => g.Key == "a");
+            var groupAudi = groups.Single(g => g.Key == "A");
             groupAudi.Should().NotBeNull("AlphaGroupKeyAlgorithm should generate 'a' with the CarBrand.Audi.ToString()");
-            groupAudi.Should().HaveCount(2);
+            groupAudi.Should().HaveCount(3);
 
-            var groupBMW = groups.SingleOrDefault(g => g.Key == "b");
+            var groupBMW = groups.SingleOrDefault(g => g.Key == "B");
             groupBMW.Should().NotBeNull("AlphaGroupKeyAlgorithm should generate 'b' with the CarBrand.BMW.ToString()");
             groupBMW.Should().HaveCount(2);
 
-            var groupVW = groups.Single(g => g.Key == "v");
+            var groupVW = groups.Single(g => g.Key == "V");
             groupVW.Should().NotBeNull("AlphaGroupKeyAlgorithm should generate 'v' with the CarBrand.VW.ToString()");
             groupVW.Should().HaveCount(2);
         }
+
+        [Fact]
+        [UseCulture("en-US")]
+        public void ShouldGroupAndSort_UsingAlphaGroupKeyAlgorithm()
+        {
+            // Arrange
+            var carsList = CarPool.GetAllCars();
+
+            var observableCarsView = new ObservableView<Car>(carsList);
+            observableCarsView.GroupKey = t => t.CreatedDate;
+            observableCarsView.GroupKeyAlgorithm = new MonthGroupAlgorithm();
+            observableCarsView.AddOrderSpecification(t => t.CreatedDate, OrderDirection.Descending);
+
+            // Act
+            var groups = observableCarsView.Groups.ToList();
+
+            // Assert
+            groups.Should().NotBeNull();
+            groups.Should().HaveCount(8);
+
+            var groupDecember2016 = groups.ElementAt(0);
+            groupDecember2016.Key.EndsWith("December 2016").Should().BeTrue("MonthGroupAlgorithm should generate group 'December 2016' at position 0 (first)");
+            groupDecember2016.Should().HaveCount(1);
+
+            var groupXy = groups.ElementAt(7);
+            groupXy.Key.EndsWith("January 1990").Should().BeTrue("MonthGroupAlgorithm should generate group 'January 1990' at position 0 (first)");
+            groupXy.Should().HaveCount(1);
+        }
+
         #endregion
 
         #region Sorting
+
         [Fact]
         public void ShouldOrderSingleOrderSpecificationDescending()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
             observableCarsView.AddOrderSpecification(x => x.Brand, OrderDirection.Descending);
@@ -413,23 +402,15 @@ namespace ObservableView.Tests
             orderedView.Should().NotBeNull();
             orderedView.Should().HaveCount(carsList.Count);
 
-            orderedView[0].Brand.Should().Be(this.carVwPolo.Brand); // Frist item in the View should be a VW
-            orderedView[5].Brand.Should().Be(this.carAudiA1.Brand); // Last item in the View should be an Audi
+            orderedView[0].Brand.Should().Be(CarPool.carVwPolo.Brand); // Frist item in the View should be a VW
+            orderedView[5].Brand.Should().Be(CarPool.carAudiA1.Brand); // Last item in the View should be an Audi
         }
 
         [Fact]
         public void ShouldOrderMultipleOrderSpecificationsUsingPropertyExpression()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
             observableCarsView.AddOrderSpecification(x => x.Brand);
@@ -442,12 +423,15 @@ namespace ObservableView.Tests
             orderedView.Should().NotBeNull();
             orderedView.Should().HaveCount(carsList.Count);
 
-            orderedView[0].Model.Should().Be(this.carAudiA3.Model); // The first one should be the Audi A3
-            orderedView[1].Model.Should().Be(this.carAudiA1.Model);
-            orderedView[2].Model.Should().Be(this.carBmwM3.Model);
-            orderedView[3].Model.Should().Be(this.carBmwM1.Model);
-            orderedView[4].Model.Should().Be(this.carVwPolo.Model);
-            orderedView[5].Model.Should().Be(this.carVwGolf.Model); // The last one should be the VW Golf
+            orderedView.Should().ContainInOrder(
+                CarPool.carAudiA4,
+                // The first one should be the Audi A4
+                CarPool.carAudiA3,
+                CarPool.carAudiA1,
+                CarPool.carBmwM3,
+                CarPool.carBmwM1,
+                CarPool.carVwPolo,
+                CarPool.carVwGolf); // The last one should be the VW Golf
         }
 
         ////[Fact]
@@ -456,12 +440,12 @@ namespace ObservableView.Tests
         ////    // Arrange
         ////    var carsList = new ObservableCollection<Car>
         ////    {
-        ////        this.carAudiA1, 
-        ////        this.carAudiA3, 
-        ////        this.carBmwM1, 
-        ////        this.carBmwM3, 
-        ////        this.carVwPolo,
-        ////        this.carVwGolf
+        ////        Cars.carAudiA1, 
+        ////        Cars.carAudiA3, 
+        ////        Cars.carBmwM1, 
+        ////        Cars.carBmwM3, 
+        ////        Cars.carVwPolo,
+        ////        Cars.carVwGolf
         ////    };
 
         ////    var observableCarsView = new ObservableView<Car>(carsList);
@@ -475,27 +459,19 @@ namespace ObservableView.Tests
         ////    orderedView.Should().NotBeNull();
         ////    orderedView.Should().HaveCount(carsList.Count);
 
-        ////    orderedView[0].Model.Should().Be(this.carAudiA3.Model); // The first one should be the Audi A3
-        ////    orderedView[1].Model.Should().Be(this.carAudiA1.Model);
-        ////    orderedView[2].Model.Should().Be(this.carBmwM3.Model);
-        ////    orderedView[3].Model.Should().Be(this.carBmwM1.Model);
-        ////    orderedView[4].Model.Should().Be(this.carVwPolo.Model);
-        ////    orderedView[5].Model.Should().Be(this.carVwGolf.Model); // The last one should be the VW Golf
+        ////    orderedView[0].Model.Should().Be(Cars.carAudiA3.Model); // The first one should be the Audi A3
+        ////    orderedView[1].Model.Should().Be(Cars.carAudiA1.Model);
+        ////    orderedView[2].Model.Should().Be(Cars.carBmwM3.Model);
+        ////    orderedView[3].Model.Should().Be(Cars.carBmwM1.Model);
+        ////    orderedView[4].Model.Should().Be(Cars.carVwPolo.Model);
+        ////    orderedView[5].Model.Should().Be(Cars.carVwGolf.Model); // The last one should be the VW Golf
         ////}
 
         [Fact]
         public void ShouldRemoveOrderSpecifications()
         {
             // Arrange
-            var carsList = new ObservableCollection<Car>
-            {
-                this.carAudiA1, 
-                this.carAudiA3, 
-                this.carBmwM1, 
-                this.carBmwM3, 
-                this.carVwPolo,
-                this.carVwGolf
-            };
+            var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
             observableCarsView.AddOrderSpecification(x => x.Brand, OrderDirection.Descending);
@@ -511,44 +487,8 @@ namespace ObservableView.Tests
 
             orderedView.SequenceEqual(carsList).Should().BeTrue();
         }
+
         #endregion
 
-        #region Test Classes
-        // Predefined car pool
-        private readonly Car carAudiA1 = new Car(CarBrand.Audi, "A1", 2013);
-        private readonly Car carAudiA4 = new Car(CarBrand.Audi, "A4 Avant", 2000);
-        private readonly Car carAudiA3 = new Car(CarBrand.Audi, "A3 Sportback", 2015);
-        private readonly Car carBmwM1 = new Car(CarBrand.BMW, "M1", 2014);
-        private readonly Car carBmwM3 = new Car(CarBrand.BMW, "M3", 2012);
-        private readonly Car carBmwX5 = new Car(CarBrand.BMW, "X5", 2012);
-        private readonly Car carVwPolo = new Car(CarBrand.VW, "Polo 1.4 TDI", 1999);
-        private readonly Car carVwGolf = new Car(CarBrand.VW, "Golf 20th Birthday Ed.", 1990);
-        private readonly Car carVwGolfGti = new Car(CarBrand.VW, "Golf GTI 2.0", 2016);
-
-        private enum CarBrand
-        {
-            Audi,
-            BMW,
-            VW
-        }
-
-        [DebuggerDisplay("Brand={Brand}, Model={Model}, Year={Year}")]
-        private class Car
-        {
-            public Car(CarBrand brand, string model, int year)
-            {
-                this.Brand = brand;
-                this.Model = model;
-                this.Year = year;
-            }
-
-            public CarBrand Brand { get; private set; }
-
-            [Searchable]
-            public string Model { get; private set; }
-
-            public int Year { get; private set; }
-        }
-        #endregion
     }
 }

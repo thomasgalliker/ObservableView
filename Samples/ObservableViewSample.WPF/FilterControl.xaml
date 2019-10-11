@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="ObservableViewSample.WPF.FilterControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ObservableViewSample.WPF"
+             xmlns:viewModels="clr-namespace:ObservableViewSample.WPF.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600"
+             d:DataContext="{d:DesignInstance viewModels:FilterViewModel}">
+    <Grid>
+        <ItemsControl Name="ItemControl" ItemsSource="{Binding FilterItems}" VerticalAlignment="Top">
+            <ItemsControl.Resources>
+                <Style TargetType="ItemsControl">
+                    <Setter Property="ItemsPanel">
+                        <Setter.Value>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ItemsControl.Resources>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:FilterItemView HorizontalAlignment="Stretch" DataContext="{Binding}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

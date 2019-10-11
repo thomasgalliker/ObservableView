@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="4.2.0.848062" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ObservableView\ObservableView.csproj" />
+    <ProjectReference Include="..\ObservableViewSample\ObservableViewSample.csproj" />
+  </ItemGroup>
+</Project>

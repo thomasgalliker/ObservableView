@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>19623a92-f3f3-49a8-85b6-ffdb96828350</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ObservableView.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\SearchTextPreprocessorException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\EnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ExpressionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ObservableViewExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\OperationExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\QueryableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ReflectionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\SortDirectionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\TypeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filtering\FilterEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filtering\FilterEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\AlphaGroupKeyAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\Grouping.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\GroupKeyAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\IGroupKeyAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Grouping\MonthGroupAlgorithm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IObservableView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObservableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ObservableView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PreserveAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\ExpressionBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\IExpressionBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\ISearchSpecification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operands\ConstantOperand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operands\IOperand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operands\Operand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operands\Operation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operands\PropertyOperand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operands\VariableOperand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operations\BinaryOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operations\GroupOperation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operators\AndOperator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operators\BinaryOperator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operators\ContainsOperator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operators\EqualOperator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operators\GroupOperator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operators\IOperator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Operators\OrOperator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Processors\ExpressionProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Processors\IExpressionProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Processors\ToLowerExpressionProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Processors\ToUpperExpressionProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\Processors\TrimExpressionProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\SearchableAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Searching\SearchSpecification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SearchLogic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sorting\NaturalSortComparable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sorting\OrderDirection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sorting\OrderSpecification.cs" />
+  </ItemGroup>
+</Project>
