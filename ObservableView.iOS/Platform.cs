@@ -1,6 +1,4 @@
-﻿using System;
-
-//[assembly: Foundation.Preserve(typeof(System.Linq.Queryable), AllMembers = true)]
+﻿//[assembly: Foundation.Preserve(typeof(System.Linq.Queryable), AllMembers = true)]
 //[assembly: Foundation.Preserve(typeof(System.Linq.Enumerable), AllMembers = true)]
 
 [assembly: Preserve]
@@ -12,7 +10,8 @@ namespace ObservableView
     {
         public static void Init()
         {
-            var temp = new DateTime();
+            var observableView = typeof(ObservableView<>);
+            var queryable = typeof(System.Linq.Queryable);
         }
     }
 }
