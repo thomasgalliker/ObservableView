@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 
 namespace ObservableView.Extensions
 {
+    [Preserve(AllMembers = true)]
     public static class QueryableExtensions
     {
         public static IQueryable<T> Where<T>(this IQueryable<T> source, Expression baseExpression, ParameterExpression parameterExpression)
