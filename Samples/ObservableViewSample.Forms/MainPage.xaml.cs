@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ObservableViewSample.Service;
+using ObservableViewSample.ViewModel;
 using Xamarin.Forms;
 
 namespace ObservableViewSample.Forms
@@ -11,7 +8,8 @@ namespace ObservableViewSample.Forms
     {
         public MainPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            this.BindingContext = new MainViewModel(new MallManager()); // TODO Use IoC here
         }
     }
 }

@@ -20,6 +20,7 @@ namespace ObservableViewSample.Forms.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            global::ObservableView.Platform.Init();
             this.LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

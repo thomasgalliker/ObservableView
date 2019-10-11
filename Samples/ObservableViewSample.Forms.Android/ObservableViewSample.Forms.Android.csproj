@@ -91,6 +91,10 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ObservableView\ObservableView.csproj">
+      <Project>{f6ed6a22-fdba-41b6-b22c-64345ed5e63d}</Project>
+      <Name>ObservableView</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ObservableViewSample.Forms\ObservableViewSample.Forms.csproj">
       <Project>{B36B1E0D-0F6F-4A7F-A10F-60E119361C11}</Project>
       <Name>ObservableViewSample.Forms</Name>

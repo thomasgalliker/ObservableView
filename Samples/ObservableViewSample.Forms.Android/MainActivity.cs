@@ -17,6 +17,7 @@ namespace ObservableViewSample.Forms.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            var x = typeof(ObservableView.ObservableView<object>);
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
