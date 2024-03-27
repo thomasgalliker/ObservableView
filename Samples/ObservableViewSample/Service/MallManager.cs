@@ -22,20 +22,20 @@ namespace ObservableViewSample.Service
         public ObservableCollection<Mall> GetMalls()
         {
             var ablphabeticList = new ObservableCollection<Mall>
-                       {
+            {
 
-                           new Mall("AAA", "AAA"),
-                           new Mall("AAA", "BBB"),
-                           new Mall("AAA", "CCC"),
+                new Mall("AAA", "AAA"),
+                new Mall("AAA", "BBB"),
+                new Mall("AAA", "CCC"),
 
-                           new Mall("BBB", "AAA"),
-                           new Mall("BBB", "BBB"),
-                           new Mall("BBB", "CCC"),
+                new Mall("BBB", "AAA"),
+                new Mall("BBB", "BBB"),
+                new Mall("BBB", "CCC"),
 
-                           new Mall("CCC", "AAA"),
-                           new Mall("CCC", "BBB"),
-                           new Mall("CCC", "CCC"),
-                       };
+                new Mall("CCC", "AAA"),
+                new Mall("CCC", "BBB"),
+                new Mall("CCC", "CCC"),
+            };
 
             //for (int i = 0; i < 5; i++)
             //{

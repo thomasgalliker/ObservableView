@@ -1,8 +1,5 @@
 using System;
-
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-
+using CommunityToolkit.Mvvm.Input;
 using ObservableView;
 using ObservableView.Grouping;
 using ObservableView.Searching.Operators;
@@ -10,10 +7,11 @@ using ObservableView.Sorting;
 
 using ObservableViewSample.Model;
 using ObservableViewSample.Service;
+using ObservableObject = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 
 namespace ObservableViewSample.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ObservableObject
     {
         private RelayCommand addMallCommand;
         private RelayCommand<Mall> deleteMallCommand;
@@ -91,78 +89,48 @@ namespace ObservableViewSample.ViewModel
             }
         }
 
-        public RelayCommand RefreshCommand
-        {
-            get
-            {
-                return this.refreshCommand ?? (this.refreshCommand = new RelayCommand(
-                         () =>
-                         {
-                             this.MallsList.Refresh();
-                         }));
-            }
-        }
+        public RelayCommand RefreshCommand => this.refreshCommand ??= new RelayCommand(this.MallsList.Refresh);
 
 
-        public RelayCommand SearchBoxClearCommand
-        {
-            get
-            {
-                return this.searchBoxClearCommand ?? (this.searchBoxClearCommand = new RelayCommand(
-                         () =>
-                         {
-                             this.MallsList.ClearSearch();
-                         }));
-            }
-        }
+        public RelayCommand SearchBoxClearCommand => this.searchBoxClearCommand ??= new RelayCommand(this.MallsList.ClearSearch);
 
         public string NewMallTitle
         {
-            get
-            {
-                return this.newMallTitle;
-            }
+            get => this.newMallTitle;
             set
             {
-                this.newMallTitle = value;
-                this.RaisePropertyChanged(() => this.NewMallTitle);
-                this.RaisePropertyChanged(() => this.IsAddMallButtonEnabled);
+                if (this.SetProperty(ref this.newMallTitle, value))
+                {
+                    this.OnPropertyChanged(nameof(this.NewMallTitle));
+                    this.OnPropertyChanged(nameof(this.IsAddMallButtonEnabled));
+                }
             }
         }
 
         public string NewMallSubtitle
         {
-            get
-            {
-                return this.newMallSubtitle;
-            }
+            get => this.newMallSubtitle;
             set
             {
                 this.newMallSubtitle = value;
-                this.RaisePropertyChanged(() => this.NewMallSubtitle);
-                this.RaisePropertyChanged(() => this.IsAddMallButtonEnabled);
+                this.OnPropertyChanged(nameof(this.NewMallSubtitle));
+                this.OnPropertyChanged(nameof(this.IsAddMallButtonEnabled));
             }
         }
 
         public int NewMallNumberOf
         {
-            get
-            {
-                return this.newMallNumberOf;
-            }
+            get => this.newMallNumberOf;
             set
             {
                 this.newMallNumberOf = Math.Abs(value);
-                this.RaisePropertyChanged(() => this.NewMallNumberOf);
+                this.OnPropertyChanged(nameof(this.NewMallNumberOf));
             }
         }
 
         public bool IsAddMallButtonEnabled
         {
-            get
-            {
-                return !string.IsNullOrEmpty(this.NewMallTitle) && !string.IsNullOrEmpty(this.NewMallSubtitle);
-            }
+            get => !string.IsNullOrEmpty(this.NewMallTitle) && !string.IsNullOrEmpty(this.NewMallSubtitle);
         }
     }
 }
