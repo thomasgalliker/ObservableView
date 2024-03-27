@@ -54,15 +54,6 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="[5.0.2,)" />
-    <PackageReference Include="NLog" Version="[5.2.2,)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ObservableView\ObservableView.csproj" PrivateAssets="All" />
-  </ItemGroup>
-
   <Target Name="PackBuildOutputs">
     <ItemGroup>
       <!--Add pdbs-->
