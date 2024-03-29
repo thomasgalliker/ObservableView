@@ -102,11 +102,6 @@ steps:
   inputs:
     versionSpec: 6.x
 
- # - task: NuGetCommand@2
- #  displayName: Nuget restore
- #  inputs:
- #    restoreSolution: '$(solution)'
-
 - task: DotNetCoreCLI@2
   displayName: 'NuGet restore'
   inputs:
