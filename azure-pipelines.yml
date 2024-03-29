@@ -8,6 +8,8 @@ name: $[format('{0}', variables['buildName'])]
 
 pool:
   vmImage: 'windows-2022'
+  demands:
+  - MSBuild
 
 trigger:
   branches:
@@ -100,11 +102,16 @@ steps:
   inputs:
     versionSpec: 6.x
 
-- task: DotNetCoreCLI@2
-  displayName: 'NuGet restore'
+ - task: NuGetCommand@2
+  displayName: Nuget restore
   inputs:
-    command: restore
-    projects: '$(solution)'
+    restoreSolution: '$(solution)'
+
+# - task: DotNetCoreCLI@2
+#   displayName: 'NuGet restore'
+#   inputs:
+#     command: restore
+#     projects: '$(solution)'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build solution'
