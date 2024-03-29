@@ -1,7 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq.Expressions;
-
-using ObservableView.Extensions;
 
 namespace ObservableView.Searching.Processors
 {

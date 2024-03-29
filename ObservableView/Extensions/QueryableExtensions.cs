@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-
-namespace ObservableView.Extensions
+﻿namespace ObservableView.Extensions
 {
     [Preserve(AllMembers = true)]
     public static class QueryableExtensions

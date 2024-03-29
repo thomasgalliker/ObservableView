@@ -1,7 +1,4 @@
-﻿using System.Linq.Expressions;
-using System.Runtime.Serialization;
-
-using ObservableView.Searching.Operands;
+﻿using ObservableView.Searching.Operands;
 
 namespace ObservableView.Searching.Operators
 {

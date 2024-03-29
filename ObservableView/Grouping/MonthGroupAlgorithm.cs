@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ObservableView.Grouping
+﻿namespace ObservableView.Grouping
 {
     public class MonthGroupAlgorithm : GroupKeyAlgorithm<DateTime?>
     {

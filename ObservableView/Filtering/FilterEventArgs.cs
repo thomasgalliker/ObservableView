@@ -1,5 +1,3 @@
-using System;
-
 namespace ObservableView.Filtering
 {
     public class FilterEventArgs<T> : EventArgs

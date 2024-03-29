@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-
-namespace ObservableView.Extensions
+﻿namespace ObservableView.Extensions
 {
     public static class EnumerableExtensions
     {

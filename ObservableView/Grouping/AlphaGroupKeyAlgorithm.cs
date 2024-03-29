@@ -1,7 +1,4 @@
-﻿
-using ObservableView.Extensions;
-
-namespace ObservableView.Grouping
+﻿namespace ObservableView.Grouping
 {
     public class AlphaGroupKeyAlgorithm : GroupKeyAlgorithm<string>
     {

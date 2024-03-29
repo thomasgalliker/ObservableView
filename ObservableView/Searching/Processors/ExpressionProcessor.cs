@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Runtime.Serialization;
-
-namespace ObservableView.Searching.Processors
+﻿namespace ObservableView.Searching.Processors
 {
     // [DataContract(Name = "ExpressionProcessor")]
     public abstract class ExpressionProcessor : IExpressionProcessor

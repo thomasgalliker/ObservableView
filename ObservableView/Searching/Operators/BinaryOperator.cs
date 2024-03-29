@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-using ObservableView.Searching.Operands;
+﻿using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;
 
 namespace ObservableView.Searching.Operators

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ObservableView.Extensions
+﻿namespace ObservableView.Extensions
 {
     public static class StringExtensions
     {

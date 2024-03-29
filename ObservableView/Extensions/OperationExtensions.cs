@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using ObservableView.Searching.Operands;
+﻿using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;
 
 namespace ObservableView.Extensions

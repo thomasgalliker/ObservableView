@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Runtime.Serialization;
 
 using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;

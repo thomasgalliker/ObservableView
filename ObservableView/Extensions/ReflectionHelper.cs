@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
-
-namespace ObservableView.Extensions
+﻿namespace ObservableView.Extensions
 {
     internal static class ReflectionHelper<T>
     {

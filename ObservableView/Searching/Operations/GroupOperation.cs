@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-using ObservableView.Searching.Operands;
+﻿using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operators;
 
 namespace ObservableView.Searching.Operations

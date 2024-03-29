@@ -1,16 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq.Expressions;
-using System.Reflection;
-
-using ObservableView.Exceptions;
-using ObservableView.Extensions;
-using ObservableView.Filtering;
-using ObservableView.Grouping;
-using ObservableView.Searching;
-using ObservableView.Sorting;
-
-namespace ObservableView
+﻿namespace ObservableView
 {
     /// <summary>
     ///     ObservableView is a class which adds sorting, filtering, searching and grouping

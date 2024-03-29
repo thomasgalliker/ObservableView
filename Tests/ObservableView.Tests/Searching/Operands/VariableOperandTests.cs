@@ -1,8 +1,4 @@
-﻿using FluentAssertions;
-
-using ObservableView.Searching.Operands;
-
-using Xunit;
+﻿using ObservableView.Searching.Operands;
 
 namespace ObservableView.Tests.Searching.Operands
 {

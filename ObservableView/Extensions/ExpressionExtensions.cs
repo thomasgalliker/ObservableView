@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace ObservableView.Extensions
+﻿namespace ObservableView.Extensions
 {
     public static class ExpressionExtensions
     {

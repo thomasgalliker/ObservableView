@@ -1,10 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.Linq.Expressions;
-using System.Reflection;
-
-using ObservableView.Extensions;
 
 namespace ObservableView.Searching.Operands
 {
@@ -97,7 +92,7 @@ namespace ObservableView.Searching.Operands
                 {
                     throw new FormatException(
                         string.Format(CultureInfo.InvariantCulture, "Value {0} does not match type {1}.",
-                        value, 
+                        value,
                         targetType),
                         formatException);
                 }

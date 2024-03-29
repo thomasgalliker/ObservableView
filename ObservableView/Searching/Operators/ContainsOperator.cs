@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Reflection;
-
-using ObservableView.Extensions;
+﻿using System.Diagnostics;
 using ObservableView.Searching.Operations;
 
 namespace ObservableView.Searching.Operators
@@ -52,21 +47,21 @@ namespace ObservableView.Searching.Operators
             //MethodInfo containsMethodInfo = ReflectionHelper<string>.GetMethod<string>((source, argument) => source.Contains(argument, this.stringComparison));
             var stringComparisonExpression = Expression.Constant(this.stringComparison);
 
-//#if IOS
-//            Expression containsExpression = Expression.Call(
-//                leftExpression, 
-//                containsExtensionMethodInfo,
-//                rightExpression,
-//                stringComparisonExpression);
-           
-//#else
+            //#if IOS
+            //            Expression containsExpression = Expression.Call(
+            //                leftExpression, 
+            //                containsExtensionMethodInfo,
+            //                rightExpression,
+            //                stringComparisonExpression);
+
+            //#else
             Expression containsExpression = Expression.Call(
                 null,
                 containsExtensionMethodInfo,
                 leftExpression,
                 rightExpression,
                 stringComparisonExpression);
-//#endif
+            //#endif
 
             if (leftNotNullExpression != null)
             {

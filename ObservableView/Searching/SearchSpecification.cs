@@ -1,13 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-
-using ObservableView.Extensions;
-using ObservableView.Filtering;
-using ObservableView.Searching.Operands;
+﻿using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;
 using ObservableView.Searching.Operators;
-using System.Reflection;
 
 using ObservableView.Searching.Processors;
 
