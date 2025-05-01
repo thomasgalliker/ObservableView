@@ -2,34 +2,19 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:i="clr-namespace:MauiSampleApp.Views.ItemTemplates"
+    xmlns:vm="clr-namespace:ObservableViewSample.ViewModel;assembly=ObservableViewSample"
     x:Class="MauiSampleApp.Views.MainPage"
-    Title="ObservableView Sample App">
+    Title="ObservableView Sample App"
+    x:DataType="vm:MainViewModel">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="MallViewCell">
-                <ViewCell>
-                    <Grid
-                        Padding="4"
-                        RowSpacing="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Label
-                            Grid.Row="0"
-                            FontAttributes="Bold"
-                            Text="{Binding Title}" />
-                        <Label
-                            Grid.Row="1"
-                            Text="{Binding Subtitle}" />
-                    </Grid>
-                </ViewCell>
+            <DataTemplate x:Key="MallItemTemplate">
+                <i:MallItemTemplate />
             </DataTemplate>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Grid
-        IsVisible="{Binding IsNotBusy}"
-        RowSpacing="0">
+    <Grid RowSpacing="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -47,7 +32,7 @@
             IsGroupingEnabled="False"
             IsPullToRefreshEnabled="true"
             IsRefreshing="{Binding IsRefreshing}"
-            ItemTemplate="{StaticResource MallViewCell}"
+            ItemTemplate="{StaticResource MallItemTemplate}"
             ItemsSource="{Binding MallsList.View}"
             RefreshCommand="{Binding RefreshCommand}"
             SeparatorColor="LightGray"

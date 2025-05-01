@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using ObservableView;
 using ObservableView.Grouping;
@@ -15,11 +16,12 @@ namespace ObservableViewSample.ViewModel
     {
         private RelayCommand addMallCommand;
         private RelayCommand<Mall> deleteMallCommand;
-        private RelayCommand refreshCommand;
+        private IAsyncRelayCommand refreshCommand;
         private RelayCommand searchBoxClearCommand;
         private string newMallTitle;
         private string newMallSubtitle;
         private int newMallNumberOf = 1;
+        private bool isRefreshing;
 
         public MainViewModel(IMallManager mallManager)
         {
@@ -89,8 +91,31 @@ namespace ObservableViewSample.ViewModel
             }
         }
 
-        public RelayCommand RefreshCommand => this.refreshCommand ??= new RelayCommand(this.MallsList.Refresh);
+        public IAsyncRelayCommand RefreshCommand
+        {
+            get => this.refreshCommand ??= new AsyncRelayCommand(this.RefreshAsync);
+        }
 
+        public async Task RefreshAsync()
+        {
+            this.IsRefreshing = true;
+
+            try
+            {
+                await Task.Delay(1000);
+                this.MallsList.Refresh();
+            }
+            finally
+            {
+                this.IsRefreshing = false;
+            }
+        }
+
+        public bool IsRefreshing
+        {
+            get => this.isRefreshing;
+            set => this.SetProperty(ref this.isRefreshing, value);
+        }
 
         public RelayCommand SearchBoxClearCommand => this.searchBoxClearCommand ??= new RelayCommand(this.MallsList.ClearSearch);
 
