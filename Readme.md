@@ -1,5 +1,6 @@
 # ObservableView
-<img src="https://raw.githubusercontent.com/thomasgalliker/ObservableView/master/logo_gradient.png" alt="ObservableView" align="right" height="100">
+[![Version](https://img.shields.io/nuget/v/ObservableView.svg)](https://www.nuget.org/packages/Paging.NET)  [![Downloads](https://img.shields.io/nuget/dt/ObservableView.svg)](https://www.nuget.org/packages/Paging.NET) [![Buy Me a Coffee](https://img.shields.io/badge/support-buy%20me%20a%20coffee-FFDD00)](https://buymeacoffee.com/thomasgalliker)
+
 ObservableView is a simple wrapper for collections which provides an easy-to-use API for searching, filtering, sorting and grouping of collections. This project enhances the well-known ObservableCollection of the .Net Framework with addition, commonly-used features. The goal is to have a Swiss army knife of a collection utility which provides an easy-to-use but very powerful API while preserving maximum platform compatibility.
 
 ### Download and Install ObservableView
@@ -8,28 +9,7 @@ Use the following command to install ObservableView using NuGet package manager 
 
     PM> Install-Package ObservableView
 
-You can use this library in any .Net project which is compatible to .Net Framework 4.5+ and .Net Standard 1.3+ (e.g. Xamarin, WPF)
-
-### Platform Support
-
-|Platform|Version|
-| ------------------- | :-----------: |
-|Xamarin.iOS|iOS 8+|
-|Xamarin.Android|API 14+|
-|WPF|.NET 4.5+|
-
-**Xamarin.iOS  Setup**
-You must set the line `ObservableView.Platform.Init();` in your projects AppDelegate:
-```C#
-public override bool FinishedLaunching(UIApplication app, NSDictionary options)
-{
-    Xamarin.Forms.Forms.Init();
-    ObservableView.Platform.Init(); // <--
-    this.LoadApplication(new App());
-
-    return base.FinishedLaunching(app, options);
-}
-```
+You can use this library in any .NET project which is compatible to .NET Standard 2.0 and higher.
 
 ### API Usage
 #### Basic MVVM data binding with List Views
@@ -138,5 +118,5 @@ this.MallsList.GroupKey = mall => mall.Title;
 ### Performance considerations
 Performance is a critical success factor for ObservableView. ObservableView has been tested with ten thousands of data records with good results. If you run into performance bottlenecks caused by ObservableView, do not hesitate to open a new issue.
 
-### License
-This project is Copyright &copy; 2019 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+### Contribution
+Contributors welcome! If you find a bug or you want to propose a new feature, feel free to do so by opening a new issue on github.com.
