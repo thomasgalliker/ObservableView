@@ -1,7 +1,7 @@
 ####################################################################
-# VSTS Build Configuration, Version 1.4
+# Azure Devops Build Configuration
 #
-# (c)2022 superdev GmbH
+# (c)2025 superdev GmbH
 ####################################################################
 
 name: $[format('{0}', variables['buildName'])]
@@ -23,16 +23,7 @@ trigger:
     exclude:
     - Docs/*
 
-schedules:
-- cron: "0 0 1 * *"
-  displayName: At 00:00 on day-of-month 1
-  branches:
-    include:
-    - develop
-  always: true
-
 variables:
-  solution: 'ObservableView.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   majorVersion: 3
@@ -106,12 +97,16 @@ steps:
   displayName: 'NuGet restore'
   inputs:
     command: restore
-    projects: '$(solution)'
+    projects: |
+      ObservableView/**/*.csproj
+      **/*.Tests.csproj
 
 - task: DotNetCoreCLI@2
   displayName: 'Build solution'
   inputs:
-    projects: '$(solution)'
+    projects: |
+      ObservableView/**/*.csproj
+      **/*.Tests.csproj
     arguments: '--no-restore --configuration $(buildConfiguration)'
     
 - task: DotNetCoreCLI@2
@@ -121,7 +116,7 @@ steps:
     projects: '**/*.Tests.csproj'
     arguments: '--no-restore --no-build --configuration $(buildConfiguration) /p:CollectCoverage=true /p:Exclude="[Microsoft*]*%2C[Mono*]*%2C[xunit*]*%2C[*.Testdata]*" /p:CoverletOutput=UnitTests.coverage.cobertura.xml /p:MergeWith=$(Build.SourcesDirectory)/Tests/CoverletOutput/coverage.json /p:CoverletOutputFormat=cobertura'
     
-- task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+- task: reportgenerator@5
   displayName: 'Create Code Coverage Report'
   inputs:
     reports: '$(Build.SourcesDirectory)/Tests/**/*.coverage.cobertura*.xml'
@@ -149,7 +144,7 @@ steps:
 
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
      
-- task: PublishCodeCoverageResults@1
+- task: PublishCodeCoverageResults@2
   displayName: 'Publish code coverage'
   inputs:
     codeCoverageTool: Cobertura
