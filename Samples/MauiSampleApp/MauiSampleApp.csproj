@@ -53,10 +53,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ViewModels\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\ObservableViewSample\ObservableViewSample.csproj" />
 	</ItemGroup>
 
