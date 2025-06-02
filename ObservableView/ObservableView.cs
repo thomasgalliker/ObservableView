@@ -9,7 +9,7 @@ namespace ObservableView
     [Preserve(AllMembers = true)]
     public class ObservableView<T> : BindableBase, IObservableView
     {
-        private static readonly object FilterHandlerEventLock = new object();
+        private readonly object filterHandlerEventLock = new object();
 
         private readonly List<OrderSpecification<T>> orderSpecifications;
         private ObservableCollection<T> sourceCollection;
@@ -41,15 +41,15 @@ namespace ObservableView
 
         private void InitializeSearchSpecificationFromSearchableAttributes()
         {
-            MethodInfo addMethod = ReflectionHelper<ISearchSpecification<T>>.GetMethod(source => source.Add<T>(null, null, null));
+            var addMethod = ReflectionHelper<ISearchSpecification<T>>.GetMethod(source => source.Add<T>(null, null, null));
 
-            var searchableAttributes = this.GetSearchableAttributes();
+            var searchableAttributes = GetSearchableAttributes();
             foreach (var propertyInfo in searchableAttributes)
             {
                 var parameter = Expression.Parameter(typeof(T), "x");
                 var property = Expression.Property(parameter, propertyInfo);
                 var funcType = typeof(Func<,>).MakeGenericType(typeof(T), propertyInfo.PropertyType);
-                LambdaExpression lambdaExpression = Expression.Lambda(funcType, property, parameter);
+                var lambdaExpression = Expression.Lambda(funcType, property, parameter);
 
                 addMethod.GetGenericMethodDefinition()
                     .MakeGenericMethod(propertyInfo.PropertyType)
@@ -62,8 +62,8 @@ namespace ObservableView
         {
         }
 
-        public ObservableView(IEnumerable<T> list)
-            : this(list.ToObservableCollection())
+        public ObservableView(IEnumerable<T> source)
+            : this(source.ToObservableCollection())
         {
         }
 
@@ -71,7 +71,7 @@ namespace ObservableView
         {
             add
             {
-                lock (FilterHandlerEventLock)
+                lock (this.filterHandlerEventLock)
                 {
                     this.filterHandler += value;
                 }
@@ -80,7 +80,7 @@ namespace ObservableView
             }
             remove
             {
-                lock (FilterHandlerEventLock)
+                lock (this.filterHandlerEventLock)
                 {
                     this.filterHandler -= value;
                 }
@@ -94,8 +94,10 @@ namespace ObservableView
             get => this.groupKey;
             set
             {
-                this.groupKey = value;
-                this.OnPropertyChanged(nameof(this.Groups));
+                if (this.SetProperty(ref this.groupKey, value))
+                {
+                    this.OnPropertyChanged(nameof(this.Groups));
+                }
             }
         }
 
@@ -104,8 +106,10 @@ namespace ObservableView
             get => this.groupKeyAlgorithm;
             set
             {
-                this.groupKeyAlgorithm = value;
-                this.OnPropertyChanged(nameof(this.Groups));
+                if (this.SetProperty(ref this.groupKeyAlgorithm, value))
+                {
+                    this.OnPropertyChanged(nameof(this.Groups));
+                }
             }
         }
 
@@ -120,13 +124,16 @@ namespace ObservableView
 
                 var groupedList = this.View
                     .GroupBy(item => this.GroupKeyAlgorithm.GetGroupKey(this.GroupKey.Invoke(item)))
-                    .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup))
-                    .ToList();
+                    .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup));
 
                 return groupedList;
             }
         }
 
+        /// <summary>
+        /// Specifies the delay interval used to throttle search updates while the user is typing.
+        /// Helps reduce the frequency of search operations triggered by input changes.
+        /// </summary>
         public TimeSpan SearchInputDelay { get; set; } = TimeSpan.FromMilliseconds(500);
 
         /// <summary>
@@ -184,8 +191,7 @@ namespace ObservableView
                     this.sourceCollection.CollectionChanged += this.HandleSourceCollectionChanged;
                 }
 
-                this.HandleSourceCollectionChanged(this.sourceCollection,
-                    new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                this.HandleSourceCollectionChanged(this.sourceCollection, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
 
@@ -286,7 +292,7 @@ namespace ObservableView
         {
             if (keySelector == null)
             {
-                throw new ArgumentNullException("keySelector");
+                throw new ArgumentNullException(nameof(keySelector));
             }
 
             var newOrderSpecification = new OrderSpecification<T>(keySelector, orderDirection);
@@ -305,7 +311,7 @@ namespace ObservableView
         OrderDirection? IObservableView.GetSortSpecification(string propertyName)
         {
             var orderSpecification = this.orderSpecifications.SingleOrDefault(s => s.PropertyName == propertyName);
-            return orderSpecification != null ? orderSpecification.OrderDirection : (OrderDirection?)null;
+            return orderSpecification?.OrderDirection;
         }
 
         /// <inheritdoc />
@@ -397,10 +403,10 @@ namespace ObservableView
             this.Refresh();
         }
 
-        private IEnumerable<PropertyInfo> GetSearchableAttributes()
+        private static IEnumerable<PropertyInfo> GetSearchableAttributes()
         {
-            return typeof(T).GetRuntimeProperties().Where(propertyInfo =>
-                propertyInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(SearchableAttribute))).ToList();
+            return typeof(T).GetRuntimeProperties()
+                .Where(propertyInfo => propertyInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(SearchableAttribute)));
         }
 
         /// <summary>
@@ -450,14 +456,14 @@ namespace ObservableView
                     $"or by defining [Searchable] annotations on properties in type {typeof(T).Name} to mark them as searchable.");
             }
 
-            ParameterExpression parameterExpression = Expression.Parameter(typeof(T), "x");
-            Expression baseExpression = this.BuildBaseExpression(parameterExpression, searchStrings, this.SearchTextLogic);
+            var parameterExpression = Expression.Parameter(typeof(T), "x");
+            var baseExpression = this.BuildBaseExpression(parameterExpression, searchStrings, this.SearchTextLogic);
             if (baseExpression == null)
             {
                 return results;
             }
 
-            IQueryable<T> queryableDtos = viewCollection.AsQueryable();
+            var queryableDtos = viewCollection.AsQueryable();
             return queryableDtos.Where(baseExpression, parameterExpression).ToObservableCollection();
         }
 
@@ -504,19 +510,18 @@ namespace ObservableView
             return baseExpression;
         }
 
-        private static IEnumerable<T> PerformOrdering(IEnumerable<T> enumerable, IEnumerable<OrderSpecification<T>> orderSpecifications)
+        private static IEnumerable<T> PerformOrdering(IEnumerable<T> source, List<OrderSpecification<T>> orderSpecifications)
         {
-            IQueryable<T> query = enumerable.AsQueryable();
-
-            OrderSpecification<T> firstSpecification = orderSpecifications.First();
             IOrderedEnumerable<T> orderedQuery;
+
+            var firstSpecification = orderSpecifications.First();
             if (firstSpecification.OrderDirection == OrderDirection.Ascending)
             {
-                orderedQuery = query.OrderBy(firstSpecification.KeySelector);
+                orderedQuery = source.OrderBy(firstSpecification.KeySelector);
             }
             else
             {
-                orderedQuery = query.OrderByDescending(firstSpecification.KeySelector);
+                orderedQuery = source.OrderByDescending(firstSpecification.KeySelector);
             }
 
             foreach (var orderSpecification in orderSpecifications.Skip(1))
@@ -531,7 +536,7 @@ namespace ObservableView
                 }
             }
 
-            return orderedQuery.ToList();
+            return orderedQuery;
         }
     }
 }
