@@ -1,4 +1,6 @@
-﻿namespace ObservableView
+﻿using ObservableView.Utils;
+
+namespace ObservableView
 {
     /// <summary>
     ///     ObservableView is a class which adds sorting, filtering, searching and grouping
@@ -17,6 +19,7 @@
         private Func<T, object> groupKey;
         private IGroupKeyAlgorithm groupKeyAlgorithm;
         private Func<string, string> searchTextPreprocessor;
+        private readonly TaskDelayer searchTextThrottle = new TaskDelayer();
 
         public ObservableView(ObservableCollection<T> collection)
         {
@@ -122,25 +125,26 @@
             }
         }
 
+        public TimeSpan SearchInputDelay { get; set; } = TimeSpan.FromMilliseconds(500);
+
         /// <summary>
-        ///     Gets or sets the search text.
-        ///     This property can be used for data binding and has the same effect
-        ///     as using the <code>Search("searchtext")</code> method to perform a search operation.
+        /// Gets or sets the search text.
+        /// This property can be used for data binding and has the same effect
+        /// as using the <code>Search("searchtext")</code> method to perform a search operation.
         /// </summary>
         public string SearchText
         {
-            get
-            => this.searchText;
+            get => this.searchText;
             set
             {
-                if (this.searchText != value)
+                if (this.SetProperty(ref this.searchText, value))
                 {
-                    this.searchText = value;
-                    this.OnPropertyChanged(nameof(this.SearchText));
-
-                    // Update properties to reflect the search result
-                    this.OnPropertyChanged(nameof(this.View));
-                    this.OnPropertyChanged(nameof(this.Groups));
+                    _ = this.searchTextThrottle.RunWithDelay(this.SearchInputDelay, () =>
+                    {
+                        // Update properties View and Groups with new SearchText
+                        this.OnPropertyChanged(nameof(this.View));
+                        this.OnPropertyChanged(nameof(this.Groups));
+                    });
                 }
             }
         }
@@ -194,9 +198,9 @@
             get
             {
                 // View returns the original collection if no filtering, search and ordering is applied.
-                // The order of processing is set-up in a way to guarantee maximum performance.
+                // The order of processing is set up in a way to guarantee maximum performance.
 
-                var viewCollection = this.Source;
+                IEnumerable<T> viewCollection = this.Source;
                 if (viewCollection != null && viewCollection.Any())
                 {
                     if (!string.IsNullOrEmpty(this.SearchText))
@@ -212,12 +216,16 @@
 
                     if (this.orderSpecifications != null && this.orderSpecifications.Any())
                     {
-                        viewCollection = PerformOrdering(viewCollection, this.orderSpecifications).ToObservableCollection();
+                        viewCollection = PerformOrdering(viewCollection, this.orderSpecifications);
                     }
+                }
+                else
+                {
+                    viewCollection = Array.Empty<T>();
                 }
 
                 // It is important to return the viewCollection in a new ObservableCollection object.
-                // Otherwise the binding is not refreshed when OnPropertyChanged is called.
+                // Otherwise, the binding is not refreshed when OnPropertyChanged is called.
                 return new ObservableCollection<T>(viewCollection);
             }
         }
@@ -358,21 +366,18 @@
         ////    return Expression.Call(leftToLower, typeof(string).GetRuntimeMethod("Contains", new[] { typeof(string) }), rightExpression);
         ////}
 
-        private ObservableCollection<T> GetFilteredCollection(IEnumerable<T> viewCollection)
+        private IEnumerable<T> GetFilteredCollection(IEnumerable<T> source)
         {
-            var filteredCollection = new ObservableCollection<T>();
-            foreach (T item in viewCollection)
+            foreach (var item in source)
             {
                 var filterEventArgs = new FilterEventArgs<T>(item);
                 this.filterHandler(this, filterEventArgs);
 
                 if (filterEventArgs.IsAllowed)
                 {
-                    filteredCollection.Add(item);
+                    yield return item;
                 }
             }
-
-            return filteredCollection;
         }
 
         public ISearchSpecification<T> SearchSpecification { get; private set; }
