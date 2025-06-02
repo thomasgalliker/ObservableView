@@ -11,7 +11,8 @@ namespace ObservableView
     public abstract class BindableBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(storage, value))
             {
@@ -19,19 +20,6 @@ namespace ObservableView
             }
 
             storage = value;
-            this.OnPropertyChanged(propertyName);
-
-            return true;
-        }
-        protected virtual bool SetProperty<T>(ref T storage, T value, Action onChanged, [CallerMemberName] string propertyName = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(storage, value))
-            {
-                return false;
-            }
-
-            storage = value;
-            onChanged?.Invoke();
             this.OnPropertyChanged(propertyName);
 
             return true;
@@ -42,9 +30,9 @@ namespace ObservableView
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs args)
+        private void OnPropertyChanged(PropertyChangedEventArgs args)
         {
-            PropertyChanged?.Invoke(this, args);
+            this.PropertyChanged?.Invoke(this, args);
         }
     }
 }

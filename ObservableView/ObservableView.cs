@@ -3,8 +3,8 @@
 namespace ObservableView
 {
     /// <summary>
-    ///     ObservableView is a class which adds sorting, filtering, searching and grouping
-    ///     on top of collections.
+    /// ObservableView is a class which adds sorting, filtering, searching and grouping
+    /// on top of collections.
     /// </summary>
     [Preserve(AllMembers = true)]
     public class ObservableView<T> : BindableBase, IObservableView
@@ -52,8 +52,8 @@ namespace ObservableView
                 LambdaExpression lambdaExpression = Expression.Lambda(funcType, property, parameter);
 
                 addMethod.GetGenericMethodDefinition()
-                         .MakeGenericMethod(propertyInfo.PropertyType)
-                         .Invoke(this.SearchSpecification, new object[] { lambdaExpression, null, null });
+                    .MakeGenericMethod(propertyInfo.PropertyType)
+                    .Invoke(this.SearchSpecification, new object[] { lambdaExpression, null, null });
             }
         }
 
@@ -75,6 +75,7 @@ namespace ObservableView
                 {
                     this.filterHandler += value;
                 }
+
                 this.Refresh();
             }
             remove
@@ -83,6 +84,7 @@ namespace ObservableView
                 {
                     this.filterHandler -= value;
                 }
+
                 this.Refresh();
             }
         }
@@ -117,9 +119,9 @@ namespace ObservableView
                 }
 
                 var groupedList = this.View
-                        .GroupBy(item => this.GroupKeyAlgorithm.GetGroupKey(this.GroupKey.Invoke(item)))
-                        .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup))
-                        .ToList();
+                    .GroupBy(item => this.GroupKeyAlgorithm.GetGroupKey(this.GroupKey.Invoke(item)))
+                    .Select(itemGroup => new Grouping<T>(itemGroup.Key, itemGroup))
+                    .ToList();
 
                 return groupedList;
             }
@@ -182,7 +184,8 @@ namespace ObservableView
                     this.sourceCollection.CollectionChanged += this.HandleSourceCollectionChanged;
                 }
 
-                this.HandleSourceCollectionChanged(this.sourceCollection, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                this.HandleSourceCollectionChanged(this.sourceCollection,
+                    new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
         }
 
@@ -285,6 +288,7 @@ namespace ObservableView
             {
                 throw new ArgumentNullException("keySelector");
             }
+
             var newOrderSpecification = new OrderSpecification<T>(keySelector, orderDirection);
             var index = this.orderSpecifications.FindIndex(x => x.PropertyName == newOrderSpecification.PropertyName);
             if (index > -1)
@@ -319,7 +323,7 @@ namespace ObservableView
         }
 
         /// <summary>
-        ///     Refreshes the Source, View and Groups property of this instance.
+        /// Refreshes the Source, View and Groups property of this instance.
         /// </summary>
         public void Refresh()
         {
@@ -336,25 +340,25 @@ namespace ObservableView
         ////    var propertyInfo = typeof(T).GetRuntimeProperty(propertyName);
         ////    if (propertyInfo != null)
         ////    {
-        ////        Expression left = Expression.Property(parameterExpression, propertyInfo);
-        ////        if (left.Type == typeof(string))
-        ////        {
-        ////            // If the given property is of type string, we want to compare them in lower letters.
-        ////            Expression toLowerExpression = left.ToLower();
-        ////            Expression removeDiacriticsExpression = Expression.Call(null, typeof(StringExtensions).GetRuntimeMethod("RemoveDiacritics", new[] { typeof(string) }), toLowerExpression);
-        ////            Expression containsExpression = removeDiacriticsExpression.Contains(rightExpression);
-        ////            returnExpression = Expression.OrElse(containsExpression, toLowerExpression.Contains(rightExpression)); // There are two comparisons done: One with diacritics and one without.
-        ////        }
-        ////        else if (left.Type == typeof(int))
-        ////        {
-        ////            // If the given property is of type integer, we want to convert it to string first.
-        ////            Expression leftToLower = Expression.Call(left, typeof(int).GetRuntimeMethod("ToString", new Type[] { })); // TODO: use ToLower extension method
-        ////            returnExpression = leftToLower.Contains(rightExpression);
-        ////        }
-        ////        else if (left.Type.GetTypeInfo().IsEnum)
-        ////        {
-        ////            // TODO: Handle enum localized strings
-        ////        }
+        ////    Expression left = Expression.Property(parameterExpression, propertyInfo);
+        ////    if (left.Type == typeof(string))
+        ////    {
+        ////        // If the given property is of type string, we want to compare them in lower letters.
+        ////        Expression toLowerExpression = left.ToLower();
+        ////        Expression removeDiacriticsExpression = Expression.Call(null, typeof(StringExtensions).GetRuntimeMethod("RemoveDiacritics", new[] { typeof(string) }), toLowerExpression);
+        ////        Expression containsExpression = removeDiacriticsExpression.Contains(rightExpression);
+        ////        returnExpression = Expression.OrElse(containsExpression, toLowerExpression.Contains(rightExpression)); // There are two comparisons done: One with diacritics and one without.
+        ////    }
+        ////    else if (left.Type == typeof(int))
+        ////    {
+        ////        // If the given property is of type integer, we want to convert it to string first.
+        ////        Expression leftToLower = Expression.Call(left, typeof(int).GetRuntimeMethod("ToString", new Type[] { })); // TODO: use ToLower extension method
+        ////        returnExpression = leftToLower.Contains(rightExpression);
+        ////    }
+        ////    else if (left.Type.GetTypeInfo().IsEnum)
+        ////    {
+        ////        // TODO: Handle enum localized strings
+        ////    }
         ////    }
 
         ////    return returnExpression;
@@ -395,16 +399,14 @@ namespace ObservableView
 
         private IEnumerable<PropertyInfo> GetSearchableAttributes()
         {
-            return typeof(T).GetRuntimeProperties().Where(propertyInfo => propertyInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(SearchableAttribute))).ToList();
+            return typeof(T).GetRuntimeProperties().Where(propertyInfo =>
+                propertyInfo.CustomAttributes.Any(attr => attr.AttributeType == typeof(SearchableAttribute))).ToList();
         }
 
         /// <summary>
-        ///     Performs a search operation using the given
-        ///     <param name="pattern">search pattern</param>
-        ///     .
-        ///     The search operation is performed on the properties <code>View</code> and <code>Group</code>.
+        /// Performs a search operation using the given search pattern.
+        /// The search operation is performed on the properties <code>View</code> and <code>Group</code>.
         /// </summary>
-        /// <param name="pattern"></param>
         public void Search(string pattern)
         {
             this.SearchText = pattern;
@@ -422,7 +424,7 @@ namespace ObservableView
         public char[] SearchTextDelimiters { get; set; }
 
         /// <summary>
-        /// Defines the logic to be applied between the splitted search words.
+        /// Defines the logic to be applied between the split search words.
         /// </summary>
         public SearchLogic SearchTextLogic { get; set; }
 
@@ -460,7 +462,7 @@ namespace ObservableView
         }
 
         /// <summary>
-        ///     This methods builds the Expression tree from the defined SearchSpecification and the given searchStrings.
+        /// This method builds the expression tree from the defined SearchSpecification and the given searchStrings.
         /// </summary>
         private Expression BuildBaseExpression(ParameterExpression parameterExpression, string[] searchStrings, SearchLogic searchLogic)
         {
