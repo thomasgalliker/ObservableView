@@ -1,13 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-
-using FluentAssertions;
-
-using ObservableView.Searching;
-using ObservableView.Searching.Operands;
-using ObservableView.Tests.TestData;
-
-using Xunit;
+﻿using ObservableView.Searching.Operands;
 
 namespace ObservableView.Tests.Searching.Operands
 {

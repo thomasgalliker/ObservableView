@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-
-namespace ObservableView.Tests.TestData
+﻿namespace ObservableView.Tests.TestData
 {
     /// <summary>
     ///     Predefined car pool

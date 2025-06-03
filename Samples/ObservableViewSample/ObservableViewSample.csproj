@@ -2,14 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latestmajor</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="App.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,16 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-
-using FluentAssertions;
-
-using ObservableView.Extensions;
-using ObservableView.Tests.TestData;
-
-using Xunit;
-
-namespace ObservableView.Tests.Extensions
+﻿namespace ObservableView.Tests.Extensions
 {
     public class QueryableExtensionsTests
     {

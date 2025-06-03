@@ -1,97 +1,68 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFrameworks>net48;netstandard1.3;netstandard2.0;Xamarin.iOS10;MonoAndroid90</TargetFrameworks>
-    <AssemblyName>ObservableView</AssemblyName>
-    <RootNamespace>ObservableView</RootNamespace>
-    <PackageId>ObservableView</PackageId>
-    <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObservableView/develop/logo_gradient.png</PackageIconUrl>
-    <Summary>Collections overlay for searching, filtering, sorting and grouping</Summary>
-    <PackageTags>ObservableView;ObservableCollection;sorting;filtering;searching;collections;xamarin</PackageTags>
-    <Title>ObservableView</Title>
-    <Description>ObservableView is a simple wrapper for collections which provides an easy to use API for searching, filtering, sorting and grouping of collections.</Description>
-    <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>1.0.0</Version>
-    <PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
-    <Authors>thomasgalliker</Authors>
-    <Owners>thomasgalliker</Owners>
-    <NeutralLanguage>en</NeutralLanguage>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <Company>superdev GmbH</Company>
-    <Copyright>© superdev gmbh. All rights reserved.</Copyright>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageReleaseNotes>
-      2.0.0
-      - Support for .Net Standard 2.0
+    <Nullable>disable</Nullable>
+    <IsPackable>true</IsPackable>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
 
-      1.1.0-pre1
-      - Complete overwork of the search API
-      - Added custom SearchTextDelimiters
-      - Added SearchTextPreprocessor
-      - Added configurable SearchTextLogic (AND, OR)
-
-      1.0.2
-      - Bug fix: Sorting in WPF DataGrid headers not reflected correctly
-      - Bug fix: Sorting not updated on View property refresh
-
-      1.0.1
-      - Initial release
-    </PackageReleaseNotes>
+  <!--NuGet package-->
+  <PropertyGroup>
+    <Product>ObservableView</Product>
+    <Description>ObservableView</Description>
+    <Version>1.0.0</Version>
+    <Authors>Thomas Galliker</Authors>
+    <PackageId>ObservableView</PackageId>
+    <PackageTags>ObservableView;ObservableCollection;sorting;filtering;searching;collections;xamarin</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/ObservableView/develop/Images/logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/thomasgalliker/ObservableView</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/thomasgalliker/ObservableView</RepositoryUrl>
-    <LangVersion>7.2</LangVersion>
-    <DefineConstants>$(DefineConstants);</DefineConstants>
-    <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/thomasgalliker/ObservableView</PackageProjectUrl>
-    <MDocDocumentationDirectory>$(MSBuildThisFileDirectory)..\docs\en</MDocDocumentationDirectory>
-    <Configurations>Debug;Release</Configurations>
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)'=='Release' And '$(OS)' == 'Windows_NT' ">
-    <!-- sourcelink: Declare that the Repository URL can be published to NuSpec -->
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <!-- sourcelink: Embed source files that are not tracked by the source control manager to the PDB -->
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <!-- sourcelink: Include PDB in the built .nupkg -->
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <Company>superdev GmbH</Company>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageReleaseNotes>3.0.0
+- Drop support for .NET framework
+- Drop support for Xamarin
+
+2.0.0
+- Support for .Net Standard 2.0
+
+1.1.0-pre1
+- Complete overwork of the search API
+- Added custom SearchTextDelimiters
+- Added SearchTextPreprocessor
+- Added configurable SearchTextLogic (AND, OR)
+
+1.0.2
+- Bug fix: Sorting in WPF DataGrid headers not reflected correctly
+- Bug fix: Sorting not updated on View property refresh
+
+1.0.1
+- Initial release
+    </PackageReleaseNotes>
+    <Copyright>Copyright $([System.DateTime]::Now.ToString(`yyyy`)) © Thomas Galliker</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);NET45</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
-  </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) ">
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
-  </ItemGroup>
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) OR $(TargetFramework.StartsWith('net45'))">
-    <Compile Include="**\*.cs" Exclude="**\obj\**"/>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="System.Linq" />
-    <Reference Include="System.Linq.Queryable" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
+  <Target Name="PackBuildOutputs">
+    <ItemGroup>
+      <!--Add pdbs-->
+      <TfmSpecificPackageFile Include="$(OutDir)$(AssemblyName).pdb" PackagePath="lib/netstandard2.0" />
 
-  <Import Condition=" $(TargetFramework.StartsWith('Xamarin.iOS')) " Project="..\ObservableView.iOS\ObservableView.iOS.projitems" Label="Shared" />
-  <Import Project="..\ObservableView.Shared\ObservableView.Shared.projitems" Label="Shared" />
-
+      <!--Add the referenced assembly to the nuget package-->
+      <TfmSpecificPackageFile Include="$(OutDir)ObservableView.dll" PackagePath="lib/netstandard2.0" />
+      <TfmSpecificPackageFile Include="$(OutDir)ObservableView.pdb" PackagePath="lib/netstandard2.0" />
+      <TfmSpecificPackageFile Include="$(OutDir)ObservableView.xml" PackagePath="lib/netstandard2.0" />
+    </ItemGroup>
+  </Target>
 </Project>

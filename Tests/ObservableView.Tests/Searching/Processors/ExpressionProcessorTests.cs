@@ -1,11 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-
-using FluentAssertions;
-
-using ObservableView.Searching.Processors;
-
-using Xunit;
+﻿using ObservableView.Searching.Processors;
 
 namespace ObservableView.Tests.Searching.Processors
 {

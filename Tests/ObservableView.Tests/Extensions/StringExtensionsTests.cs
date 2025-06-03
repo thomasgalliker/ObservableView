@@ -1,12 +1,4 @@
-﻿using System;
-
-using FluentAssertions;
-
-using ObservableView.Extensions;
-
-using Xunit;
-
-namespace ObservableView.Tests.Extensions
+﻿namespace ObservableView.Tests.Extensions
 {
     public class StringExtensionsTests
     {
