@@ -1,13 +1,4 @@
-﻿using System.Linq.Expressions;
-
-using FluentAssertions;
-using ObservableView.Searching;
-using ObservableView.Searching.Operators;
-using ObservableView.Tests.TestData;
-
-using Xunit;
-
-namespace ObservableView.Tests.Searching
+﻿namespace ObservableView.Tests.Searching
 {
     public class ExpressionBuilderTests
     {

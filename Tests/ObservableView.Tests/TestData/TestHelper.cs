@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-
-using ObservableView.Extensions;
-
-namespace ObservableView.Tests.TestData
+﻿namespace ObservableView.Tests.TestData
 {
     internal static class TestHelper
     {

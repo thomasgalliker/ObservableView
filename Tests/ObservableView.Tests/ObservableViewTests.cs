@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using FluentAssertions;
-using ObservableView.Grouping;
-using ObservableView.Searching.Operators;
-using ObservableView.Sorting;
-using ObservableView.Tests.TestData;
-using ObservableView.Tests.TestHelpers;
-using Xunit;
-
-namespace ObservableView.Tests
+﻿namespace ObservableView.Tests
 {
     public class ObservableViewTests
     {

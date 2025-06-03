@@ -15,5 +15,4 @@ namespace ObservableViewSample.Model
             this.Subtitle = subtitle;
         }
     }
-
 }

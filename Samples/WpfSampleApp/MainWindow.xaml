@@ -1,0 +1,188 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="clr-namespace:ObservableView.Extensions;assembly=ObservableView"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:CommunityToolkit.Mvvm.Input;assembly=CommunityToolkit.Mvvm"
+    xmlns:views="clr-namespace:WpfSampleApp.Views"
+    x:Class="WpfSampleApp.MainWindow"
+    Title="MainWindow"
+    Width="640"
+    Height="480"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="DeleteButtonCellTemplate">
+                <Button
+                    Content="Delete"
+                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DeleteMallCommand}"
+                    CommandParameter="{Binding}">
+                    <!--<i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <toolkit:EventToCommand
+                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DeleteMallCommand}"
+                                CommandParameter="{Binding}"
+                                PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>-->
+                </Button>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                Content="Search"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top" />
+
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="1"
+                Width="200"
+                Height="23"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Text="{Binding MallsList.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                TextWrapping="Wrap" />
+
+            <Button
+                Grid.Row="0"
+                Grid.Column="2"
+                Content="Refresh"
+                Width="80"
+                HorizontalAlignment="Right"
+                Command="{Binding RefreshCommand}" />
+
+            <!--<Label
+                Grid.Row="0"
+                Grid.Column="0"
+                Content="Filter control"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top" />-->
+
+            <!--<views:FilterControl
+                Grid.Row="0"
+                Grid.Column="1"
+                Width="400"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                VerticalContentAlignment="Stretch" />-->
+        </Grid>
+
+        <DataGrid
+            Grid.Row="1"
+            Grid.Column="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Stretch"
+            AutoGenerateColumns="False"
+            GridLinesVisibility="Horizontal"
+            ItemsSource="{Binding MallsList.View}"
+            HorizontalGridLinesBrush="LightGray">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Binding="{Binding Title}"
+                    CanUserSort="True"
+                    Header="Title"
+                    SortMemberPath="Title" />
+                <DataGridTextColumn
+                    Binding="{Binding Subtitle}"
+                    CanUserSort="True"
+                    Header="Subtitle"
+                    SortMemberPath="Subtitle" />
+                <DataGridTemplateColumn
+                    CanUserSort="False"
+                    CellTemplate="{StaticResource DeleteButtonCellTemplate}" />
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <GroupBox
+            Grid.Row="2"
+            Grid.Column="0"
+            Width="Auto"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Header="Add Mall">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Content="Title" />
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding NewMallTitle, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="Subtitle" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="{Binding NewMallSubtitle, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Content="Number of items" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{Binding NewMallNumberOf, UpdateSourceTrigger=PropertyChanged}" />
+
+                <Button
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Content="Add"
+                    Padding="2"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    IsEnabled="{Binding IsAddMallButtonEnabled}">
+                    <!--<i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <command:EventToCommand Command="{Binding AddMallCommand, Mode=OneWay}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>-->
+                </Button>
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</Window>
