@@ -1,0 +1,18 @@
+3.1
+- Build configuration optimizations.
+
+3.0
+- Add support for .NET, remove support for .NET framework.
+- Add support for .NET MAUI, remove support for Xamarin.
+
+2.0
+- Support for netstandard2.0.
+
+1.1
+- Complete overwork of the search API.
+- Added custom SearchTextDelimiters.
+- Added SearchTextPreprocessor.
+- Added configurable SearchTextLogic (AND, OR).
+
+1.0
+- Initial release.

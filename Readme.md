@@ -1,7 +1,9 @@
 # ObservableView
 [![Version](https://img.shields.io/nuget/v/ObservableView.svg)](https://www.nuget.org/packages/Paging.NET)  [![Downloads](https://img.shields.io/nuget/dt/ObservableView.svg)](https://www.nuget.org/packages/Paging.NET) [![Buy Me a Coffee](https://img.shields.io/badge/support-buy%20me%20a%20coffee-FFDD00)](https://buymeacoffee.com/thomasgalliker)
 
-ObservableView is a simple wrapper for collections which provides an easy-to-use API for searching, filtering, sorting and grouping of collections. This project enhances the well-known ObservableCollection of the .Net Framework with addition, commonly-used features. The goal is to have a Swiss army knife of a collection utility which provides an easy-to-use but very powerful API while preserving maximum platform compatibility.
+ObservableView is a lightweight wrapper for .NET collections that adds robust search, filter, sort, and group functionalities. It extends the familiar ObservableCollection by providing additional features that are commonly required but not available out of the box.
+
+The goal of ObservableView is to offer a clean, powerful, and consistent API for working with collections, while preserving broad compatibility across .NET platforms.
 
 ### Download and Install ObservableView
 This library is available on NuGet: https://www.nuget.org/packages/ObservableView/

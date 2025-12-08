@@ -1,5 +1,5 @@
 ####################################################################
-# Azure Devops Build Configuration
+# Azure DevOps Build Configuration
 #
 # (c)2025 superdev GmbH
 ####################################################################
@@ -7,9 +7,7 @@
 name: $[format('{0}', variables['buildName'])]
 
 pool:
-  vmImage: 'windows-2022'
-  demands:
-  - MSBuild
+  vmImage: 'windows-latest'
 
 trigger:
   branches:
@@ -27,7 +25,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   majorVersion: 3
-  minorVersion: 0
+  minorVersion: 1
   patchVersion: $[counter(format('{0}.{1}', variables.majorVersion, variables.minorVersion), 0)]
   ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
     # Versioning: 1.0.0
@@ -47,7 +45,7 @@ steps:
     targetType: 'inline'
     script: 'env | sort'
    
-- task: Assembly-Info-NetCore@2
+- task: Assembly-Info-NetCore@3
   displayName: 'Update Assembly Info'
   inputs:
     Path: '$(Build.SourcesDirectory)'
@@ -66,8 +64,8 @@ steps:
     PackageVersion: '$(Build.BuildNumber)'
     LogLevel: 'verbose'
     FailOnWarning: false
-    DisableTelemetry: false'
-    
+    DisableTelemetry: true
+
 - task: UseDotNet@2
   displayName: 'Use .NET 8.x'
   inputs:
@@ -108,7 +106,7 @@ steps:
       ObservableView/**/*.csproj
       **/*.Tests.csproj
     arguments: '--no-restore --configuration $(buildConfiguration)'
-    
+
 - task: DotNetCoreCLI@2
   displayName: 'Run UnitTests'
   inputs:
@@ -137,11 +135,10 @@ steps:
   displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
-
     Contents: |
-     **\bin\$(BuildConfiguration)\**
-     **\bin\*.nupkg
-
+      **\bin\*.nupkg
+      **\bin\*.snupkg
+      **\ReleaseNotes.txt
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
      
 - task: PublishCodeCoverageResults@2
