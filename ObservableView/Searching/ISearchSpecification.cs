@@ -24,7 +24,7 @@ namespace ObservableView.Searching
 
         void ReplaceSearchTextVariables<TX>(TX value);
 
-        Operation? BaseOperation { get; }
+        IOperation BaseOperation { get; }
 
         /// <summary>
         /// Removes all search specifications and resets <code>SearchText</code> to <code>string.Empty</code>.

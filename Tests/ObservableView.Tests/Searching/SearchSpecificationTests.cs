@@ -100,7 +100,7 @@ namespace ObservableView.Tests.Searching
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            const object SearchText = null;
+            const object? SearchText = null;
             ISearchSpecification<Car> searchSpecification = new SearchSpecification<Car>();
             searchSpecification
                .Add(car => car.Model, BinaryOperator.Contains)

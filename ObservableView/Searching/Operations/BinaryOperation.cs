@@ -3,7 +3,7 @@ using ObservableView.Searching.Operators;
 
 namespace ObservableView.Searching.Operations
 {
-    public class BinaryOperation : Operation
+    public class BinaryOperation : Operation<BinaryOperator>
     {
         public BinaryOperation(BinaryOperator binaryOperator, PropertyOperand leftOperand, IOperand rightOperand)
             : base(binaryOperator)

@@ -13,7 +13,7 @@ namespace ObservableView.Searching.Operators
             ////derivedTypes = FindDerivedTypes<BinaryOperator>().ToList();
         }
 
-        public Expression Build(IExpressionBuilder expressionBuilder, Operation operation)
+        public Expression Build(IExpressionBuilder expressionBuilder, IOperation operation)
         {
             var binaryOperation = (BinaryOperation)operation;
 

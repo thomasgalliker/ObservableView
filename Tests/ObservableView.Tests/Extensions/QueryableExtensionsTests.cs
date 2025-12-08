@@ -23,11 +23,10 @@
         private static Expression GetContainsExpression(ParameterExpression parameterExpression, string propertyName, string propertyValue)
         {
             var propertyExp = Expression.Property(parameterExpression, propertyName);
-            MethodInfo containsMethodInfo = ReflectionHelper<string>.GetMethod<string>((source, argument) => source.Contains(argument));
+            var containsMethodInfo = ReflectionHelper<string>.GetMethod<string>((source, argument) => source.Contains(argument))!;
             var someValue = Expression.Constant(propertyValue, typeof(string));
             var containsMethodExp = Expression.Call(propertyExp, containsMethodInfo, someValue);
-
-            return containsMethodExp;
+            return containsMethodExp!;
         }
     }
 }

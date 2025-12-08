@@ -10,25 +10,38 @@ namespace ObservableView.Searching
     public class SearchSpecification<T> : ISearchSpecification<T>
     {
         private const string DefaultSearchTextVariableName = "searchText";
+        private IOperation? baseOperation;
+
+        public SearchSpecification()
+        {
+
+        }
 
         public event EventHandler? SearchSpecificationAdded;
 
         public event EventHandler? SearchSpecificationsCleared;
 
-        public Operation? BaseOperation { get; private set; }
-
-        private static void EnsureOperator(Type propertyType, ref BinaryOperator @operator)
+        public IOperation BaseOperation
         {
-            if (@operator == null)
+            get => this.baseOperation ?? throw new InvalidOperationException($"Use {nameof(this.Add)} method to add at least one search specification before accessing {nameof(this.BaseOperation)}");
+        }
+
+        private static void EnsureOperator(Type propertyType, ref BinaryOperator binaryOperator)
+        {
+            if (binaryOperator == null)
             {
                 // TODO: BinaryOperator? @operator = null then take default depending on property type
                 if (propertyType == typeof(string))
                 {
-                    @operator = BinaryOperator.Contains;
+                    binaryOperator = BinaryOperator.Contains;
                 }
                 else if (propertyType == typeof(int))
                 {
-                    @operator = BinaryOperator.Equal;
+                    binaryOperator = BinaryOperator.Equal;
+                }
+                else
+                {
+                    throw new NotSupportedException($"Property type {propertyType.Name} is currently not supported");
                 }
             }
         }
@@ -53,9 +66,9 @@ namespace ObservableView.Searching
 
             EnsureOperator(propertyInfo.PropertyType, ref @operator);
 
-            if (this.BaseOperation == null)
+            if (this.baseOperation == null)
             {
-                this.BaseOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo, expressionProcessors), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
+                this.baseOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo, expressionProcessors), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
 
                 this.OnSearchSpecificationAdded();
             }
@@ -89,9 +102,9 @@ namespace ObservableView.Searching
 
         private ISearchSpecification<T> CreateNestedOperation<TProperty>(Expression<Func<T, TProperty>> propertyExpression, GroupOperator groupOperator, IExpressionProcessor[] expressionProcessors, BinaryOperator? @operator = null)
         {
-            if (this.BaseOperation == null)
+            if (this.baseOperation == null)
             {
-                throw new InvalidOperationException("Call Add beforehand.");
+                throw new InvalidOperationException($"Use {nameof(this.Add)} method to add at least one search specification before adding another And/Or operation.");
             }
 
             if (propertyExpression == null)
@@ -109,7 +122,7 @@ namespace ObservableView.Searching
 
             var nestedBinaryOperation = new BinaryOperation(@operator, new PropertyOperand(propertyInfo, expressionProcessors), new VariableOperand(DefaultSearchTextVariableName, propertyInfo.PropertyType));
 
-            this.BaseOperation = new GroupOperation(this.BaseOperation, nestedBinaryOperation, groupOperator);
+            this.baseOperation = new GroupOperation(this.baseOperation, nestedBinaryOperation, groupOperator);
 
             this.OnSearchSpecificationAdded();
             return this;
@@ -143,7 +156,7 @@ namespace ObservableView.Searching
 
         public void Clear()
         {
-            this.BaseOperation = null;
+            this.baseOperation = null;
             this.OnSearchSpecificationsCleared();
         }
 
@@ -154,7 +167,7 @@ namespace ObservableView.Searching
 
         public bool Any()
         {
-            return this.BaseOperation != null;
+            return this.baseOperation != null;
         }
     }
 }

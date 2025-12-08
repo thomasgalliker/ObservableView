@@ -28,9 +28,9 @@ namespace ObservableView.Searching
 
         public ParameterExpression ParameterExpression { get; }
 
-        public Expression Build(Operation operation)
+        public Expression Build(IOperation operation)
         {
-            return operation.Operator.Build(this, operation);
+            return operation.Build(this);
         }
 
         public Expression Build(IOperand operand)
