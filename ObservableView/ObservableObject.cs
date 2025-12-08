@@ -10,9 +10,9 @@ namespace ObservableView
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class BindableBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(storage, value))
             {
@@ -25,7 +25,7 @@ namespace ObservableView
             return true;
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }

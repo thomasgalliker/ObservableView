@@ -5,7 +5,7 @@ namespace ObservableView.Tests.TestData
     [DebuggerDisplay("Brand={Brand}, Model={Model}, ChasisNumber={ChasisNumber}, Year={Year}")]
     public class Car
     {
-        public Car(CarBrand brand, string model, string chasisNumber, DateTime createdDate, Engine engine)
+        public Car(CarBrand brand, string model, string? chasisNumber, DateTime createdDate, Engine engine)
         {
             this.Brand = brand;
             this.Model = model;
@@ -20,7 +20,7 @@ namespace ObservableView.Tests.TestData
         [Searchable]
         public string Model { get; private set; }
 
-        public string ChasisNumber { get; private set; }
+        public string? ChasisNumber { get; private set; }
 
         public int Year { get; private set; }
 

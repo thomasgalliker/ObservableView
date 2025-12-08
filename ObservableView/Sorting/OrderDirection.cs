@@ -2,7 +2,7 @@ namespace ObservableView.Sorting
 {
     public enum OrderDirection
     {
-        Ascending,
-        Descending
+        Ascending = 0,
+        Descending = 1
     }
 }

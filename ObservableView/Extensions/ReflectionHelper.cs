@@ -9,7 +9,7 @@
         /// <exception cref="ArgumentNullException">The <paramref name="methodSelector" /> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="methodSelector" /> does not represent a method call.</exception>
         /// <returns>The method info represented by the lambda expression.</returns>
-        internal static MethodInfo GetMethod(Expression<Action<T>> methodSelector)
+        internal static MethodInfo? GetMethod(Expression<Action<T>> methodSelector)
         {
             return GetMethodInfo(methodSelector);
         }
@@ -22,7 +22,7 @@
         /// <exception cref="ArgumentNullException">The <paramref name="methodSelector" /> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="methodSelector" /> does not represent a method call.</exception>
         /// <returns>The method info represented by the lambda expression.</returns>
-        internal static MethodInfo GetMethod<T1>(Expression<Action<T, T1>> methodSelector)
+        internal static MethodInfo? GetMethod<T1>(Expression<Action<T, T1>> methodSelector)
         {
             return GetMethodInfo(methodSelector);
         }
@@ -36,7 +36,7 @@
         /// <exception cref="ArgumentNullException">The <paramref name="methodSelector" /> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="methodSelector" /> does not represent a method call.</exception>
         /// <returns>The method info represented by the lambda expression.</returns>
-        internal static MethodInfo GetMethod<T1, T2>(Expression<Action<T, T1, T2>> methodSelector)
+        internal static MethodInfo? GetMethod<T1, T2>(Expression<Action<T, T1, T2>> methodSelector)
         {
             return GetMethodInfo(methodSelector);
         }
@@ -51,7 +51,7 @@
         /// <exception cref="ArgumentNullException">The <paramref name="methodSelector" /> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="methodSelector" /> does not represent a method call.</exception>
         /// <returns>The method info represented by the lambda expression.</returns>
-        internal static MethodInfo GetMethod<T1, T2, T3>(Expression<Action<T, T1, T2, T3>> methodSelector)
+        internal static MethodInfo? GetMethod<T1, T2, T3>(Expression<Action<T, T1, T2, T3>> methodSelector)
         {
             return GetMethodInfo(methodSelector);
         }
@@ -64,11 +64,10 @@
         /// <returns>The property info represented by the lambda expression.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="propertySelector" /> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="propertySelector" /> does not represent a property access.</exception>
-        internal static PropertyInfo GetProperty<TResult>(Expression<Func<T, TResult>> propertySelector)
+        internal static PropertyInfo? GetProperty<TResult>(Expression<Func<T, TResult>> propertySelector)
         {
-            PropertyInfo info = GetMemberInfo(propertySelector) as PropertyInfo;
-
-            return info;
+            var propertyInfo = GetMemberInfo(propertySelector) as PropertyInfo;
+            return propertyInfo;
         }
 
         /// <summary>
@@ -79,9 +78,9 @@
         /// <returns>The field info represented by the lambda expression.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="fieldSelector" /> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="fieldSelector" /> does not represent a field access.</exception>
-        internal static FieldInfo GetField<TResult>(Expression<Func<T, TResult>> fieldSelector)
+        internal static FieldInfo? GetField<TResult>(Expression<Func<T, TResult>> fieldSelector)
         {
-            FieldInfo info = GetMemberInfo(fieldSelector) as FieldInfo;
+            var info = GetMemberInfo(fieldSelector) as FieldInfo;
 
             return info;
         }
@@ -93,10 +92,10 @@
         /// <exception cref="ArgumentNullException">The <paramref name="methodSelector" /> is null.</exception>
         /// <exception cref="ArgumentException">The <paramref name="methodSelector" /> does not represent a method call.</exception>
         /// <returns>The method info represented by the lambda expression.</returns>
-        private static MethodInfo GetMethodInfo(LambdaExpression methodSelector)
+        private static MethodInfo? GetMethodInfo(LambdaExpression methodSelector)
         {
-            MethodCallExpression callExpression = methodSelector.Body as MethodCallExpression;
-            return callExpression.Method;
+            var callExpression = methodSelector.Body as MethodCallExpression;
+            return callExpression?.Method;
         }
 
         /// <summary>

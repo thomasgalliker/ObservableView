@@ -10,9 +10,9 @@
     public class NaturalSortComparable : IComparable,
                                          IComparable<NaturalSortComparable>
     {
-        private readonly string value;
+        private readonly string? value;
 
-        public NaturalSortComparable(string value)
+        public NaturalSortComparable(string? value)
         {
             this.value = value;
         }
@@ -22,7 +22,7 @@
             return this.CompareTo(otherValueObj as NaturalSortComparable);
         }
 
-        public int CompareTo(NaturalSortComparable other)
+        public int CompareTo(NaturalSortComparable? other)
         {
             if (this.value == null && other == null)
             {
@@ -106,7 +106,9 @@
                     yIndex += yText.Count;
                 }
                 else if (char.IsDigit(otherValue[yIndex]))
+                {
                     return 1;
+                }
                 else
                 {
                     int difference = char.ToUpperInvariant(this.value[xIndex]).CompareTo(char.ToUpperInvariant(otherValue[yIndex]));
@@ -136,7 +138,7 @@
         {
             get
             {
-                return this.value[index];
+                return this.value?[index] ?? char.MinValue;
             }
         }
 

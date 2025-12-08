@@ -7,10 +7,10 @@ namespace ObservableView.Searching.Operations
     public class GroupOperation : Operation
     {
         public GroupOperation(Operation leftOperation, Operation rightOperation, GroupOperator groupOperator)
+            : base(groupOperator)
         {
             this.LeftOperation = leftOperation;
             this.RightOperation = rightOperation;
-            this.Operator = groupOperator;
         }
 
         // [DataMember(Name = "LeftOperation", IsRequired = true)]

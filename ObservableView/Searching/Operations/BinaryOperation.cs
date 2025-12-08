@@ -6,8 +6,8 @@ namespace ObservableView.Searching.Operations
     public class BinaryOperation : Operation
     {
         public BinaryOperation(BinaryOperator binaryOperator, PropertyOperand leftOperand, IOperand rightOperand)
+            : base(binaryOperator)
         {
-            this.Operator = binaryOperator;
             this.LeftOperand = leftOperand;
             this.RightOperand = rightOperand;
         }

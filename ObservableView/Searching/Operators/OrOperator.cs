@@ -11,7 +11,7 @@ namespace ObservableView.Searching.Operators
     {
         public override Expression Build(IExpressionBuilder expressionBuilder, Operation operation)
         {
-            GroupOperation groupOperation = (GroupOperation)operation;
+            var groupOperation = (GroupOperation)operation;
 
             return Expression.OrElse(expressionBuilder.Build(groupOperation.LeftOperation), expressionBuilder.Build(groupOperation.RightOperation));
         }

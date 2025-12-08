@@ -2,9 +2,9 @@
 {
     public class MonthGroupAlgorithm : GroupKeyAlgorithm<DateTime?>
     {
-        private readonly Func<string> nullString;
+        private readonly Func<string?> nullString;
 
-        public MonthGroupAlgorithm(Func<string> nullString = null)
+        public MonthGroupAlgorithm(Func<string?>? nullString = null)
         {
             if (nullString == null)
             {
@@ -14,7 +14,7 @@
             this.nullString = nullString;
         }
 
-        public override string GetGroupKey(DateTime? value)
+        public override string? GetGroupKey(DateTime? value)
         {
             if (!value.HasValue)
             {

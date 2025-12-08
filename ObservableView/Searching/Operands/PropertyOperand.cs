@@ -8,26 +8,35 @@ namespace ObservableView.Searching.Operands
     [DebuggerDisplay("PropertyOperand: Name={PropertyInfo.Name}, Type={PropertyInfo.PropertyType.Name}")]
     public class PropertyOperand : Operand
     {
-        public PropertyOperand(PropertyInfo propertyInfo, IExpressionProcessor[] expressionProcessors = null)
+        private IExpressionProcessor[] expressionProcessors = Array.Empty<IExpressionProcessor>();
+
+        public PropertyOperand(PropertyInfo propertyInfo, IExpressionProcessor[] expressionProcessors)
+            : this(propertyInfo)
+        {
+            this.ExpressionProcessors = expressionProcessors ?? throw new ArgumentNullException(nameof(expressionProcessors));
+        }
+
+        public PropertyOperand(PropertyInfo propertyInfo)
         {
             this.PropertyInfo = propertyInfo;
-            this.ExpressionProcessors = expressionProcessors;
         }
 
         // [DataMember(Name = "PropertyInfo", IsRequired = true)]
         public PropertyInfo PropertyInfo { get; set; }
 
+        public IExpressionProcessor[] ExpressionProcessors
+        {
+            get => this.expressionProcessors;
+            set => this.expressionProcessors = value ?? throw new ArgumentNullException(nameof(this.ExpressionProcessors));
+        }
+
         public override Expression Build(IExpressionBuilder expressionBuilder)
         {
             Expression propertyExpression = Expression.Property(expressionBuilder.ParameterExpression, this.PropertyInfo);
 
-            // TODO Move ExpressionProcessors to PropertyOperand (not used anywhere else)...
-            if (this.ExpressionProcessors != null)
+            foreach (var expressionProcessor in this.ExpressionProcessors)
             {
-                foreach (var expressionProcessor in this.ExpressionProcessors)
-                {
-                    propertyExpression = expressionProcessor.Process(propertyExpression);
-                }
+                propertyExpression = expressionProcessor.Process(propertyExpression);
             }
 
             return propertyExpression;
