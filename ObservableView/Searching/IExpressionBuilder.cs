@@ -20,7 +20,7 @@ namespace ObservableView.Searching
         /// <param name="operation">The filter operation.</param>
         /// <returns>The built expression.</returns>
         /// <exception cref="ArgumentNullException">The <paramref name="operation" /> parameter is <c>null</c>.</exception>
-        Expression Build(Operation operation);
+        Expression Build(IOperation operation);
 
         /// <summary>
         ///     Builds the expression for the specified filter operand.

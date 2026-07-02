@@ -5,11 +5,12 @@ namespace ObservableView.Grouping
     [DebuggerDisplay("Key = {Key}, Count = {this.Items.Count}")]
     public class Grouping<TV> : ObservableCollection<TV>
     {
-        public string Key { get; private set; }
+        public string? Key { get; private set; }
 
-        public Grouping(string key, IEnumerable<TV> items)
+        public Grouping(string? key, IEnumerable<TV> items)
         {
             this.Key = key;
+
             foreach (var item in items)
             {
                 this.Items.Add(item);

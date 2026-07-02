@@ -11,8 +11,8 @@ namespace ObservableView.Tests.Searching.Operands
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Model);
-            var propertyOperand = new PropertyOperand(propertyInfo: propertyInfo, expressionProcessors: null);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Model)!;
+            var propertyOperand = new PropertyOperand(propertyInfo);
 
             // Act
             var propertyExpression = propertyOperand.Build(expressionBuilder);
@@ -34,9 +34,9 @@ namespace ObservableView.Tests.Searching.Operands
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Model);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Model)!;
             var expressionProcessors = new IExpressionProcessor[] { ExpressionProcessor.ToLower, ExpressionProcessor.ToUpper };
-            var propertyOperand = new PropertyOperand(propertyInfo: propertyInfo, expressionProcessors: expressionProcessors);
+            var propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors);
 
             // Act
             var propertyExpression = propertyOperand.Build(expressionBuilder);

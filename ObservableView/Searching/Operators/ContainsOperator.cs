@@ -17,7 +17,7 @@ namespace ObservableView.Searching.Operators
         {
             var leftExpression = expressionBuilder.Build(binaryOperation.LeftOperand);
 
-            Expression leftNotNullExpression = null;
+            Expression? leftNotNullExpression = null;
             if (leftExpression.Type.GetTypeInfo().IsValueType == false)
             {
                 var nullExpression = Expression.Constant(null, leftExpression.Type);
@@ -31,7 +31,7 @@ namespace ObservableView.Searching.Operators
 
             var rightExpression = expressionBuilder.Build(binaryOperation.RightOperand);
 
-            Expression rightNotNullExpression = null;
+            Expression? rightNotNullExpression = null;
             if (rightExpression.Type.GetTypeInfo().IsValueType == false)
             {
                 var nullExpression = Expression.Constant(null, rightExpression.Type);

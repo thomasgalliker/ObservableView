@@ -80,7 +80,7 @@
         public void ShouldRaisePropertyChangedEventIfNewItemsAreAdded()
         {
             // Arrange
-            var receivedEvents = new List<string>();
+            var receivedEvents = new List<string?>();
             var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
@@ -113,7 +113,7 @@
         public void ShouldRaisePropertyChangedEventIfItemsAreRemoved()
         {
             // Arrange
-            var receivedEvents = new List<string>();
+            var receivedEvents = new List<string?>();
             var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
@@ -237,7 +237,7 @@
             var carsList = CarPool.GetDefaultCarsList();
             var observableCarsView = new ObservableView<Car>(carsList);
             observableCarsView.SearchTextDelimiters = new[] { ' ' };
-            observableCarsView.SearchTextPreprocessor = searchText => { return searchText.Replace("AND", ""); };
+            observableCarsView.SearchTextPreprocessor = searchText => { return searchText?.Replace("AND", ""); };
 
             // Act
             observableCarsView.Search("Birthday AND Golf");
@@ -362,11 +362,11 @@
             groups.Should().HaveCount(8);
 
             var groupDecember2016 = groups.ElementAt(0);
-            groupDecember2016.Key.EndsWith("December 2016").Should().BeTrue("MonthGroupAlgorithm should generate group 'December 2016' at position 0 (first)");
+            groupDecember2016.Key?.EndsWith("December 2016").Should().BeTrue("MonthGroupAlgorithm should generate group 'December 2016' at position 0 (first)");
             groupDecember2016.Should().HaveCount(1);
 
             var groupXy = groups.ElementAt(7);
-            groupXy.Key.EndsWith("January 1990").Should().BeTrue("MonthGroupAlgorithm should generate group 'January 1990' at position 0 (first)");
+            groupXy.Key?.EndsWith("January 1990").Should().BeTrue("MonthGroupAlgorithm should generate group 'January 1990' at position 0 (first)");
             groupXy.Should().HaveCount(1);
         }
 

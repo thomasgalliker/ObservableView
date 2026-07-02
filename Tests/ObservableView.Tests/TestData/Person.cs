@@ -28,22 +28,22 @@ namespace ObservableView.Tests.TestData
     [DebuggerDisplay("Surname={Surname}, Name={Name}, Birthdate={Birthdate}")]
     public class Person
     {
-        public string Surname { get; set; }
+        public string? Surname { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public DateTime Birthdate { get; set; }
 
-        public Country Country { get; set; }
+        public Country? Country { get; set; }
     }
 
     public class Country
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public string Iso3166Code { get; set; }
+        public string? Iso3166Code { get; set; }
 
-        public Continent Continent { get; set; }
+        public Continent? Continent { get; set; }
 
         public int Population { get; set; }
     }

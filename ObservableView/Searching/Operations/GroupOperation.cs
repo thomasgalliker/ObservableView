@@ -4,19 +4,19 @@ using ObservableView.Searching.Operators;
 namespace ObservableView.Searching.Operations
 {
     // [DataContract(Name = "GroupOperation")]
-    public class GroupOperation : Operation
+    public class GroupOperation : Operation<GroupOperator>
     {
-        public GroupOperation(Operation leftOperation, Operation rightOperation, GroupOperator groupOperator)
+        public GroupOperation(IOperation leftOperation, IOperation rightOperation, GroupOperator groupOperator)
+            : base(groupOperator)
         {
             this.LeftOperation = leftOperation;
             this.RightOperation = rightOperation;
-            this.Operator = groupOperator;
         }
 
         // [DataMember(Name = "LeftOperation", IsRequired = true)]
-        public Operation LeftOperation { get; set; }
+        public IOperation LeftOperation { get; }
 
         // [DataMember(Name = "RightOperation", IsRequired = true)]
-        public Operation RightOperation { get; set; }
+        public IOperation RightOperation { get; }
     }
 }

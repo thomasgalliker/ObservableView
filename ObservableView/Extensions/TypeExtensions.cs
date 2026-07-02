@@ -18,7 +18,8 @@
 
         public static Expression GetDefaultValueExpression(this Type type)
         {
-            Expression defaultValueExpression = null;
+            Expression? defaultValueExpression = null;
+
             if (type.GetTypeInfo().IsValueType) // This distinction is obsolete but helps speeding up at execution time
             {
                 defaultValueExpression = Expression.Default(type);

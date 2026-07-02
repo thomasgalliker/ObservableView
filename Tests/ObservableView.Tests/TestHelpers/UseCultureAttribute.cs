@@ -14,8 +14,8 @@ namespace ObservableView.Tests.TestHelpers
         private readonly Lazy<CultureInfo> culture;
         private readonly Lazy<CultureInfo> uiCulture;
 
-        private CultureInfo originalCulture;
-        private CultureInfo originalUiCulture;
+        private CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
+        private CultureInfo originalUiCulture = Thread.CurrentThread.CurrentUICulture;
 
         /// <summary>
         /// Replaces the culture and UI culture of the current thread with

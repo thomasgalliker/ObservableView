@@ -10,6 +10,6 @@ namespace ObservableView.Searching.Operators
         /// <param name="expressionBuilder">The expression builder.</param>
         /// <param name="operation">The operation.</param>
         /// <returns>The expression.</returns>
-        Expression Build(IExpressionBuilder expressionBuilder, Operation operation);
+        Expression Build(IExpressionBuilder expressionBuilder, IOperation operation);
     }
 }

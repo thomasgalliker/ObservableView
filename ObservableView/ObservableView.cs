@@ -1,4 +1,5 @@
-﻿using ObservableView.Utils;
+﻿using ObservableView.Searching.Processors;
+using ObservableView.Utils;
 
 namespace ObservableView
 {
@@ -11,21 +12,19 @@ namespace ObservableView
     {
         private readonly object filterHandlerEventLock = new object();
 
-        private readonly List<OrderSpecification<T>> orderSpecifications;
-        private ObservableCollection<T> sourceCollection;
-
-        private string searchText = string.Empty;
-        private FilterEventHandler<T> filterHandler;
-        private Func<T, object> groupKey;
-        private IGroupKeyAlgorithm groupKeyAlgorithm;
-        private Func<string, string> searchTextPreprocessor;
+        private readonly List<OrderSpecification<T>> orderSpecifications = new List<OrderSpecification<T>>();
         private readonly TaskDelayer searchTextThrottle = new TaskDelayer();
+        private ObservableCollection<T> sourceCollection = new ObservableCollection<T>();
+
+        private string? searchText;
+        private FilterEventHandler<T>? filterHandler;
+        private Func<T, object?>? groupKey;
+        private IGroupKeyAlgorithm? groupKeyAlgorithm;
+        private Func<string?, string?>? searchTextPreprocessor;
 
         public ObservableView(ObservableCollection<T> collection)
         {
             this.Source = collection;
-
-            this.orderSpecifications = new List<OrderSpecification<T>>();
 
             this.SearchSpecification = new SearchSpecification<T>();
             this.InitializeSearchSpecificationFromSearchableAttributes();
@@ -41,7 +40,7 @@ namespace ObservableView
 
         private void InitializeSearchSpecificationFromSearchableAttributes()
         {
-            var addMethod = ReflectionHelper<ISearchSpecification<T>>.GetMethod(source => source.Add<T>(null, null, null));
+            var addMethod = ReflectionHelper<ISearchSpecification<T>>.GetMethod(source => source.Add<T>(null!, null!, null!))!;
 
             var searchableAttributes = GetSearchableAttributes();
             foreach (var propertyInfo in searchableAttributes)
@@ -53,7 +52,7 @@ namespace ObservableView
 
                 addMethod.GetGenericMethodDefinition()
                     .MakeGenericMethod(propertyInfo.PropertyType)
-                    .Invoke(this.SearchSpecification, new object[] { lambdaExpression, null, null });
+                    .Invoke(this.SearchSpecification, new object[] { lambdaExpression, Array.Empty<IExpressionProcessor>(), null! });
             }
         }
 
@@ -89,7 +88,7 @@ namespace ObservableView
             }
         }
 
-        public Func<T, object> GroupKey
+        public Func<T, object?>? GroupKey
         {
             get => this.groupKey;
             set
@@ -101,7 +100,7 @@ namespace ObservableView
             }
         }
 
-        public IGroupKeyAlgorithm GroupKeyAlgorithm
+        public IGroupKeyAlgorithm? GroupKeyAlgorithm
         {
             get => this.groupKeyAlgorithm;
             set
@@ -141,7 +140,7 @@ namespace ObservableView
         /// This property can be used for data binding and has the same effect
         /// as using the <code>Search("searchtext")</code> method to perform a search operation.
         /// </summary>
-        public string SearchText
+        public string? SearchText
         {
             get => this.searchText;
             set
@@ -158,7 +157,7 @@ namespace ObservableView
             }
         }
 
-        public Func<string, string> SearchTextPreprocessor
+        public Func<string?, string?>? SearchTextPreprocessor
         {
             get => this.searchTextPreprocessor;
             set
@@ -170,7 +169,7 @@ namespace ObservableView
             }
         }
 
-        public event EventHandler<NotifyCollectionChangedEventArgs> SourceCollectionChanged;
+        public event EventHandler<NotifyCollectionChangedEventArgs>? SourceCollectionChanged;
 
         public ObservableCollection<T> Source
         {
@@ -195,7 +194,7 @@ namespace ObservableView
             }
         }
 
-        private void HandleSourceCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void HandleSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             this.Refresh();
 
@@ -239,7 +238,7 @@ namespace ObservableView
             }
         }
 
-        private string PreprocessSearchText(string text)
+        private string? PreprocessSearchText(string? text)
         {
             if (this.SearchTextPreprocessor != null)
             {
@@ -261,14 +260,14 @@ namespace ObservableView
         /// </summary>
         /// <param name="keySelector">Lambda expression to select the ordering property.</param>
         /// <param name="orderDirection">Order direction in which the selected property shall be sorted.</param>
-        public void AddOrderSpecification(Expression<Func<T, object>> keySelector, OrderDirection orderDirection = OrderDirection.Ascending)
+        public void AddOrderSpecification(Expression<Func<T, object?>> keySelector, OrderDirection orderDirection = OrderDirection.Ascending)
         {
             this.AddOrderSpecificationInternal(keySelector, orderDirection);
             this.Refresh();
         }
 
         /// <inheritdoc />
-        void IObservableView.AddOrderSpecification(string propertyName, OrderDirection orderDirection = OrderDirection.Ascending)
+        void IObservableView.AddOrderSpecification(string propertyName, OrderDirection orderDirection)
         {
             this.AddOrderSpecification(propertyName, orderDirection);
         }
@@ -283,12 +282,12 @@ namespace ObservableView
         {
             var parameter = Expression.Parameter(typeof(T));
             var memberExpression = Expression.Property(parameter, propertyName);
-            var keySelector = Expression.Lambda<Func<T, object>>(memberExpression, parameter);
+            var keySelector = Expression.Lambda<Func<T, object?>>(memberExpression, parameter);
 
             this.AddOrderSpecificationInternal(keySelector, orderDirection);
         }
 
-        private void AddOrderSpecificationInternal(Expression<Func<T, object>> keySelector, OrderDirection orderDirection)
+        private void AddOrderSpecificationInternal(Expression<Func<T, object?>> keySelector, OrderDirection orderDirection)
         {
             if (keySelector == null)
             {
@@ -310,6 +309,11 @@ namespace ObservableView
         /// <inheritdoc />
         OrderDirection? IObservableView.GetSortSpecification(string propertyName)
         {
+            if(propertyName == null)
+            {
+                throw new ArgumentNullException(nameof(propertyName));
+            }
+
             var orderSpecification = this.orderSpecifications.SingleOrDefault(s => s.PropertyName == propertyName);
             return orderSpecification?.OrderDirection;
         }
@@ -378,14 +382,17 @@ namespace ObservableView
 
         private IEnumerable<T> GetFilteredCollection(IEnumerable<T> source)
         {
-            foreach (var item in source)
+            if (this.filterHandler is FilterEventHandler<T> filterEventHandler)
             {
-                var filterEventArgs = new FilterEventArgs<T>(item);
-                this.filterHandler(this, filterEventArgs);
-
-                if (filterEventArgs.IsAllowed)
+                foreach (var item in source)
                 {
-                    yield return item;
+                    var filterEventArgs = new FilterEventArgs<T>(item);
+                    filterEventHandler.Invoke(this, filterEventArgs);
+
+                    if (filterEventArgs.IsAllowed)
+                    {
+                        yield return item;
+                    }
                 }
             }
         }
@@ -434,7 +441,7 @@ namespace ObservableView
         /// </summary>
         public SearchLogic SearchTextLogic { get; set; }
 
-        private ObservableCollection<T> PerformSearch(IEnumerable<T> viewCollection, string pattern)
+        private ObservableCollection<T> PerformSearch(IEnumerable<T> viewCollection, string? pattern)
         {
             var results = new ObservableCollection<T>();
 
@@ -443,7 +450,7 @@ namespace ObservableView
                 return viewCollection.ToObservableCollection();
             }
 
-            var searchStrings = pattern.Trim().Split(this.SearchTextDelimiters, StringSplitOptions.RemoveEmptyEntries);
+            var searchStrings = pattern!.Trim().Split(this.SearchTextDelimiters, StringSplitOptions.RemoveEmptyEntries);
             if (!searchStrings.Any())
             {
                 return results;
@@ -470,9 +477,9 @@ namespace ObservableView
         /// <summary>
         /// This method builds the expression tree from the defined SearchSpecification and the given searchStrings.
         /// </summary>
-        private Expression BuildBaseExpression(ParameterExpression parameterExpression, string[] searchStrings, SearchLogic searchLogic)
+        private Expression? BuildBaseExpression(ParameterExpression parameterExpression, string[] searchStrings, SearchLogic searchLogic)
         {
-            Expression baseExpression = null;
+            Expression? baseExpression = null;
             foreach (var searchString in searchStrings)
             {
                 this.SearchSpecification.ReplaceSearchTextVariables(searchString);

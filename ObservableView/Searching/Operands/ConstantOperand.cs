@@ -6,7 +6,7 @@ namespace ObservableView.Searching.Operands
     [DebuggerDisplay("ConstantOperand: Value={Value}, Type={Type}")]
     public class ConstantOperand : Operand
     {
-        private object value;
+        private object? value;
 
         /// <summary>
         /// Takes a <param name="type">target type</param>. The value is not (yet) specified.
@@ -23,7 +23,7 @@ namespace ObservableView.Searching.Operands
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             this.Value = value;
@@ -42,7 +42,7 @@ namespace ObservableView.Searching.Operands
 
         public Type Type { get; private set; }
 
-        public object Value
+        public object? Value
         {
             get
             {
@@ -57,7 +57,7 @@ namespace ObservableView.Searching.Operands
 
         public override Expression Build(IExpressionBuilder expressionBuilder)
         {
-            Expression constantExpression = null;
+            Expression? constantExpression = null;
 
             var genericType = this.Type.GetGenericType();
             var convertedValue = TryConvertToTargetType(this.Value, targetType: genericType);
@@ -73,7 +73,7 @@ namespace ObservableView.Searching.Operands
             return constantExpression;
         }
 
-        private static object TryConvertToTargetType(object value, Type targetType)
+        private static object? TryConvertToTargetType(object? value, Type targetType)
         {
             if (targetType != null && value != null)
             {

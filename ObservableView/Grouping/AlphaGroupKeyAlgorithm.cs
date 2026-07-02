@@ -9,7 +9,7 @@
             this.upperCase = upperCase;
         }
 
-        public override string GetGroupKey(string value)
+        public override string? GetGroupKey(string? value)
         {
             if (value == null)
             {

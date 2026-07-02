@@ -1,11 +1,12 @@
 ﻿using ObservableView.Searching.Operands;
 using ObservableView.Searching.Operations;
+using ObservableView.Searching.Operators;
 
 namespace ObservableView.Extensions
 {
     internal static class OperationExtensions
     {
-        internal static IEnumerable<object> Flatten(this Operation operation)
+        internal static IEnumerable<object> Flatten(this IOperation operation)
         {
             return Recurse(operation);
         }
@@ -15,7 +16,12 @@ namespace ObservableView.Extensions
             if (obj is BinaryOperation binaryOperation)
             {
                 yield return binaryOperation.LeftOperand;
-                yield return binaryOperation.Operator;
+
+                if (binaryOperation.Operator is IOperator @operator)
+                {
+                    yield return @operator;
+                }
+
                 yield return binaryOperation.RightOperand;
             }
 
@@ -35,7 +41,10 @@ namespace ObservableView.Extensions
                 yield return binObject;
             }
 
-            yield return groupOperation.Operator;
+            if (groupOperation.Operator is IOperator @operator)
+            {
+                yield return @operator;
+            }
 
             foreach (var binObject in Recurse(groupOperation.RightOperation))
             {

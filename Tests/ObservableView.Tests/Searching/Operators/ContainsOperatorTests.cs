@@ -17,7 +17,7 @@ namespace ObservableView.Tests.Searching.Operators
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Year);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Year)!;
             var propertyOperand = new PropertyOperand(propertyInfo);
             var constantOperand = new ConstantOperand("20");
 
@@ -46,10 +46,12 @@ namespace ObservableView.Tests.Searching.Operators
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyOperandModel = new PropertyOperand(ReflectionHelper<Car>.GetProperty(x => x.Model));
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(x => x.Model)!;
+            var propertyOperandModel = new PropertyOperand(propertyInfo);
             var constantOperand = new ConstantOperand("a");
             var containsOperator = new ContainsOperator(StringComparison.Ordinal);
-            var binaryOperationModelContainsConst = new BinaryOperation(null, propertyOperandModel, constantOperand);
+            var binaryOperator = new EqualOperator();
+            var binaryOperationModelContainsConst = new BinaryOperation(binaryOperator, propertyOperandModel, constantOperand);
 
             // Act
             var containsExpression = containsOperator.Build(expressionBuilder, binaryOperationModelContainsConst);

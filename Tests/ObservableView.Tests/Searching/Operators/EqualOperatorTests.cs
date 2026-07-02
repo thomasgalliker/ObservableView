@@ -11,8 +11,8 @@ namespace ObservableView.Tests.Searching.Operators
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Model);
-            PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Model)!;
+            var propertyOperand = new PropertyOperand(propertyInfo);
             string constantModelValue = CarPool.carAudiA1.Model;
             IOperand constantOperand = new ConstantOperand(value: constantModelValue);
 
@@ -36,8 +36,8 @@ namespace ObservableView.Tests.Searching.Operators
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year);
-            PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year)!;
+            var propertyOperand = new PropertyOperand(propertyInfo);
             const int ConstantYearValue = 2012;
             IOperand constantOperand = new ConstantOperand(value: ConstantYearValue);
 
@@ -61,8 +61,8 @@ namespace ObservableView.Tests.Searching.Operators
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Engine);
-            PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Engine)!;
+            var propertyOperand = new PropertyOperand(propertyInfo);
             IOperand constantOperand = new ConstantOperand(value: Engines.electricEngine);
 
             // Act
@@ -85,8 +85,8 @@ namespace ObservableView.Tests.Searching.Operators
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Engine);
-            PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Engine)!;
+            var propertyOperand = new PropertyOperand(propertyInfo);
             IOperand constantOperand = new ConstantOperand(type: typeof(Engine));
 
             // Act
@@ -109,8 +109,8 @@ namespace ObservableView.Tests.Searching.Operators
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year);
-            PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year)!;
+            var propertyOperand = new PropertyOperand(propertyInfo);
             const string ConstantYearValue = "2012";
             IOperand constantOperand = new ConstantOperand(value: ConstantYearValue);
 
@@ -129,8 +129,8 @@ namespace ObservableView.Tests.Searching.Operators
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year);
-            PropertyOperand propertyOperand = new PropertyOperand(propertyInfo, expressionProcessors: null);
+            var propertyInfo = ReflectionHelper<Car>.GetProperty(c => c.Year)!;
+            var propertyOperand = new PropertyOperand(propertyInfo);
             const string ConstantYearValue = "2012";
             IOperand constantOperand = new ConstantOperand(value: ConstantYearValue, type: propertyInfo.PropertyType);
 

@@ -5,7 +5,7 @@ namespace ObservableView.Searching.Operators
     // [DataContract(Name = "GroupOperator")]
     public abstract class GroupOperator : IOperator
     {
-        public abstract Expression Build(IExpressionBuilder expressionBuilder, Operation operation);
+        public abstract Expression Build(IExpressionBuilder expressionBuilder, IOperation operation);
 
         public static AndOperator And
         {

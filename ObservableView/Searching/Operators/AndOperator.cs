@@ -9,9 +9,9 @@ namespace ObservableView.Searching.Operators
     [DebuggerDisplay("AndOperator")]
     public class AndOperator : GroupOperator
     {
-        public override Expression Build(IExpressionBuilder expressionBuilder, Operation operation)
+        public override Expression Build(IExpressionBuilder expressionBuilder, IOperation operation)
         {
-            GroupOperation groupOperation = (GroupOperation)operation;
+            var groupOperation = (GroupOperation)operation;
 
             return Expression.AndAlso(expressionBuilder.Build(groupOperation.LeftOperation), expressionBuilder.Build(groupOperation.RightOperation));
         }

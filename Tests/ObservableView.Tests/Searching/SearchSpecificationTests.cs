@@ -85,10 +85,10 @@ namespace ObservableView.Tests.Searching
             sequenceOfExpressions.Should().HaveCount(7);
 
             var variableOperand1 = sequenceOfExpressions.ElementAt(2) as VariableOperand;
-            variableOperand1.Value.Should().Be(SearchText);
+            variableOperand1?.Value.Should().Be(SearchText);
 
             var variableOperand2 = sequenceOfExpressions.ElementAt(6) as VariableOperand;
-            variableOperand2.Value.Should().Be(SearchText);
+            variableOperand2?.Value.Should().Be(SearchText);
 
             var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(0);
@@ -100,7 +100,7 @@ namespace ObservableView.Tests.Searching
             // Arrange
             IExpressionBuilder expressionBuilder = new ExpressionBuilder(typeof(Car));
 
-            const object SearchText = null;
+            const object? SearchText = null;
             ISearchSpecification<Car> searchSpecification = new SearchSpecification<Car>();
             searchSpecification
                .Add(car => car.Model, BinaryOperator.Contains)
@@ -116,10 +116,10 @@ namespace ObservableView.Tests.Searching
             sequenceOfExpressions.Should().HaveCount(11);
 
             var variableOperand1 = sequenceOfExpressions.ElementAt(2) as VariableOperand;
-            variableOperand1.Value.Should().Be(SearchText);
+            variableOperand1?.Value.Should().Be(SearchText);
 
             var variableOperand2 = sequenceOfExpressions.ElementAt(6) as VariableOperand;
-            variableOperand2.Value.Should().Be(SearchText);
+            variableOperand2?.Value.Should().Be(SearchText);
 
             var queryResult = TestHelper.ApplyExpression(CarPool.GetDefaultCarsList(), expression, expressionBuilder.ParameterExpression);
             queryResult.Should().HaveCount(1);
