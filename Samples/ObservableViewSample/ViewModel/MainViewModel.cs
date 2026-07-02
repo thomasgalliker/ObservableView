@@ -5,7 +5,6 @@ using ObservableView;
 using ObservableView.Grouping;
 using ObservableView.Searching.Operators;
 using ObservableView.Sorting;
-
 using ObservableViewSample.Model;
 using ObservableViewSample.Service;
 using ObservableObject = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
@@ -54,47 +53,32 @@ namespace ObservableViewSample.ViewModel
 
         public ObservableView<Mall> MallsList { get; private set; }
 
-        public RelayCommand AddMallCommand
-        {
-            get
+        public RelayCommand AddMallCommand =>
+            this.addMallCommand ??= new RelayCommand(() =>
             {
-                return this.addMallCommand ?? (this.addMallCommand = new RelayCommand(
-                        () =>
-                        {
-                            // Add new item to ObservableView
-                            for (int i = 0; i < this.NewMallNumberOf; i++)
-                            {
-                                this.MallsList.Source.Add(new Mall(this.NewMallTitle + (i > 0 ? "_" + i : ""), this.NewMallSubtitle));
-                            }
+                // Add new item to ObservableView
+                for (var i = 0; i < this.NewMallNumberOf; i++)
+                {
+                    this.MallsList.Source.Add(new Mall(this.NewMallTitle + (i > 0 ? "_" + i : ""), this.NewMallSubtitle));
+                }
 
-                            // Reset the text input
-                            this.NewMallTitle = string.Empty;
-                            this.NewMallSubtitle = string.Empty;
-                        }));
-            }
-        }
+                // Reset the text input
+                this.NewMallTitle = string.Empty;
+                this.NewMallSubtitle = string.Empty;
+            });
 
-        public RelayCommand<Mall> DeleteMallCommand
-        {
-            get
+        public RelayCommand<Mall> DeleteMallCommand =>
+            this.deleteMallCommand ??= new RelayCommand<Mall>((mall) =>
             {
-                return this.deleteMallCommand ?? (this.deleteMallCommand = new RelayCommand<Mall>(
-                         (mall) =>
-                         {
-                             // Remove new item to ObservableView
-                             this.MallsList.Source.Remove(mall);
+                // Remove new item to ObservableView
+                this.MallsList.Source.Remove(mall);
 
-                             // Reset the text input
-                             this.NewMallTitle = string.Empty;
-                             this.NewMallSubtitle = string.Empty;
-                         }));
-            }
-        }
+                // Reset the text input
+                this.NewMallTitle = string.Empty;
+                this.NewMallSubtitle = string.Empty;
+            });
 
-        public IAsyncRelayCommand RefreshCommand
-        {
-            get => this.refreshCommand ??= new AsyncRelayCommand(this.RefreshAsync);
-        }
+        public IAsyncRelayCommand RefreshCommand => this.refreshCommand ??= new AsyncRelayCommand(this.RefreshAsync);
 
         public async Task RefreshAsync()
         {
@@ -153,9 +137,6 @@ namespace ObservableViewSample.ViewModel
             }
         }
 
-        public bool IsAddMallButtonEnabled
-        {
-            get => !string.IsNullOrEmpty(this.NewMallTitle) && !string.IsNullOrEmpty(this.NewMallSubtitle);
-        }
+        public bool IsAddMallButtonEnabled => !string.IsNullOrEmpty(this.NewMallTitle) && !string.IsNullOrEmpty(this.NewMallSubtitle);
     }
 }
