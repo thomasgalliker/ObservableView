@@ -11,6 +11,8 @@ namespace ObservableView
     public class ObservableView<T> : BindableBase, IObservableView
     {
         private readonly object filterHandlerEventLock = new object();
+        private readonly object itemPropertyChangedEventLock = new object();
+        private readonly Dictionary<INotifyPropertyChanged, int> trackedItems = new Dictionary<INotifyPropertyChanged, int>();
 
         private readonly List<OrderSpecification<T>> orderSpecifications = new List<OrderSpecification<T>>();
         private readonly TaskDelayer searchTextThrottle = new TaskDelayer();
@@ -21,6 +23,7 @@ namespace ObservableView
         private Func<T, object?>? groupKey;
         private IGroupKeyAlgorithm? groupKeyAlgorithm;
         private Func<string?, string?>? searchTextPreprocessor;
+        private EventHandler<ItemPropertyChangedEventArgs<T>>? itemPropertyChanged;
 
         public ObservableView(ObservableCollection<T> collection)
         {
@@ -171,6 +174,42 @@ namespace ObservableView
 
         public event EventHandler<NotifyCollectionChangedEventArgs>? SourceCollectionChanged;
 
+        /// <summary>
+        /// Raised whenever a property on an item contained in <see cref="Source"/> changes,
+        /// provided the item implements <see cref="INotifyPropertyChanged"/>. Subscribing to this
+        /// event activates per-item change tracking; while there are no subscribers, ObservableView
+        /// does not subscribe to individual items' PropertyChanged event, so there is no behavioral
+        /// or performance impact on consumers who don't use this feature.
+        /// </summary>
+        public event EventHandler<ItemPropertyChangedEventArgs<T>>? ItemPropertyChanged
+        {
+            add
+            {
+                lock (this.itemPropertyChangedEventLock)
+                {
+                    var wasActive = this.itemPropertyChanged != null;
+                    this.itemPropertyChanged += value;
+
+                    if (!wasActive)
+                    {
+                        this.SubscribeAllItems();
+                    }
+                }
+            }
+            remove
+            {
+                lock (this.itemPropertyChangedEventLock)
+                {
+                    this.itemPropertyChanged -= value;
+
+                    if (this.itemPropertyChanged == null)
+                    {
+                        this.UnsubscribeAllItems();
+                    }
+                }
+            }
+        }
+
         public ObservableCollection<T> Source
         {
             get => this.sourceCollection;
@@ -196,9 +235,152 @@ namespace ObservableView
 
         private void HandleSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            lock (this.itemPropertyChangedEventLock)
+            {
+                this.UpdateItemTracking(e);
+            }
+
             this.Refresh();
 
             this.SourceCollectionChanged?.Invoke(sender, e);
+        }
+
+        private void UpdateItemTracking(NotifyCollectionChangedEventArgs e)
+        {
+            if (this.itemPropertyChanged == null)
+            {
+                // No one is listening to ItemPropertyChanged - tracking is inactive.
+                return;
+            }
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    if (e.NewItems != null)
+                    {
+                        foreach (T item in e.NewItems)
+                        {
+                            this.SubscribeItem(item);
+                        }
+                    }
+
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    if (e.OldItems != null)
+                    {
+                        foreach (T item in e.OldItems)
+                        {
+                            this.UnsubscribeItem(item);
+                        }
+                    }
+
+                    break;
+
+                case NotifyCollectionChangedAction.Replace:
+                    if (e.OldItems != null)
+                    {
+                        foreach (T item in e.OldItems)
+                        {
+                            this.UnsubscribeItem(item);
+                        }
+                    }
+
+                    if (e.NewItems != null)
+                    {
+                        foreach (T item in e.NewItems)
+                        {
+                            this.SubscribeItem(item);
+                        }
+                    }
+
+                    break;
+
+                case NotifyCollectionChangedAction.Move:
+                    // The set of items is unchanged - nothing to (un)subscribe.
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                default:
+                    // OldItems/NewItems are null on Reset (e.g. ObservableCollection.Clear()),
+                    // so we resync against the tracked-items bookkeeping instead of the event args.
+                    this.UnsubscribeAllItems();
+                    this.SubscribeAllItems();
+                    break;
+            }
+        }
+
+        private void SubscribeAllItems()
+        {
+            if (this.sourceCollection == null)
+            {
+                return;
+            }
+
+            foreach (var item in this.sourceCollection)
+            {
+                this.SubscribeItem(item);
+            }
+        }
+
+        private void UnsubscribeAllItems()
+        {
+            foreach (var trackedItem in this.trackedItems.Keys)
+            {
+                trackedItem.PropertyChanged -= this.HandleItemPropertyChanged;
+            }
+
+            this.trackedItems.Clear();
+        }
+
+        private void SubscribeItem(T item)
+        {
+            if (item is not INotifyPropertyChanged notifyPropertyChanged)
+            {
+                return;
+            }
+
+            // The same item instance can appear more than once in Source - track a reference
+            // count so that removing one occurrence doesn't unsubscribe an instance that is
+            // still present elsewhere in the collection.
+            if (this.trackedItems.TryGetValue(notifyPropertyChanged, out var referenceCount))
+            {
+                this.trackedItems[notifyPropertyChanged] = referenceCount + 1;
+            }
+            else
+            {
+                this.trackedItems[notifyPropertyChanged] = 1;
+                notifyPropertyChanged.PropertyChanged += this.HandleItemPropertyChanged;
+            }
+        }
+
+        private void UnsubscribeItem(T item)
+        {
+            if (item is not INotifyPropertyChanged notifyPropertyChanged
+                || !this.trackedItems.TryGetValue(notifyPropertyChanged, out var referenceCount))
+            {
+                return;
+            }
+
+            if (referenceCount <= 1)
+            {
+                this.trackedItems.Remove(notifyPropertyChanged);
+                notifyPropertyChanged.PropertyChanged -= this.HandleItemPropertyChanged;
+            }
+            else
+            {
+                this.trackedItems[notifyPropertyChanged] = referenceCount - 1;
+            }
+        }
+
+        private void HandleItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender is T item)
+            {
+                this.itemPropertyChanged?.Invoke(this, new ItemPropertyChangedEventArgs<T>(item, e.PropertyName));
+            }
+
+            this.Refresh();
         }
 
         public ObservableCollection<T> View
