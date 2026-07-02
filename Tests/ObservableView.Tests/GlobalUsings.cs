@@ -1,13 +1,14 @@
 ﻿global using System.Collections.ObjectModel;
 global using System.Linq.Expressions;
 global using System.Reflection;
-global using FluentAssertions;
+global using AwesomeAssertions;
 global using ObservableView.Extensions;
 global using ObservableView.Grouping;
 global using ObservableView.Searching;
 global using ObservableView.Searching.Operators;
 global using ObservableView.Sorting;
 global using ObservableView.Tests.TestData;
+global using ObservableView.Tracking;
 global using Xunit;
 global using Xunit.Sdk;
 global using ObservableView.Tests.TestHelpers;
