@@ -12,7 +12,7 @@ namespace ObservableView
     {
         private readonly object filterHandlerEventLock = new object();
         private readonly object itemPropertyChangedEventLock = new object();
-        private readonly HashSet<INotifyPropertyChanged> trackedItems = new HashSet<INotifyPropertyChanged>();
+        private readonly Dictionary<INotifyPropertyChanged, int> trackedItems = new Dictionary<INotifyPropertyChanged, int>();
 
         private readonly List<OrderSpecification<T>> orderSpecifications = new List<OrderSpecification<T>>();
         private readonly TaskDelayer searchTextThrottle = new TaskDelayer();
@@ -235,7 +235,10 @@ namespace ObservableView
 
         private void HandleSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            this.UpdateItemTracking(e);
+            lock (this.itemPropertyChangedEventLock)
+            {
+                this.UpdateItemTracking(e);
+            }
 
             this.Refresh();
 
@@ -309,6 +312,11 @@ namespace ObservableView
 
         private void SubscribeAllItems()
         {
+            if (this.sourceCollection == null)
+            {
+                return;
+            }
+
             foreach (var item in this.sourceCollection)
             {
                 this.SubscribeItem(item);
@@ -317,7 +325,7 @@ namespace ObservableView
 
         private void UnsubscribeAllItems()
         {
-            foreach (var trackedItem in this.trackedItems)
+            foreach (var trackedItem in this.trackedItems.Keys)
             {
                 trackedItem.PropertyChanged -= this.HandleItemPropertyChanged;
             }
@@ -327,17 +335,41 @@ namespace ObservableView
 
         private void SubscribeItem(T item)
         {
-            if (item is INotifyPropertyChanged notifyPropertyChanged && this.trackedItems.Add(notifyPropertyChanged))
+            if (item is not INotifyPropertyChanged notifyPropertyChanged)
             {
+                return;
+            }
+
+            // The same item instance can appear more than once in Source - track a reference
+            // count so that removing one occurrence doesn't unsubscribe an instance that is
+            // still present elsewhere in the collection.
+            if (this.trackedItems.TryGetValue(notifyPropertyChanged, out var referenceCount))
+            {
+                this.trackedItems[notifyPropertyChanged] = referenceCount + 1;
+            }
+            else
+            {
+                this.trackedItems[notifyPropertyChanged] = 1;
                 notifyPropertyChanged.PropertyChanged += this.HandleItemPropertyChanged;
             }
         }
 
         private void UnsubscribeItem(T item)
         {
-            if (item is INotifyPropertyChanged notifyPropertyChanged && this.trackedItems.Remove(notifyPropertyChanged))
+            if (item is not INotifyPropertyChanged notifyPropertyChanged
+                || !this.trackedItems.TryGetValue(notifyPropertyChanged, out var referenceCount))
             {
+                return;
+            }
+
+            if (referenceCount <= 1)
+            {
+                this.trackedItems.Remove(notifyPropertyChanged);
                 notifyPropertyChanged.PropertyChanged -= this.HandleItemPropertyChanged;
+            }
+            else
+            {
+                this.trackedItems[notifyPropertyChanged] = referenceCount - 1;
             }
         }
 

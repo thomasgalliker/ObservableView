@@ -220,6 +220,24 @@
         }
 
         [Fact]
+        public void ItemPropertyChanged_Unsubscribe_DetachesUnderlyingItemPropertyChangedHandler()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car });
+            void Handler(object? sender, ItemPropertyChangedEventArgs<CarViewModel> e) { }
+            observableCarsView.ItemPropertyChanged += Handler;
+
+            car.HasPropertyChangedSubscribers.Should().BeTrue();
+
+            // Act
+            observableCarsView.ItemPropertyChanged -= Handler;
+
+            // Assert
+            car.HasPropertyChangedSubscribers.Should().BeFalse();
+        }
+
+        [Fact]
         public void ItemPropertyChanged_ItemRemovedFromSource_StopsTrackingRemovedItem()
         {
             // Arrange
@@ -288,6 +306,40 @@
 
             // Act
             Action act = () => observableCarsView.ItemPropertyChanged += (_, _) => { };
+
+            // Assert
+            act.Should().NotThrow();
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_DuplicateItemInstanceRemovedOnce_StillTracksRemainingDuplicate()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var sourceList = new ObservableCollection<CarViewModel> { car, car };
+            var observableCarsView = new ObservableView<CarViewModel>(sourceList);
+
+            var receivedEventsCount = 0;
+            observableCarsView.ItemPropertyChanged += (_, _) => receivedEventsCount++;
+
+            // Act
+            sourceList.Remove(car); // removes the first occurrence only; car is still present once
+            car.Model = "M3 Competition";
+
+            // Assert
+            receivedEventsCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_SourceSetToNullWhileActive_DoesNotThrow()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car });
+            observableCarsView.ItemPropertyChanged += (_, _) => { };
+
+            // Act
+            Action act = () => observableCarsView.Source = null!;
 
             // Assert
             act.Should().NotThrow();

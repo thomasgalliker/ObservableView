@@ -15,6 +15,8 @@ namespace ObservableView.Tests.TestData
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public bool HasPropertyChangedSubscribers => this.PropertyChanged != null;
+
         public CarBrand Brand
         {
             get => this.brand;
