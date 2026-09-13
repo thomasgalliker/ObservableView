@@ -44,7 +44,7 @@
             // Arrange
             var stringList = new List<string> { FilteredStringItemA, FilteredStringItemB, FilteredStringItemC };
             var observableStringView = new ObservableView<string>(stringList);
-            observableStringView.FilterHandler += (sender, e) => { };
+            observableStringView.FilterHandler += (_, _) => { };
 
             // Act
             ObservableCollection<string> filteredView = observableStringView.View;
@@ -64,7 +64,7 @@
             var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.FilterHandler += (sender, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
+            observableCarsView.FilterHandler += (_, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
 
             // Act
             ObservableCollection<Car> filteredView = observableCarsView.View;
@@ -84,8 +84,8 @@
             var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.FilterHandler += (sender, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
-            observableCarsView.PropertyChanged += (sender, e) => receivedEvents.Add(e.PropertyName);
+            observableCarsView.FilterHandler += (_, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
+            observableCarsView.PropertyChanged += (_, e) => receivedEvents.Add(e.PropertyName);
 
             // Act
             // Let's add 3 new cars. One of them is a BMW which is 'allowed' by the filter criteria.
@@ -117,9 +117,8 @@
             var carsList = CarPool.GetDefaultCarsList();
 
             var observableCarsView = new ObservableView<Car>(carsList);
-            observableCarsView.FilterHandler += (sender, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
-            ;
-            observableCarsView.PropertyChanged += (sender, e) => receivedEvents.Add(e.PropertyName);
+            observableCarsView.FilterHandler += (_, e) => e.IsAllowed = e.Item.Brand == CarBrand.BMW;
+            observableCarsView.PropertyChanged += (_, e) => receivedEvents.Add(e.PropertyName);
 
             // Act
             // Let's remove 3 existing cars. The View should then only contain the remaining BMW (M3).
@@ -138,6 +137,212 @@
             receivedEvents.Count(x => x == "Source").Should().Be(3); // 3 Source changes, because we removed 3 new elements
             receivedEvents.Count(x => x == "View").Should().Be(3);
             receivedEvents.Count(x => x == "Groups").Should().Be(3);
+        }
+
+        #endregion
+
+        #region Item Property Tracking
+
+        [Fact]
+        public void ItemPropertyChanged_Subscribe_RaisesEventWithChangedItemAndPropertyName()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car });
+
+            ItemPropertyChangedEventArgs<CarViewModel>? receivedEventArgs = null;
+            observableCarsView.ItemPropertyChanged += (_, e) => receivedEventArgs = e;
+
+            // Act
+            car.Model = "M3 Competition";
+
+            // Assert
+            receivedEventArgs.Should().NotBeNull();
+            receivedEventArgs!.Item.Should().BeSameAs(car);
+            receivedEventArgs.PropertyName.Should().Be(nameof(CarViewModel.Model));
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_Subscribe_RefreshesSourceViewAndGroupsPropertyChanged()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car });
+
+            var receivedEvents = new List<string?>();
+            observableCarsView.ItemPropertyChanged += (_, _) => { };
+            observableCarsView.PropertyChanged += (_, e) => receivedEvents.Add(e.PropertyName);
+
+            // Act
+            car.Model = "M3 Competition";
+
+            // Assert
+            receivedEvents.Should().Contain("Source");
+            receivedEvents.Should().Contain("View");
+            receivedEvents.Should().Contain("Groups");
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_NoSubscriber_DoesNotRefreshOrThrow()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car });
+
+            var receivedEvents = new List<string?>();
+            observableCarsView.PropertyChanged += (_, e) => receivedEvents.Add(e.PropertyName);
+
+            // Act
+            car.Model = "M3 Competition";
+
+            // Assert
+            receivedEvents.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_Unsubscribe_StopsReceivingEvents()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car });
+
+            var receivedEventsCount = 0;
+            void Handler(object? sender, ItemPropertyChangedEventArgs<CarViewModel> e) => receivedEventsCount++;
+            observableCarsView.ItemPropertyChanged += Handler;
+
+            // Act
+            car.Model = "M3 Competition";
+            observableCarsView.ItemPropertyChanged -= Handler;
+            car.Model = "M3 CS";
+
+            // Assert
+            receivedEventsCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_Unsubscribe_DetachesUnderlyingItemPropertyChangedHandler()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car });
+            void Handler(object? sender, ItemPropertyChangedEventArgs<CarViewModel> e) { }
+            observableCarsView.ItemPropertyChanged += Handler;
+
+            car.HasPropertyChangedSubscribers.Should().BeTrue();
+
+            // Act
+            observableCarsView.ItemPropertyChanged -= Handler;
+
+            // Assert
+            car.HasPropertyChangedSubscribers.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_ItemRemovedFromSource_StopsTrackingRemovedItem()
+        {
+            // Arrange
+            var car1 = new CarViewModel(CarBrand.BMW, "M3");
+            var car2 = new CarViewModel(CarBrand.BMW, "M1");
+            var sourceList = new ObservableCollection<CarViewModel> { car1, car2 };
+            var observableCarsView = new ObservableView<CarViewModel>(sourceList);
+
+            var receivedEventsCount = 0;
+            observableCarsView.ItemPropertyChanged += (_, _) => receivedEventsCount++;
+
+            // Act
+            sourceList.Remove(car2);
+            car2.Model = "M1 no longer tracked";
+
+            // Assert
+            receivedEventsCount.Should().Be(0);
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_SourceReassigned_StopsTrackingOldItems()
+        {
+            // Arrange
+            var car1 = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car1 });
+            observableCarsView.ItemPropertyChanged += (_, _) => { };
+
+            // Act
+            observableCarsView.Source = new ObservableCollection<CarViewModel> { new CarViewModel(CarBrand.Audi, "A4") };
+
+            var receivedEventsCount = 0;
+            observableCarsView.ItemPropertyChanged += (_, _) => receivedEventsCount++;
+            car1.Model = "M3 Competition"; // old, no-longer-tracked instance
+
+            // Assert
+            receivedEventsCount.Should().Be(0);
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_ItemReplacedInSource_TracksNewItemNotOldItem()
+        {
+            // Arrange
+            var car1 = new CarViewModel(CarBrand.BMW, "M3");
+            var car2 = new CarViewModel(CarBrand.Audi, "A4");
+            var sourceList = new ObservableCollection<CarViewModel> { car1 };
+            var observableCarsView = new ObservableView<CarViewModel>(sourceList);
+
+            var receivedEventsCount = 0;
+            observableCarsView.ItemPropertyChanged += (_, _) => receivedEventsCount++;
+
+            // Act
+            sourceList[0] = car2;
+            car1.Model = "M3 Competition"; // old, replaced instance
+            car2.Model = "A4 Avant"; // new, tracked instance
+
+            // Assert
+            receivedEventsCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_ItemDoesNotImplementINotifyPropertyChanged_NoExceptionThrown()
+        {
+            // Arrange
+            var carsList = CarPool.GetDefaultCarsList();
+            var observableCarsView = new ObservableView<Car>(carsList);
+
+            // Act
+            Action act = () => observableCarsView.ItemPropertyChanged += (_, _) => { };
+
+            // Assert
+            act.Should().NotThrow();
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_DuplicateItemInstanceRemovedOnce_StillTracksRemainingDuplicate()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var sourceList = new ObservableCollection<CarViewModel> { car, car };
+            var observableCarsView = new ObservableView<CarViewModel>(sourceList);
+
+            var receivedEventsCount = 0;
+            observableCarsView.ItemPropertyChanged += (_, _) => receivedEventsCount++;
+
+            // Act
+            sourceList.Remove(car); // removes the first occurrence only; car is still present once
+            car.Model = "M3 Competition";
+
+            // Assert
+            receivedEventsCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void ItemPropertyChanged_SourceSetToNullWhileActive_DoesNotThrow()
+        {
+            // Arrange
+            var car = new CarViewModel(CarBrand.BMW, "M3");
+            var observableCarsView = new ObservableView<CarViewModel>(new ObservableCollection<CarViewModel> { car });
+            observableCarsView.ItemPropertyChanged += (_, _) => { };
+
+            // Act
+            Action act = () => observableCarsView.Source = null!;
+
+            // Assert
+            act.Should().NotThrow();
         }
 
         #endregion
@@ -261,7 +466,7 @@
 
             // Act
             observableCarsView.Search("Polo");
-            Action action = () => { var searchView = observableCarsView.View; };
+            var action = () => { _ = observableCarsView.View; };
 
             // Assert
             Assert.Throws<InvalidOperationException>(action);
@@ -428,10 +633,10 @@
         ////    // Arrange
         ////    var carsList = new ObservableCollection<Car>
         ////    {
-        ////        Cars.carAudiA1, 
-        ////        Cars.carAudiA3, 
-        ////        Cars.carBmwM1, 
-        ////        Cars.carBmwM3, 
+        ////        Cars.carAudiA1,
+        ////        Cars.carAudiA3,
+        ////        Cars.carBmwM1,
+        ////        Cars.carBmwM3,
         ////        Cars.carVwPolo,
         ////        Cars.carVwGolf
         ////    };

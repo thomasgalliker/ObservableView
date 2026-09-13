@@ -2,6 +2,7 @@
 global using System.Collections.Generic;
 global using System.Collections.ObjectModel;
 global using System.Collections.Specialized;
+global using System.ComponentModel;
 global using System.Linq;
 global using System.Linq.Expressions;
 global using System.Reflection;
@@ -11,3 +12,4 @@ global using ObservableView.Filtering;
 global using ObservableView.Grouping;
 global using ObservableView.Searching;
 global using ObservableView.Sorting;
+global using ObservableView.Tracking;

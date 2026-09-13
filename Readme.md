@@ -62,6 +62,19 @@ As you can observe in the example above, the XAML view binds to `MallList.View`.
 #### Add, remove, update source collection
 If you need to add or remove items of the source collection, you can simply do so by manipulating the MallList.Source property. By doing so, it automatically refreshes all dependent properties (e.g. View).
 
+#### Track item property changes
+If the items in your source collection implement `INotifyPropertyChanged`, ObservableView can notify you whenever a property of one of those items changes, and it automatically refreshes `View`/`Groups` so that sort/filter/search/group results stay up to date:
+```C#
+this.MallsList.ItemPropertyChanged += this.MallsList_ItemPropertyChanged;
+```
+```C#
+private void MallsList_ItemPropertyChanged(object sender, ObservableView.Tracking.ItemPropertyChangedEventArgs<Mall> e)
+{
+	Console.WriteLine($"{e.PropertyName} changed on {e.Item}");
+}
+```
+Subscribing to `ItemPropertyChanged` is opt-in: ObservableView only subscribes to individual items' `PropertyChanged` event while there is at least one subscriber, so there is no performance impact for consumers who do not use this feature. Items that do not implement `INotifyPropertyChanged` are silently ignored.
+
 #### Search
 Two steps are necessary in order to enable the search functionality:
 1) Define search specification(s) for properties of your collection item type ```T```:
